@@ -2,7 +2,6 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/config/firebaseConfig";
 import { useState } from "react";
-import Link from "next/link";
 
 export default function  LoginPage() {
 
@@ -38,7 +37,6 @@ export default function  LoginPage() {
         <button type="submit">ログイン</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <div><Link href = '/'>go back to home</Link> </div>
     </div>
   );
 };

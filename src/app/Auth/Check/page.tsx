@@ -1,7 +1,6 @@
 "use client"
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { auth } from "@/config/firebaseConfig";
 
 export default function AuthCheck() {
@@ -10,7 +9,7 @@ export default function AuthCheck() {
   const handleCheckAuth = () =>{
     const currentUser = auth.currentUser
     if(currentUser){
-      setMessage(`ログイン中:${currentUser.email}`);
+      setMessage(`ログイン中:${currentUser.displayName}`);
       console.log("email:",currentUser.email)
     }else{
       setMessage("ログインしてない")
@@ -37,7 +36,6 @@ export default function AuthCheck() {
       <p>{message}</p>
       <button onClick={handleLogout}>ログアウト</button>
       <div><button onClick={handleDeleteUser}>アカウントを削除する</button></div>
-      <div><Link href = '/'>homeへ戻る</Link> </div>
     </div>
   );
 }

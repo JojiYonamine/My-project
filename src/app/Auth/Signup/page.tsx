@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/config/firebaseConfig";
-import Link from "next/link";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -38,8 +37,6 @@ export default function SignupPage() {
         <button type="submit">登録</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <div><Link href = '/'>go back to home</Link> </div>
     </div>
     
   );

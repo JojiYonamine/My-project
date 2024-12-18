@@ -2,19 +2,27 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/config/firebaseConfig";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const router = useRouter();
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("登録が完了しました！");
-    } catch (err: any) {
-      setError(err.message || "エラーが発生しました");
+      router.push('/Auth/SettingIndividual')
+    } catch (err: unknown) {
+      if(err instanceof Error){
+        setError(err.message)
+      }else{
+        setError("不明なエラーが発生しました")
+      }
     }
   };
 

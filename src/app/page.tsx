@@ -4,10 +4,7 @@
 //Next.js13以降らしい、Viteとは全く違う感じがするので注意していこう
 
 "use client"
-import { auth } from "@/config/firebaseConfig";
-
 const home =()=>{
-  console.log(auth.currentUser);
   return(
     <div>
       <h1>ようこそ</h1>

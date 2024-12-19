@@ -8,6 +8,8 @@ const Chat = () => {
         e.preventDefault()
     };
 
+    
+
     return(
         <div>
             <h1>this is chat</h1>

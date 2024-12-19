@@ -1,0 +1,41 @@
+app
+├── Album
+│   └── page.tsx
+├── Auth
+│   ├── Check
+│   │   └── page.tsx
+│   ├── CoupleRegister
+│   │   └── page.tsx
+│   ├── Login
+│   │   └── page.tsx
+│   ├── SettingIndividual
+│   │   └── page.tsx
+│   └── Signup
+│       └── page.tsx
+├── Badget
+│   └── page.tsx
+├── Calendar
+│   └── page.tsx
+├── Chat
+│   └── page.tsx
+├── Diary
+│   └── page.tsx
+├── Tasks
+│   └── page.tsx
+├── Test
+│   └── page.tsx
+├── components
+│   └── navbar.tsx
+├── config
+│   └── firebaseConfig.ts
+├── favicon.ico
+├── fonts
+│   ├── GeistMonoVF.woff
+│   └── GeistVF.woff
+├── globals.css
+├── layout.tsx
+├── not-found.tsx
+├── page.tsx
+└── utils
+    ├── backToHome.tsx
+    └── fetchTest.ts

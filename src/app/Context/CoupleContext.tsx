@@ -40,15 +40,17 @@ export const CoupleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                         });
 
                         const couplesRef = collection(db,"couples");
-                        const partner1Query = query(couplesRef, where("partner1Id","==",firebaseUser.uid));
-                        const partner2Query = query(couplesRef, where("partner2Id","==",firebaseUser.uid));
+                        const partner1Query = query(couplesRef, where("partner1_id","==",firebaseUser.uid));
+                        const partner2Query = query(couplesRef, where("partner2_id","==",firebaseUser.uid));
 
                         const partner1Unsubscribe = onSnapshot(partner1Query,(partner1Snapshot) => {
                             if(!partner1Snapshot.empty){
                                 const doc = partner1Snapshot.docs[0]
+                                console.log("Couple ID from partner1Query:", doc.id);
                                 setCoupleId(doc.id)
                                 setLoading(false); 
                             }else{
+                                console.log("No Couple ID from partner1Query:");
                                 setCoupleId(null)
                                 setLoading(false); 
                             }
@@ -57,9 +59,11 @@ export const CoupleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                         const partner2Unsubscribe = onSnapshot(partner2Query,(partner2Snapshot) => {
                             if(!partner2Snapshot.empty){
                                 const doc = partner2Snapshot.docs[0]
+                                console.log("Couple ID from partner2Query:", doc.id);
                                 setCoupleId(doc.id)
                                 setLoading(false); 
                             }else{
+                                console.log("No Couple ID from partner2Query:");
                                 setCoupleId(null)
                                 setLoading(false); 
                             }

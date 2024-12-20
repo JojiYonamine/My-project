@@ -1,7 +1,7 @@
 "use client";
 
 import { auth, db } from "@/config/firebaseConfig";
-import { addDoc, collection,  getDocs, query, where } from "firebase/firestore";
+import {  collection,  doc,  getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { useState } from "react";
 
 
@@ -16,7 +16,8 @@ const RegisterCouples = () => {
                 console.log("No user logged in");
                 return;
             }
-            const current_user_uid = auth.currentUser.uid
+            const user =auth.currentUser
+            const current_user_uid = user.uid
             const usersRef = collection(db, "users");
             const q = query(usersRef, where("email", "==", partnerEmail));
             const querySnapshot = await getDocs(q);
@@ -28,13 +29,23 @@ const RegisterCouples = () => {
             const partnerDoc = querySnapshot.docs[0]
             const partnerId = partnerDoc.id;
     
-            const couplesRef = collection(db,"couples");
-            await addDoc(couplesRef,{
+            const cid = current_user_uid+partnerId;
+            const couplesRef = doc(db, "couples", cid);
+            await setDoc(couplesRef,{
+                cid:cid,
                 partner1_id: current_user_uid,
                 partner2_id: partnerId,
                 createdAt: new Date(),
             })
             console.log("Couple Registered!")
+            const docRef1 = doc(db,"users",current_user_uid);
+            const docRef2 = doc(db,"users",partnerId)
+            await updateDoc(docRef1,{
+                    cid:cid,
+                  });
+            await updateDoc(docRef2,{
+                cid:cid,
+            });
         }catch(err:unknown){
             console.error("Error registering couple:",err);
         }

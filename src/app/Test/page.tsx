@@ -1,12 +1,14 @@
 "use client"
 
-import { useCouple } from "@/Context/CoupleContext"
+import { useCouple } from "@/Context/Couple-modified"
 export default function Test () {
-  const {user, loading} = useCouple();
+  const {user, coupleId, loading} = useCouple();
   return (
     <div>
       <p>ログイン中: {user?.email || "未ログイン"}</p>
+      <p>ログイン中: {user?.uid || "未ログイン"}</p>
       <p>{loading?('ロード中'):('ロード済み')}</p>
+      <p>Couple ID: {coupleId }</p>
     </div>
   )
 }

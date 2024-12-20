@@ -1,9 +1,9 @@
 "use client"
-import { useCouple } from "@/Context/CoupleContext";
+import { useCouple } from "@/Context/Couple-modified";
 import Link from "next/link";
 
 export default function Navbar() {
-  const {user, loading} = useCouple();
+  const {user,coupleId, loading} = useCouple();
     return (
       <nav className="bg-gray-800 text-white p-4">
         <div className="flex justify-between items-center">
@@ -28,7 +28,12 @@ export default function Navbar() {
           </li>
         </ul>
         <div>
+        <div>
           {loading?(<p>ロード中</p>):user?(<p>ログイン中:{user.email}</p>):(<p>未ログイン</p>)}
+          </div>
+          <div>
+          {coupleId?(<p>{coupleId}</p>):(<p>登録してください</p>)}
+          </div>
         </div>
         </div>
         

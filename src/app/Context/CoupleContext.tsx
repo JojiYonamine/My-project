@@ -1,3 +1,5 @@
+"use client"
+
 import { auth, db } from "@/config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
@@ -45,8 +47,10 @@ export const CoupleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                             if(!partner1Snapshot.empty){
                                 const doc = partner1Snapshot.docs[0]
                                 setCoupleId(doc.id)
+                                setLoading(false); 
                             }else{
                                 setCoupleId(null)
+                                setLoading(false); 
                             }
                         })
 
@@ -54,8 +58,10 @@ export const CoupleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                             if(!partner2Snapshot.empty){
                                 const doc = partner2Snapshot.docs[0]
                                 setCoupleId(doc.id)
+                                setLoading(false); 
                             }else{
                                 setCoupleId(null)
+                                setLoading(false); 
                             }
                         });
 
@@ -66,13 +72,14 @@ export const CoupleProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                     }else{
                         setUser(null);
                         setCoupleId(null);
+                        setLoading(false); 
                     }
                 });return () => unSubscribeUser();
             } else{
                 setUser(null);
                 setCoupleId(null);
+                setLoading(false); 
             }
-            setLoading(false); 
         });
         return () => unSubscribeAuth();
     },[]);

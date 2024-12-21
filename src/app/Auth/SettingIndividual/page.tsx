@@ -21,6 +21,7 @@ const Setting =()=>{
         uid: user.uid,
         name: user.displayName || "Anonymous",
         email: user.email,
+        cid: null,
         createdAt: new Date(),
       });
       console.log("User registered in Firestore!");

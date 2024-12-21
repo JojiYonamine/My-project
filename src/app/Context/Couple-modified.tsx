@@ -21,6 +21,7 @@ export const CoupleProvider:React.FC<{ children: React.ReactNode }> =({children}
     const[coupleId,setCoupleId] = useState<string|null>(null);
     const [loading, setLoading] = useState<boolean>(true); 
 
+
     useEffect(() => {
         const unSubscribeAuth = onAuthStateChanged (auth, async (firebaseUser) =>{
             if(firebaseUser){

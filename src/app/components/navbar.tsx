@@ -32,7 +32,7 @@ export default function Navbar() {
           {loading?(<p>ロード中</p>):user?(<p>ログイン中:{user.email}</p>):(<p>未ログイン</p>)}
           </div>
           <div>
-          {coupleId?(<p>{coupleId}</p>):(<p>登録してください</p>)}
+          {coupleId?(<p>{coupleId}</p>):(<p>カップルを登録してください</p>)}
           </div>
         </div>
         </div>

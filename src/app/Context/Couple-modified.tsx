@@ -23,37 +23,44 @@ export const CoupleProvider:React.FC<{ children: React.ReactNode }> =({children}
 
 
     useEffect(() => {
+        //console.log("useCouple開始")
         const unSubscribeAuth = onAuthStateChanged (auth, async (firebaseUser) =>{
-            if(firebaseUser){
-                const userRef = doc(db,"users",firebaseUser.uid);
-                const userDoc = await getDoc(userRef)
-                const userdata = userDoc.data()
-                if (userdata && userdata.cid){
-                    console.log(userdata.cid)
-                    setUser({
-                        uid:firebaseUser.uid,
-                        email:firebaseUser.email,
-                        name:firebaseUser.displayName
-                    });
-                    setCoupleId(userdata.cid);
-                    setLoading(false)
-                }else{
-                    console.log("cidなし")
-                    setUser({
-                        uid:firebaseUser.uid,
-                        email:firebaseUser.email,
-                        name:firebaseUser.displayName
-                    });
-                    setCoupleId(null);
-                    setLoading(false)
-                }
-            }else{
+            console.log("onAuthStateChanged呼び出し");
+
+            if(!firebaseUser){
+                //console.log("ログインしろ！")
                 setUser(null);
                 setCoupleId(null);
                 setLoading(false)
+                return;
             }
-        });return () => unSubscribeAuth();
-
+            const userRef = doc(db,"users",firebaseUser.uid);
+            const userDoc = await getDoc(userRef)
+            const userdata = userDoc.data()
+            if(!userdata || !userdata.cid){
+                //console.log("cidなし")
+                setUser({
+                    uid:firebaseUser.uid,
+                    email:firebaseUser.email,
+                    name:firebaseUser.displayName
+                });
+                setCoupleId(null);
+                setLoading(false)
+                return;
+            }
+            setUser({
+                uid:firebaseUser.uid,
+                email:firebaseUser.email,
+                name:firebaseUser.displayName
+            });
+            setCoupleId(userdata.cid);
+            setLoading(false)
+            })
+            ;return () => {
+                //console.log("クリーンアップ開始");
+                unSubscribeAuth();
+                console.log("unsubscribe");
+            }
     },[]);
     return (
         <CoupleContext.Provider value={{ user, coupleId, loading }}>
@@ -65,3 +72,32 @@ export const CoupleProvider:React.FC<{ children: React.ReactNode }> =({children}
 export const useCouple = () => {
     return useContext(CoupleContext);
   };
+
+// if(firebaseUser){
+            //     const userRef = doc(db,"users",firebaseUser.uid);
+            //     const userDoc = await getDoc(userRef)
+            //     const userdata = userDoc.data()
+            //     if (userdata && userdata.cid){
+            //         console.log(userdata.cid)
+            //         setUser({
+            //             uid:firebaseUser.uid,
+            //             email:firebaseUser.email,
+            //             name:firebaseUser.displayName
+            //         });
+            //         setCoupleId(userdata.cid);
+            //         setLoading(false)
+            //     }else{
+            //         console.log("cidなし")
+            //         setUser({
+            //             uid:firebaseUser.uid,
+            //             email:firebaseUser.email,
+            //             name:firebaseUser.displayName
+            //         });
+            //         setCoupleId(null);
+            //         setLoading(false)
+            //     }
+            // }else{
+            //     setUser(null);
+            //     setCoupleId(null);
+            //     setLoading(false)
+            // }

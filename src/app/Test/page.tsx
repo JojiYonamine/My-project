@@ -1,25 +1,36 @@
-"use client"
+// "use client"
 
-import { CoupleProvider } from "@/Context/Couple-modified";
-import { useState } from "react";
+// import { format } from "date-fns";
 
-const TestComponent = () => {
-  const [showProvider, setShowProvider] = useState(false);
+// const Today = () => {
+//   const today = new Date();
+//   const typeOrigin = typeof(today)
+//   const formatedDate = format(today,'yyyy-MM-dd')
+//   const formatedDate = format(today,'yyyy-MM-dd-HH-mm-ss')
+//   console.log()
 
-  return (
-    <div>
-      <button onClick={() => setShowProvider((prev:boolean) => !prev)}>Toggle Provider</button>
-      {showProvider?(
-        <CoupleProvider>
-          <div>Provider is Active</div>
-        </CoupleProvider>
-      ):(<div>Provider is Inactive</div>
-      )}
-    </div>
-  );
-};
+// }
 
-export default TestComponent;
+// import { CoupleProvider } from "@/Context/Couple-modified";
+// import { useState } from "react";
+
+// const TestComponent = () => {
+//   const [showProvider, setShowProvider] = useState(false);
+
+//   return (
+//     <div>
+//       <button onClick={() => setShowProvider((prev:boolean) => !prev)}>Toggle Provider</button>
+//       {showProvider?(
+//         <CoupleProvider>
+//           <div>Provider is Active</div>
+//         </CoupleProvider>
+//       ):(<div>Provider is Inactive</div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default TestComponent;
 
 // import { useCouple } from "@/Context/Couple-modified"
 // export default function Test () {

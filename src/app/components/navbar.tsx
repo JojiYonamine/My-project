@@ -24,6 +24,9 @@ export default function Navbar() {
           <Link href='/Chat'>chat</Link>
           </li>
           <li>
+          <Link href='/Calendar'>Calendar</Link>
+          </li>
+          <li>
           <Link href='/Test'>test</Link>
           </li>
         </ul>

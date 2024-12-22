@@ -1,0 +1,50 @@
+users(collection){
+    userId(docdcument){
+        cid:"coupleId"(this is unique)
+        name:"joji"
+        email:"test@test.com"
+        partnerId::"partner's id"
+    }
+}
+
+
+couples(collection){
+    CoupleId(doccument){
+        partner1Id:"partner1's id"
+        partner2Id:"partner2's id"
+        chareooms(subcollection):{
+            chatRoomId(document):{
+                name:"keep in touch"
+                createdAt:"2024-12-21"
+                messages(subcollection):{
+                    messageId(doccument):{
+                        text:"hello"
+                        createdBy:"joji"
+                        createdAt:"2024-12-20"
+                    }
+                }
+            }
+        }
+        calendars(subcollection) :{
+            calendarId(doccument):{
+                createdBy:"joji"
+                title:"birth day"
+                share:true
+                date:"2024-12-25"
+                description:"my partners birthday"
+                theme:"anvirsary"
+                createdAt:"2024-12-22"
+            }
+        }
+        tasks(subcollection):{
+            taskId(doccument):{
+                createdBy:"joji"
+                title:"purchase bread"
+                share:true
+                dueDate:"2024-12-26"
+                theme:"buying"
+                createdAt:"2024-12-21"
+            }
+        }
+    }
+}

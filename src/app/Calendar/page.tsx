@@ -5,26 +5,38 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { auth } from "@/config/firebaseConfig";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
+import { useCouple } from "@/Context/Couple-modified";
+import { dateToIso, IsoToDate } from "@/utils/dateUtils";
+import { af } from "date-fns/locale";
+import { addDoc, collection } from "firebase/firestore";
+import { eventsRef } from "@/utils/firestoreRefs";
 
-// const localizer = momentLocalizer(moment);
+const localizer = momentLocalizer(moment);
 
 
-export const  MyCalendar=()=>{
-    // const root = useRouter()
-
+const  MyCalendar=()=>{
+    const root = useRouter()
+    const owner = useCouple().user.uid
+    const cid = useCouple().cid
     const [title,setTitle] = useState<string>("")
-    // const [date,setDate] = useState<Date>(new Date())
-    const [date, setDate] = useState<string>(() => { //Inputようにフォーマット
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      return `${year}-${month}-${day}T${hours}:${minutes}`;
-    });
-    // const owner = auth.currentUser.uid
+    const [startDate,setStartDate] = useState<Date>(new Date())
+    const [endDate,setEndDate] = useState<Date>(new Date())
+    const [allDay,setAllDay] = useState<boolean>(false);
+    const [calendarId,setCalendarId] = useState<string>("")
+    const addNewEvent = async() => {
+      try{
+        await addDoc(eventsRef(cid,calendarId),{
+          createdBy:owner,
+          allDay:allDay,
+          title:title,
+          start:startDate,
+          end:endDate
+        })
+      
+      }catch(err:unknown){
+        console.error("エラーが発生",err)
+      }
+    }
   return (
     <div style={{ height: 500 }}>
         <div>
@@ -34,23 +46,38 @@ export const  MyCalendar=()=>{
             value={title}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setTitle(e.target.value)}}
             />
-            <input
-            type="datetime-local"
-            placeholder="日時を入力"
-            value={date}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setDate(e.target.value)}}
-            />
-            <button onClick={() => {console.log(`title:${title},date:${date}`,typeof(date))}}>登録</button>
+            <button onClick={(allDay) => {setAllDay(!allDay)}}></button>
+            {allDay?
+            (<div><input
+              type="datetime-local"
+              placeholder="開始日時を入力"
+              value={dateToIso(startDate)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setStartDate(IsoToDate(e.target.value))}}
+              />
+              <input
+              type="datetime-local"
+              placeholder="終了日時を入力"
+              value={dateToIso(endDate)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setEndDate(IsoToDate(e.target.value))}}
+              /></div>):
+              (<div><input
+                type="date"
+                placeholder="日付"
+                value={dateToIso(startDate)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setStartDate(IsoToDate(e.target.value))}}
+                /></div>)}
+            
+            <button onClick={() => {console.log(`title:${title},date:${startDate}`,typeof(startDate))}}>登録</button>
         </div>
         
 
-      {/* <Calendar
+      <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 500, width: "100%" }}
-      /> */}
+      />
     </div>
   );
 }

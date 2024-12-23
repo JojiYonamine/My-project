@@ -13,4 +13,12 @@ export const FormatDate = (date:string) => {
         hour:hour,
         minute :minute,
     }
+};
+
+export const dateToIso = (date:Date) => {
+    return date.toISOString();
+}
+
+export const IsoToDate = (ISO:string) => {
+    return new Date(ISO)
 }

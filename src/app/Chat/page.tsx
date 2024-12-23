@@ -22,7 +22,7 @@ const Chat = () => {
   //チャットルーム作成関数 ルーム名、CIDを必要とする。
   //console.log(CoupleId)
   const root = useRouter();
-  const CoupleId = useCouple().coupleId;
+  const CoupleId = useCouple().cid;
 
   //未ログイン、単身者を弾く
   useEffect(() => {

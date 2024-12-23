@@ -27,13 +27,21 @@ couples(collection){
         }
         calendars(subcollection) :{
             calendarId(doccument):{
+                theme:"anivirsary"
                 createdBy:"joji"
-                title:"birth day"
                 share:true
-                date:"2024-12-25"
-                description:"my partners birthday"
-                theme:"anvirsary"
-                createdAt:"2024-12-22"
+                createdAt:"2024-12-25"
+                description:"my friends anivirsaries"
+                events(subcollection):{
+                    eventId(doccument):{
+                        createdBy:joji;
+                        allDay:boolean;
+                        title:string;
+                        start:Date;
+                        end?:Date; 
+                    }
+
+                }
             }
         }
         tasks(subcollection):{

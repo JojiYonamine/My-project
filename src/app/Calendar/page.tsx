@@ -1,28 +1,48 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { auth } from "@/config/firebaseConfig";
 import { useRouter } from "next/navigation";
 import { useCouple } from "@/Context/Couple-modified";
 import { dateToIso, IsoToDate } from "@/utils/dateUtils";
-import { af } from "date-fns/locale";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc } from "firebase/firestore";
 import { eventsRef } from "@/utils/firestoreRefs";
-
+import {RequireAuth} from "@/components/RequireAuth";
+console.log(RequireAuth)
 const localizer = momentLocalizer(moment);
-
+function ensureCid(cid: string | null): asserts cid is string {
+  if (!cid) {
+    throw new Error("CID is required but was null");
+  }
+}
 
 const  MyCalendar=()=>{
+    const loading = useCouple().loading
     const root = useRouter()
-    const owner = useCouple().user.uid
+    const owner = useCouple().user?.uid
+    useEffect(() => {
+      if (!loading && !owner) {
+        console.log("you need to login");
+        root.push("/");
+        return;
+      }
+    }, [loading, owner, root]);
+    // if (loading){
+    //   return (<h1>now loading</h1>)
+    // }
+    // if(!owner){
+    //   console.log('you need to')
+    //   root.push("/")
+    //   return null
+    // }
     const cid = useCouple().cid
     const [title,setTitle] = useState<string>("")
     const [startDate,setStartDate] = useState<Date>(new Date())
     const [endDate,setEndDate] = useState<Date>(new Date())
     const [allDay,setAllDay] = useState<boolean>(false);
     const [calendarId,setCalendarId] = useState<string>("")
+    ensureCid(cid)
     const addNewEvent = async() => {
       try{
         await addDoc(eventsRef(cid,calendarId),{
@@ -67,22 +87,30 @@ const  MyCalendar=()=>{
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setStartDate(IsoToDate(e.target.value))}}
                 /></div>)}
             
-            <button onClick={() => {console.log(`title:${title},date:${startDate}`,typeof(startDate))}}>登録</button>
+            <button onClick={() => {console.log(`title:${title},date:${startDate}`,typeof(startDate));addNewEvent()}}>登録</button>
         </div>
         
 
-      <Calendar
+      {/* <Calendar
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 500, width: "100%" }}
-      />
+      /> */}
     </div>
   );
 }
 
-export default MyCalendar;
+// export default MyCalendar;
+const Calendar = () => {
+  return (
+    <RequireAuth>
+      <MyCalendar />
+    </RequireAuth>
+  );
+}
+export default Calendar
 // const events = [
 //   {
 //     title: "Birthday Party",

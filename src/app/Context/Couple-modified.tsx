@@ -2,7 +2,7 @@
 import { auth, db } from "@/config/firebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, } from "firebase/firestore";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
 interface CoupleContextProps {
@@ -22,7 +22,7 @@ export const CoupleProvider:React.FC<{ children: React.ReactNode }> =({children}
     const[user,setUser] = useState<{ uid: string; email: string | null; name: string | null } | null>(null);
     const[coupleId,setCoupleId] = useState<string|null>(null);
     const [loading, setLoading] = useState<boolean>(true); 
-    const root = useRouter()
+    // const root = useRouter()
 
     useEffect(() => {
         //console.log("useCouple開始")
@@ -34,8 +34,8 @@ export const CoupleProvider:React.FC<{ children: React.ReactNode }> =({children}
                 setUser(null);
                 setCoupleId(null);
                 setLoading(false)
-                root.push("/Auth/Login")
                 alert("まずろぐいんして")
+                // root.push("/")
                 return;
             }
             const userRef = doc(db,"users",firebaseUser.uid);
@@ -75,14 +75,6 @@ export const CoupleProvider:React.FC<{ children: React.ReactNode }> =({children}
 
 export const useCouple = () => {
     const context = useContext(CoupleContext);
-
-    if (!context) {
-        throw new Error("useCouple must be used within a CoupleProvider");
-    }
-
-    if (context.user === null) {
-        throw new Error("ログインして");
-    }
 
     return context;
 };

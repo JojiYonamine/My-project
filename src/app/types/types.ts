@@ -1,13 +1,24 @@
+import { FieldValue } from "firebase/firestore";
+
 export interface baseEvent {
-    id: string;
-    owner:string;
-    allDay:boolean;
+    // id: string;
     title:string;
-    start:Date;
-    end?:Date; //オプション！all day falseの時だけ使おう
+    createdBy:string;
+    createdAt:Date;
+    // share:boolean;
+}
+
+export interface calendar {
+    theme:string;
+    description?:string;
+    share:boolean;
+    createdAt:Date|FieldValue;
 }
 
 export interface calendarEvent extends baseEvent{
-    type:"event";
-    calendarTheme:"string"
+    type:"calendarEvent";
+    calendarTheme:"theme"
+    allDay:boolean;
+    start:Date;
+    end:Date; //all day trueの時は、startに等しくなる
 }

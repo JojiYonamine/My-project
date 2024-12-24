@@ -25,9 +25,8 @@ couples(collection){
                 }
             }
         }
-        calendars(subcollection) :{
-            calendarId(doccument):{
-                theme:"anivirsary"
+        calendars(subcollection) :{  
+            theme(doccument):{  //themeごとに作る、今回はanivarsary
                 createdBy:"joji"
                 share:true
                 createdAt:"2024-12-25"

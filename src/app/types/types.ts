@@ -9,6 +9,7 @@ export interface baseEvent {
 }
 
 export interface calendarEvent extends baseEvent{
+    eventId?:string;
     allDay:boolean;
     start:Date|FieldValue;
     end:Date|FieldValue; //all day trueの時は、startに等しくなる
@@ -16,6 +17,7 @@ export interface calendarEvent extends baseEvent{
 
 
 export interface calendar {
+    id?:string
     theme:string;
     description?:string;
     color?:string;

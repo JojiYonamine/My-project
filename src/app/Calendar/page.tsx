@@ -2,30 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useRouter } from "next/navigation";
 import { useCouple } from "@/Context/Couple-modified";
-import {
-  dateAndTimeToIso,
-  dateToIso,
-  IsoToDate,
-  timestampToDate,
-} from "@/utils/dateUtils";
-import {
-  addDoc,
-  onSnapshot,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
-import { calendarRef, calendarsRef, eventsRef } from "@/utils/firestoreRefs";
+import { dateAndTimeToIso, dateToIso, IsoToDate } from "@/utils/dateUtils";
+
 import { RequireAuth } from "@/components/RequireAuth";
-import {
-  format,
-  getDay,
-  isAfter,
-  isBefore,
-  parse,
-  startOfWeek,
-} from "date-fns";
+import { format, getDay, parse, startOfWeek } from "date-fns";
 import { calendar, calendarEvent } from "@/types/types";
 import { ja } from "date-fns/locale";
 import { ensureCid, ensureUser } from "@/utils/typeGare";
@@ -46,77 +27,80 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-
 const MyCalendar = () => {
-  const loading = useCouple().loading;
-  const root = useRouter();
   const cid = useCouple().cid;
   const user = useCouple().user;
   ensureUser(user);
   ensureCid(cid);
   const owner = user.uid;
 
-  // useEffect(() => {
-  //   if (!loading && !owner) {
-  //     console.log("you need to login");
-  //     root.push("/");
-  //     return;
-  //   }
-  // }, [loading, owner, root]);
-
   //イベント用の状態
   const [eventTitle, setEventTitle] = useState<string>("");
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [allDay, setAllDay] = useState<boolean>(false);
-  // const [events, setEvents] = useState([]);
   const [events, setEvents] = useState<calendarEvent[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<calendarEvent | undefined>(
+    undefined
+  );
+  const [updateEvent, setUpdateEvent] = useState<boolean>(false);
 
   //カレンダー用の状態
   const [description, setDescription] = useState<string>("");
   const [share, setShare] = useState<boolean>(false);
   const [theme, setTheme] = useState<string>("");
   const [calendars, setCalendars] = useState<calendar[]>([]);
-  const [update,setUpdate] = useState<boolean>(false);
-  const [activeCalendar, setActiveCalendar] = useState<string>("not selected");
+  const [updateCalendar, setUpdateCalendar] = useState<boolean>(false);
+  const [activeCalendar, setActiveCalendar] = useState<string | undefined>(
+    undefined
+  );
 
-  // const [calendarId,setCalendarId] = useState<string>("")
+  // カレンダー追加
+  const addNewCalendr = async () => {
+    console.log(updateCalendar)
+    await addCalendar(cid, theme, {
+      theme: theme,
+      description: description,
+      share: share,
+      createdAt: new Date(),
+    });
+    setTheme("");
+    setDescription("");
+    setShare(false);
+    setUpdateCalendar(!updateCalendar);
+  };
+  // カレンダー取得
+  useEffect(() => {
+    fetchCalendars(cid).then(setCalendars);
+  }, [cid, updateCalendar]);
+
+  // イベント追加
   const addNewEvent = async () => {
-    addEvent(cid,activeCalendar,{
+    if (!activeCalendar) {
+      alert("カレンダーを選んでください");
+      return;
+    }
+    addEvent(cid, activeCalendar, {
       title: eventTitle,
       createdBy: owner,
       createdAt: new Date(),
       allDay: allDay,
       start: startDate,
       end: endDate,
-    })
-    setEventTitle("")
-  }
- 
-  const addNewCalendr = async () => {
-    addCalendar(cid,theme,{
-      theme: theme,
-      description: description,
-      share: share,
-      createdAt: new Date()
-    })
-    setTheme("");
-    setDescription("");
-    setShare(false);
-    setUpdate(!update)
+    });
+    setEventTitle("");
+    setUpdateEvent(!updateEvent);
   };
 
 
-  // カレンダー取得外部ファイルから
-  useEffect (() => {
-    fetchCalendars(cid).then(setCalendars)
-  },[cid,update])
 
-  useEffect (() => {
-    fetchEvents(cid,activeCalendar).then(setEvents)
-  },[cid,activeCalendar])
-
-  
+  // イベント取得
+  useEffect(() => {
+    if (!activeCalendar) {
+      return;
+    }
+    fetchEvents(cid, activeCalendar).then(setEvents);
+  }, [cid, activeCalendar, updateEvent]);
 
   const handleChangeShare = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShare(e.target.checked);
@@ -124,153 +108,143 @@ const MyCalendar = () => {
   const handleChangeAllDay = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAllDay(e.target.checked);
   };
-
+  const handleSelectEvent = (e: calendarEvent) => {
+    setSelectedEvent(e);
+  };
   return (
     <div style={{ height: 500 }}>
       <div>
-        {/* カレンダー表示 */}
-        <select
-          value={activeCalendar}
-          onChange={(e) => setActiveCalendar(e.target.value)}
-        >
-          <option value="not selected">テーマを選択</option>
-          {calendars.map((calendar) => (
+        {/* カレンダーリスト表示 */}
+        <div>
+          <select
+            value={activeCalendar}
+            onChange={(e) => setActiveCalendar(e.target.value)}
+          >
+            <option value={undefined}>テーマを選択</option>
+            {calendars.map((calendar) => (
             <option key={calendar.theme} value={calendar.theme}>
               {calendar.theme}
             </option>
-          ))}
-        </select>
-        <div>
-          {/* <h1>Calendars</h1>
-          <ul>
-            {calendars.map((calendar) => (
-              <li key={calendar.theme}>
-                <button
-                  onClick={() => {
-                    setActiveCalendar(calendar.theme);
-                    console.log(calendar.theme);
-                  }}
-                >
-                  {calendar.theme}
-                </button>
-              </li>
             ))}
-          </ul> */}
+          </select>
         </div>
 
         {/* カレンダー作成 */}
-        <form
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            addNewCalendr();
-          }}
-        >
-          <input
-            type="text"
-            placeholder="テーマを入力"
-            value={theme}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setTheme(e.target.value);
+        <div>
+          <form
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              addNewCalendr();
             }}
-          />
-          <label>
+          >
             <input
-              type="checkbox"
-              checked={share}
-              onChange={handleChangeShare}
+              type="text"
+              placeholder="テーマを入力"
+              value={theme}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setTheme(e.target.value);
+              }}
             />
-            共有
-          </label>
-
-          <input
-            type="text"
-            placeholder="説明を入力"
-            value={description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDescription(e.target.value);
-            }}
-          />
-          <button type="submit">カレンダーを登録</button>
-        </form>
+            <label>
+              <input
+                type="checkbox"
+                checked={share}
+                onChange={handleChangeShare}
+              />
+              共有
+            </label>
+            <input
+              type="text"
+              placeholder="説明を入力"
+              value={description}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setDescription(e.target.value);
+              }}
+            />
+            <button type="submit">カレンダーを登録</button>
+          </form>
+        </div>
 
         {/* イベント登録 */}
-        <form
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            addNewEvent();
-          }}
-        >
-          <input
-            type="text"
-            placeholder="タイトルを入力"
-            value={eventTitle}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setEventTitle(e.target.value);
+        <div>
+          <form
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              addNewEvent();
             }}
-          />
-          <label>
+          >
             <input
-              type="checkbox"
-              checked={allDay}
-              onChange={handleChangeAllDay}
+              type="text"
+              placeholder="タイトルを入力"
+              value={eventTitle}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setEventTitle(e.target.value);
+              }}
             />
-            終日
-          </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={allDay}
+                onChange={handleChangeAllDay}
+              />
+              終日
+            </label>
 
-          {allDay ? (
+            {allDay ? (
+              <div>
+                <input
+                  type="date"
+                  value={dateToIso(startDate)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setStartDate(IsoToDate(e.target.value));
+                    setEndDate(IsoToDate(e.target.value));
+                  }}
+                />
+              </div>
+            ) : (
+              <div>
+                <input
+                  type="datetime-local"
+                  placeholder="開始日時を入力"
+                  value={dateAndTimeToIso(startDate)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setStartDate(IsoToDate(e.target.value));
+                  }}
+                />
+                <input
+                  type="datetime-local"
+                  placeholder="終了日時を入力"
+                  value={dateAndTimeToIso(endDate)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setEndDate(IsoToDate(e.target.value));
+                  }}
+                />
+              </div>
+            )}
+            <button type="submit">イベントを登録</button>
+          </form>
+        </div>
+        <div>
+          <Calendar
+            localizer={localizer}
+            events={events}
+            startAccessor="start"
+            endAccessor="end"
+            onSelectEvent={handleSelectEvent}
+            style={{ height: 500, width: "100%" }}
+          />
+          {selectedEvent && (
             <div>
-              <input
-                type="date"
-                value={dateToIso(startDate)}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setStartDate(IsoToDate(e.target.value));
-                  setEndDate(IsoToDate(e.target.value));
-                }}
-              />
-            </div>
-          ) : (
-            <div>
-              <input
-                type="datetime-local"
-                placeholder="開始日時を入力"
-                value={dateAndTimeToIso(startDate)}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setStartDate(IsoToDate(e.target.value));
-                }}
-              />
-              <input
-                type="datetime-local"
-                placeholder="終了日時を入力"
-                value={dateAndTimeToIso(endDate)}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setEndDate(IsoToDate(e.target.value));
-                }}
-              />
+              <h3>Selected Event</h3>
+              <p>{selectedEvent.title}</p>
             </div>
           )}
-          <button type="submit">イベントを登録</button>
-        </form>
-        <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 500, width: "100%" }}
-        />
+        </div>
       </div>
-
-      {/* <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 500, width: "100%" }}
-      /> */}
     </div>
   );
 };
 
-// export default MyCalendar;
 const CalendarFeat = () => {
   return (
     <RequireAuth>
@@ -279,17 +253,3 @@ const CalendarFeat = () => {
   );
 };
 export default CalendarFeat;
-// const events = [
-//   {
-//     title: "Birthday Party",
-//     start: new Date(2024, 11, 25, 10, 0),
-//     end: new Date(2024, 11, 25, 12, 0),
-//     allDay: false,
-//   },
-//   {
-//     title: "Meeting",
-//     start: new Date(2024, 11, 26, 14, 0),
-//     end: new Date(2024, 11, 26, 16, 0),
-//     allDay: false,
-//   },
-// ];

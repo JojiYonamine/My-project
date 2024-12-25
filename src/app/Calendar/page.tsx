@@ -4,7 +4,12 @@ import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useRouter } from "next/navigation";
 import { useCouple } from "@/Context/Couple-modified";
-import { dateAndTimeToIso, dateToIso, IsoToDate, timestampToDate } from "@/utils/dateUtils";
+import {
+  dateAndTimeToIso,
+  dateToIso,
+  IsoToDate,
+  timestampToDate,
+} from "@/utils/dateUtils";
 import {
   addDoc,
   onSnapshot,
@@ -13,9 +18,21 @@ import {
 } from "firebase/firestore";
 import { calendarRef, calendarsRef, eventsRef } from "@/utils/firestoreRefs";
 import { RequireAuth } from "@/components/RequireAuth";
-import { format, getDay, isAfter, isBefore, parse, startOfWeek } from "date-fns";
+import {
+  format,
+  getDay,
+  isAfter,
+  isBefore,
+  parse,
+  startOfWeek,
+} from "date-fns";
 import { calendar, calendarEvent } from "@/types/types";
 import { ja } from "date-fns/locale";
+import { ensureCid, ensureUser } from "@/utils/typeGare";
+import { fetchCalendars } from "@/utils/Calendar/fetchCalendar";
+import { fetchEvents } from "@/utils/Calendar/fetchEvents";
+import { addCalendar } from "@/utils/Calendar/addCalendar";
+import { addEvent } from "@/utils/Calendar/addEvents";
 
 const locales = {
   ja: ja,
@@ -29,39 +46,23 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-function ensureCid(cid: string | null): asserts cid is string {
-  if (!cid) {
-    throw new Error("CID is required but was null");
-  }
-}
-function ensureUser(user: { uid: string; email: string | null; name: string | null } | null): asserts user is  { uid: string; email: string | null; name: string | null }  {
-  if (!user) {
-    throw new Error("User is required but was null");
-  }
-}
-function ensureUid(uid: string | null): asserts uid is string {
-  if (!uid) {
-    throw new Error("UID is required but was null");
-  }
-}
-
 
 const MyCalendar = () => {
   const loading = useCouple().loading;
   const root = useRouter();
   const cid = useCouple().cid;
-  const user = useCouple().user
-  ensureUser(user)
-  const owner = user.uid;
+  const user = useCouple().user;
+  ensureUser(user);
   ensureCid(cid);
+  const owner = user.uid;
 
-  useEffect(() => {
-    if (!loading && !owner) {
-      console.log("you need to login");
-      root.push("/");
-      return;
-    }
-  }, [loading, owner, root]);
+  // useEffect(() => {
+  //   if (!loading && !owner) {
+  //     console.log("you need to login");
+  //     root.push("/");
+  //     return;
+  //   }
+  // }, [loading, owner, root]);
 
   //イベント用の状態
   const [eventTitle, setEventTitle] = useState<string>("");
@@ -76,100 +77,46 @@ const MyCalendar = () => {
   const [share, setShare] = useState<boolean>(false);
   const [theme, setTheme] = useState<string>("");
   const [calendars, setCalendars] = useState<calendar[]>([]);
+  const [update,setUpdate] = useState<boolean>(false);
   const [activeCalendar, setActiveCalendar] = useState<string>("not selected");
 
   // const [calendarId,setCalendarId] = useState<string>("")
   const addNewEvent = async () => {
-    if (!eventTitle.trim()) {
-      alert("タイトルを入力してください");
-      return;
-    }
-    if (!activeCalendar) {
-      alert("テーマを入力してください");
-      return;
-    }
-    if (!(isBefore(startDate, endDate))&&(!allDay)) {
-      console.log(!isBefore(startDate, endDate),allDay)
-      alert("終了日は開始日より後にしてください");
-      return
-    }
-    if (!startDate || !endDate) {
-      alert("日付を入力してください");
-      return;
-    }
-    const newEvent:calendarEvent={
+    addEvent(cid,activeCalendar,{
       title: eventTitle,
       createdBy: owner,
-      createdAt: serverTimestamp(),
+      createdAt: new Date(),
       allDay: allDay,
       start: startDate,
-      end: endDate
-    }
-    console.log(!isBefore(startDate, endDate),allDay)
-    try {
-      await addDoc(eventsRef(cid, activeCalendar), newEvent);
-    } catch (err: unknown) {
-      console.error("エラーが発生", err);
-    }
-  };
-
+      end: endDate,
+    })
+    setEventTitle("")
+  }
+ 
   const addNewCalendr = async () => {
-    const newCalendar: calendar = {
+    addCalendar(cid,theme,{
       theme: theme,
       description: description,
       share: share,
-      createdAt: serverTimestamp(),
-    };
-    setTheme("")
-    setDescription("")
-    setShare(false)
-
-    try {
-      await setDoc(calendarRef(cid, theme), newCalendar);
-    } catch (err: unknown) {
-      console.error("エラー", err);
-    }
+      createdAt: new Date()
+    })
+    setTheme("");
+    setDescription("");
+    setShare(false);
+    setUpdate(!update)
   };
 
-  // カレンダー取得
-  useEffect(() => {
-    console.log("リスナー開始、カレンダーs");
-    const unsubcribe = onSnapshot(calendarsRef(cid), (snapshot) => {
-      const Calendars: calendar[] = snapshot.docs.map((doc) => ({
-        theme: doc.id,
-        description: doc.data().description,
-        share: doc.data().share,
-        createdAt: doc.data().createdAt,
-      }));
-      setCalendars(Calendars);
-    });
-    return () => {
-      unsubcribe();
-      console.log("リスナー解除、カレンダーs");
-    };
-  }, [cid]);
 
+  // カレンダー取得外部ファイルから
+  useEffect (() => {
+    fetchCalendars(cid).then(setCalendars)
+  },[cid,update])
 
-  // イベント取得
-  useEffect(() => {
-    const unsubcribe = onSnapshot(eventsRef(cid,activeCalendar),(snapshot) => {
-      const Events:calendarEvent[] = snapshot.docs.map((doc)=>({
-      // const Events = snapshot.docs.map((doc)=>({
-        title:doc.data().title,
-        createdBy:doc.data().createdBy,
-        createdAt: doc.data().createdA.toDate(),
-        allDay: doc.data().allDay,
-        start: doc.data().start.toDate(),//timestampToDate(doc.data().start),//timestampToDate(doc.data().startDate) ,
-        end: doc.data().end.toDate()//timestampToDate(doc.data().end),//timestampToDate(doc.data().endDate),
-      })
-    )
-      setEvents(Events);console.log(Events)
-    })
-    return () => {
-      unsubcribe();
-      console.log("リスナー解除、イベントs");
-    };
+  useEffect (() => {
+    fetchEvents(cid,activeCalendar).then(setEvents)
   },[cid,activeCalendar])
+
+  
 
   const handleChangeShare = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShare(e.target.checked);
@@ -182,8 +129,19 @@ const MyCalendar = () => {
     <div style={{ height: 500 }}>
       <div>
         {/* カレンダー表示 */}
+        <select
+          value={activeCalendar}
+          onChange={(e) => setActiveCalendar(e.target.value)}
+        >
+          <option value="not selected">テーマを選択</option>
+          {calendars.map((calendar) => (
+            <option key={calendar.theme} value={calendar.theme}>
+              {calendar.theme}
+            </option>
+          ))}
+        </select>
         <div>
-          <h1>Calendars</h1>
+          {/* <h1>Calendars</h1>
           <ul>
             {calendars.map((calendar) => (
               <li key={calendar.theme}>
@@ -197,7 +155,7 @@ const MyCalendar = () => {
                 </button>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
 
         {/* カレンダー作成 */}
@@ -216,7 +174,7 @@ const MyCalendar = () => {
             }}
           />
           <label>
-          <input
+            <input
               type="checkbox"
               checked={share}
               onChange={handleChangeShare}
@@ -259,7 +217,7 @@ const MyCalendar = () => {
             終日
           </label>
 
-          {allDay ?(
+          {allDay ? (
             <div>
               <input
                 type="date"
@@ -270,7 +228,7 @@ const MyCalendar = () => {
                 }}
               />
             </div>
-          ) :(
+          ) : (
             <div>
               <input
                 type="datetime-local"
@@ -289,16 +247,16 @@ const MyCalendar = () => {
                 }}
               />
             </div>
-          ) }
+          )}
           <button type="submit">イベントを登録</button>
         </form>
         <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 500, width: "100%" }}
-      />
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: 500, width: "100%" }}
+        />
       </div>
 
       {/* <Calendar

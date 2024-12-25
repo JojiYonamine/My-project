@@ -8,10 +8,10 @@ export const RequireAuth: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     if (!loading&&(!user || !cid)) {
       if(!user){
-        console.log("ログインしてください、ログインページに遷移します");
+        alert("ログインしてください、ログインページに遷移します");
         root.push("/Auth/Login");
       }else{
-        console.log("カップルを登録してください")
+        alert("カップルを登録してください")
         root.push("/Auth/CoupleRegister")
       }
         

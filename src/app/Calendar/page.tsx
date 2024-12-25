@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { act, useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useCouple } from "@/Context/Couple-modified";
@@ -7,13 +7,14 @@ import { dateAndTimeToIso, dateToIso, IsoToDate } from "@/utils/dateUtils";
 
 import { RequireAuth } from "@/components/RequireAuth";
 import { format, getDay, parse, startOfWeek } from "date-fns";
-import { calendar, calendarEvent } from "@/types/types";
+import { calendar, calendarEvent, calendarEventShowing } from "@/types/types";
 import { ja } from "date-fns/locale";
 import { ensureCid, ensureUser } from "@/utils/typeGare";
 import { fetchCalendars } from "@/utils/Calendar/fetchCalendar";
 import { fetchEvents } from "@/utils/Calendar/fetchEvents";
 import { addCalendar } from "@/utils/Calendar/addCalendar";
 import { addEvent } from "@/utils/Calendar/addEvents";
+import { deleteEvent } from "@/utils/Calendar/deleteEvent";
 
 const locales = {
   ja: ja,
@@ -39,8 +40,8 @@ const MyCalendar = () => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [allDay, setAllDay] = useState<boolean>(false);
-  const [events, setEvents] = useState<calendarEvent[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<calendarEvent | undefined>(
+  const [events, setEvents] = useState<calendarEventShowing[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<calendarEventShowing | undefined>(
     undefined
   );
   const [updateEvent, setUpdateEvent] = useState<boolean>(false);
@@ -80,7 +81,7 @@ const MyCalendar = () => {
       alert("カレンダーを選んでください");
       return;
     }
-    addEvent(cid, activeCalendar, {
+    await addEvent(cid, activeCalendar, {
       title: eventTitle,
       createdBy: owner,
       createdAt: new Date(),
@@ -108,9 +109,13 @@ const MyCalendar = () => {
   const handleChangeAllDay = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAllDay(e.target.checked);
   };
-  const handleSelectEvent = (e: calendarEvent) => {
+  const handleSelectEvent = (e: calendarEventShowing) => {
     setSelectedEvent(e);
   };
+  const handleDeleteEvent = async (cid:string,activeCalendar:string,eventId:string) =>{
+    await deleteEvent(cid,activeCalendar,eventId)
+    setUpdateEvent(!updateEvent);
+  }
   return (
     <div style={{ height: 500 }}>
       <div>
@@ -224,6 +229,8 @@ const MyCalendar = () => {
             <button type="submit">イベントを登録</button>
           </form>
         </div>
+
+        {/* カレンダー表示 */}
         <div>
           <Calendar
             localizer={localizer}
@@ -233,10 +240,11 @@ const MyCalendar = () => {
             onSelectEvent={handleSelectEvent}
             style={{ height: 500, width: "100%" }}
           />
-          {selectedEvent && (
+          {(selectedEvent&&activeCalendar) && (
             <div>
               <h3>Selected Event</h3>
               <p>{selectedEvent.title}</p>
+              <button onClick={()=>{handleDeleteEvent(cid,activeCalendar,selectedEvent.eventId)}}>削除</button>
             </div>
           )}
         </div>

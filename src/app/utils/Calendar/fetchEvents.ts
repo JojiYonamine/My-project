@@ -1,9 +1,9 @@
-import { calendarEvent } from "@/types/types";
+import { calendarEvent, calendarEventShowing } from "@/types/types";
 import { eventsRef } from "../firestoreRefs";
 import { getDocs } from "firebase/firestore";
 
 
-export const fetchEvents =async(cid:string,theme:string):Promise<calendarEvent[]> =>{
+export const fetchEvents =async(cid:string,theme:string):Promise<calendarEventShowing[]> =>{
     const snapShot = await getDocs(eventsRef(cid,theme));
     return snapShot.docs.map((doc) => ({
         eventId:doc.id,

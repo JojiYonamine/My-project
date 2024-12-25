@@ -9,12 +9,13 @@ import { RequireAuth } from "@/components/RequireAuth";
 import { format, getDay, parse, startOfWeek } from "date-fns";
 import { calendar, calendarEvent, calendarEventShowing } from "@/types/types";
 import { ja } from "date-fns/locale";
-import { ensureCid, ensureUser } from "@/utils/typeGare";
+import { ensureCid, ensureString, ensureUser } from "@/utils/typeGare";
 import { fetchCalendars } from "@/utils/Calendar/fetchCalendar";
 import { fetchEvents } from "@/utils/Calendar/fetchEvents";
 import { addCalendar } from "@/utils/Calendar/addCalendar";
 import { addEvent } from "@/utils/Calendar/addEvents";
 import { deleteEvent } from "@/utils/Calendar/deleteEvent";
+import { uploadEditedEvent } from "@/utils/Calendar/updateEvent";
 
 const locales = {
   ja: ja,
@@ -45,6 +46,7 @@ const MyCalendar = () => {
     undefined
   );
   const [updateEvent, setUpdateEvent] = useState<boolean>(false);
+  const [editedEvent,setEditedEvent] = useState<calendarEventShowing|undefined>(undefined)
 
   //カレンダー用の状態
   const [description, setDescription] = useState<string>("");
@@ -55,6 +57,8 @@ const MyCalendar = () => {
   const [activeCalendar, setActiveCalendar] = useState<string | undefined>(
     undefined
   );
+
+  const [showModal,setShowModal] = useState<boolean>(false)
 
   // カレンダー追加
   const addNewCalendr = async () => {
@@ -93,8 +97,6 @@ const MyCalendar = () => {
     setUpdateEvent(!updateEvent);
   };
 
-
-
   // イベント取得
   useEffect(() => {
     if (!activeCalendar) {
@@ -106,16 +108,55 @@ const MyCalendar = () => {
   const handleChangeShare = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShare(e.target.checked);
   };
+
+
   const handleChangeAllDay = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAllDay(e.target.checked);
   };
+
+
   const handleSelectEvent = (e: calendarEventShowing) => {
     setSelectedEvent(e);
+    setEditedEvent(e)
   };
+
+  const handleEditEvent = (e:React.ChangeEvent<HTMLInputElement>) => {
+    ensureString(editedEvent?.eventId)
+    const {name,value,checked} = e.target
+    if(name=="start"||name=="end"){
+      setEditedEvent({...editedEvent,[name]:IsoToDate(value)})
+      return
+    }
+    if(name=="allDay"){
+      console.log(checked)
+      setEditedEvent({...editedEvent,allDay:e.target.checked})
+      return
+    }
+    if(name=="startEnd"){
+      setEditedEvent({...editedEvent,start: IsoToDate(value), end: IsoToDate(value)})
+      return
+    }
+    setEditedEvent({ ...editedEvent,  [name]:value})
+  }
+
+
   const handleDeleteEvent = async (cid:string,activeCalendar:string,eventId:string) =>{
     await deleteEvent(cid,activeCalendar,eventId)
     setUpdateEvent(!updateEvent);
+    setSelectedEvent(undefined)
   }
+
+  const handleUpdateEvent = async () =>{
+    if (!editedEvent || !activeCalendar){
+      return
+    }
+    await uploadEditedEvent(cid,activeCalendar,editedEvent)
+    alert("イベントを更新しました")
+    setUpdateEvent(!updateEvent)
+    setEditedEvent(undefined)
+    setSelectedEvent(undefined)
+  }
+
   return (
     <div style={{ height: 500 }}>
       <div>
@@ -240,14 +281,71 @@ const MyCalendar = () => {
             onSelectEvent={handleSelectEvent}
             style={{ height: 500, width: "100%" }}
           />
-          {(selectedEvent&&activeCalendar) && (
+        </div>
+
+        {/* イベント選択時 */}
+        <div>
+          {(selectedEvent&&activeCalendar&&editedEvent) && (
             <div>
               <h3>Selected Event</h3>
               <p>{selectedEvent.title}</p>
+              <form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault();
+              handleUpdateEvent()
+            }}
+          >
+            <input
+              type="text"
+              placeholder="タイトルを入力"
+              name="title"
+              value={editedEvent.title}
+              onChange={handleEditEvent}
+            />
+            <label>
+              <input
+                type="checkbox"
+                name="allDay"
+                checked={editedEvent.allDay}
+                onChange={handleEditEvent}
+              />
+              終日
+            </label>
+
+            {editedEvent.allDay ? (
+              <div>
+                <input
+                  type="date"
+                  name="startEnd"
+                  value={dateToIso(editedEvent.start)}
+                  onChange={handleEditEvent}
+                />
+              </div>
+            ) : (
+              <div>
+                <input
+                  type="datetime-local"
+                  placeholder="開始日時を入力"
+                  name="start"
+                  value={dateAndTimeToIso(editedEvent.start)}
+                  onChange={handleEditEvent}
+                />
+                <input
+                  type="datetime-local"
+                  placeholder="終了日時を入力"
+                  name="end"
+                  value={dateAndTimeToIso(editedEvent.end)}
+                  onChange={handleEditEvent}
+                />
+              </div>
+            )}
+            <button type="submit">イベントを更新</button>
+          </form>
               <button onClick={()=>{handleDeleteEvent(cid,activeCalendar,selectedEvent.eventId)}}>削除</button>
             </div>
           )}
         </div>
+
       </div>
     </div>
   );

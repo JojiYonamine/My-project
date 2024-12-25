@@ -24,3 +24,8 @@ export function ensureDate(data:Date|FieldValue):asserts data is Date{
     throw new Error("data is not date")
   }
 }
+
+export function ensureString(eventId:string|undefined): asserts eventId is string{
+  if(!eventId)
+    throw new Error(`${eventId} is string`)
+}

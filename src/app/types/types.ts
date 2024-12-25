@@ -1,21 +1,21 @@
 import { FieldValue, Timestamp } from "firebase/firestore";
 
 export interface baseEvent {
-    // id: string;
     title:string;
     createdBy:string;
     createdAt:Date|FieldValue;
-    // share:boolean;
 }
 
+//送信するときの型
 export interface calendarEvent extends baseEvent{
     allDay:boolean;
-    start:Date|FieldValue;
-    end:Date|FieldValue; //all day trueの時は、startに等しくなる
+    start:Date;//|FieldValue;
+    end:Date;//|FieldValue; //all day trueの時は、startに等しくなる
 }
 
+//受信して表示するとき用の型
 export interface calendarEventShowing extends calendarEvent{
-    eventId:string;
+    eventId:string; //firebaseの各イベントのidをいれる
 }
 
 export interface calendar {

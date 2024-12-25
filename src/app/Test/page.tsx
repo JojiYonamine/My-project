@@ -1,3 +1,43 @@
+"use client"
+
+import { dateToIso, IsoToDate } from "@/utils/dateUtils";
+import { useState } from "react"
+
+const Test = () => {
+    const [isChecked, setIsChecked] = useState(false);
+
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setIsChecked(e.target.checked);
+    };
+    const [startDate,setStartDate]= useState<Date>(new Date())
+  
+    return (
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={isChecked} // チェック状態を制御
+            onChange={handleCheckboxChange} // 状態を更新
+          />
+          チェックボックス
+        </label>
+        <p>{isChecked ? "チェックされています" : "チェックされていません"}</p>
+        <input
+        type="datetime-local"
+        placeholder="開始日時を入力"
+        value={dateToIso(startDate)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setStartDate(IsoToDate(e.target.value));
+            console.log(e)
+        }}
+        />
+      </div>
+    );
+       
+}
+
+export default Test
+
 // "use client"
 
 // import { format } from "date-fns";

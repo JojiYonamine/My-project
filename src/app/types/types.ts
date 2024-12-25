@@ -4,21 +4,21 @@ export interface baseEvent {
     // id: string;
     title:string;
     createdBy:string;
-    createdAt:Date;
+    createdAt:Date|FieldValue;
     // share:boolean;
 }
+
+export interface calendarEvent extends baseEvent{
+    allDay:boolean;
+    start:Date|FieldValue;
+    end:Date|FieldValue; //all day trueの時は、startに等しくなる
+}
+
 
 export interface calendar {
     theme:string;
     description?:string;
+    color?:string;
     share:boolean;
     createdAt:Date|FieldValue;
-}
-
-export interface calendarEvent extends baseEvent{
-    type:"calendarEvent";
-    calendarTheme:"theme"
-    allDay:boolean;
-    start:Date;
-    end:Date; //all day trueの時は、startに等しくなる
 }

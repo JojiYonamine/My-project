@@ -1,25 +1,117 @@
-"use client"
+'use client'
+import React, { useState } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { DefaultToolbar } from "@/components/calendarToolBar";
 
-import { CoupleProvider } from "@/Context/Couple-modified";
-import { useState } from "react";
+const localizer = momentLocalizer(moment);
 
-const TestComponent = () => {
-  const [showProvider, setShowProvider] = useState(false);
+const MyCalendar = ({ events }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentView, setCurrentView] = useState("month");
+
+  const handleNavigate = (newDate) => {
+    console.log("Navigated to:", newDate);
+    setCurrentDate(newDate);
+  };
+
+  const handleViewChange = (newView) => {
+    console.log("View changed to:", newView);
+    setCurrentView(newView);
+  };
 
   return (
-    <div>
-      <button onClick={() => setShowProvider((prev:boolean) => !prev)}>Toggle Provider</button>
-      {showProvider?(
-        <CoupleProvider>
-          <div>Provider is Active</div>
-        </CoupleProvider>
-      ):(<div>Provider is Inactive</div>
-      )}
-    </div>
+    <Calendar
+      localizer={localizer}
+      events={events}
+      date={currentDate}
+      view={currentView}
+      onNavigate={handleNavigate}
+      onView={handleViewChange}
+      components={{
+        toolbar: DefaultToolbar,
+      }}
+      style={{ height: 500 }}
+    />
   );
 };
 
-export default TestComponent;
+export default MyCalendar;
+
+// "use client"
+
+// import { dateToIso, IsoToDate } from "@/utils/dateUtils";
+// import { useState } from "react"
+
+// const Test = () => {
+//     const [isChecked, setIsChecked] = useState(false);
+
+//     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//       setIsChecked(e.target.checked);
+//     };
+//     const [startDate,setStartDate]= useState<Date>(new Date())
+  
+//     return (
+//       <div>
+//         <label>
+//           <input
+//             type="checkbox"
+//             checked={isChecked} // チェック状態を制御
+//             onChange={handleCheckboxChange} // 状態を更新
+//           />
+//           チェックボックス
+//         </label>
+//         <p>{isChecked ? "チェックされています" : "チェックされていません"}</p>
+//         <input
+//         type="datetime-local"
+//         placeholder="開始日時を入力"
+//         value={dateToIso(startDate)}
+//         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+//             setStartDate(IsoToDate(e.target.value));
+//             console.log(e)
+//         }}
+//         />
+//       </div>
+//     );
+       
+// }
+
+// export default Test
+
+// "use client"
+
+// import { format } from "date-fns";
+
+// const Today = () => {
+//   const today = new Date();
+//   const typeOrigin = typeof(today)
+//   const formatedDate = format(today,'yyyy-MM-dd')
+//   const formatedDate = format(today,'yyyy-MM-dd-HH-mm-ss')
+//   console.log()
+
+// }
+
+// import { CoupleProvider } from "@/Context/Couple-modified";
+// import { useState } from "react";
+
+// const TestComponent = () => {
+//   const [showProvider, setShowProvider] = useState(false);
+
+//   return (
+//     <div>
+//       <button onClick={() => setShowProvider((prev:boolean) => !prev)}>Toggle Provider</button>
+//       {showProvider?(
+//         <CoupleProvider>
+//           <div>Provider is Active</div>
+//         </CoupleProvider>
+//       ):(<div>Provider is Inactive</div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default TestComponent;
 
 // import { useCouple } from "@/Context/Couple-modified"
 // export default function Test () {

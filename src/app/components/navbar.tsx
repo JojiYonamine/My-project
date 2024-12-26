@@ -3,7 +3,7 @@ import { useCouple } from "@/Context/Couple-modified";
 import Link from "next/link";
 
 export default function Navbar() {
-  const {user,coupleId, loading} = useCouple();
+  const {user,cid: coupleId, loading} = useCouple();
     return (
       <nav className="bg-gray-800 text-white p-4">
         <div className="flex justify-between items-center">
@@ -22,6 +22,9 @@ export default function Navbar() {
           </li>
           <li>
           <Link href='/Chat'>chat</Link>
+          </li>
+          <li>
+          <Link href='/Calendar'>Calendar</Link>
           </li>
           <li>
           <Link href='/Test'>test</Link>

@@ -18,10 +18,10 @@ const Setting =()=>{
   const registerCurrentUser = async () => {
     if (user) {
       await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
         name: user.displayName || "Anonymous",
         email: user.email,
         cid: null,
+        partnerId:null,
         createdAt: new Date(),
       });
       console.log("User registered in Firestore!");

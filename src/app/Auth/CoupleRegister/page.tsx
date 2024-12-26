@@ -1,7 +1,7 @@
 "use client";
 
 import { auth, db } from "@/config/firebaseConfig";
-import {  collection,  doc,  getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import {  collection,  doc,  getDocs, query, setDoc, where } from "firebase/firestore";
 import { useState } from "react";
 
 
@@ -40,12 +40,16 @@ const RegisterCouples = () => {
             console.log("Couple Registered!")
             const docRef1 = doc(db,"users",current_user_uid);
             const docRef2 = doc(db,"users",partnerId)
-            await updateDoc(docRef1,{
-                    cid:cid,
-                  });
-            await updateDoc(docRef2,{
+            await setDoc(docRef1,{
                 cid:cid,
-            });
+                partnerId:partnerId
+                },{ merge: true }
+            );
+            await setDoc(docRef2,{
+                cid:cid,
+                partnerId:current_user_uid
+                },{ merge: true }
+            );
         }catch(err:unknown){
             console.error("Error registering couple:",err);
         }

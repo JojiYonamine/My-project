@@ -26,3 +26,15 @@ export interface calendar {
     share:boolean;
     createdAt:Date|FieldValue;
 }
+
+export interface internalTask extends baseEvent{
+    theme:string;
+    dueDate?:Date;
+    share:boolean;
+    description:string;
+    done:boolean;
+}
+
+export interface TaskShowing extends internalTask{
+    taskId:string
+}

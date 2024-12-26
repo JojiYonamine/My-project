@@ -85,6 +85,7 @@ const MyCalendar = () => {
     setShare(false);
     setUpdateCalendar(!updateCalendar);
   };
+  
   // カレンダー取得
   useEffect(() => {
     fetchCalendars(cid).then(setCalendars);

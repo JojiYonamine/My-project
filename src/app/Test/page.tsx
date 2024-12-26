@@ -1,42 +1,83 @@
-"use client"
+'use client'
+import React, { useState } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import { DefaultToolbar } from "@/components/calendarToolBar";
 
-import { dateToIso, IsoToDate } from "@/utils/dateUtils";
-import { useState } from "react"
+const localizer = momentLocalizer(moment);
 
-const Test = () => {
-    const [isChecked, setIsChecked] = useState(false);
+const MyCalendar = ({ events }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentView, setCurrentView] = useState("month");
 
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setIsChecked(e.target.checked);
-    };
-    const [startDate,setStartDate]= useState<Date>(new Date())
+  const handleNavigate = (newDate) => {
+    console.log("Navigated to:", newDate);
+    setCurrentDate(newDate);
+  };
+
+  const handleViewChange = (newView) => {
+    console.log("View changed to:", newView);
+    setCurrentView(newView);
+  };
+
+  return (
+    <Calendar
+      localizer={localizer}
+      events={events}
+      date={currentDate}
+      view={currentView}
+      onNavigate={handleNavigate}
+      onView={handleViewChange}
+      components={{
+        toolbar: DefaultToolbar,
+      }}
+      style={{ height: 500 }}
+    />
+  );
+};
+
+export default MyCalendar;
+
+// "use client"
+
+// import { dateToIso, IsoToDate } from "@/utils/dateUtils";
+// import { useState } from "react"
+
+// const Test = () => {
+//     const [isChecked, setIsChecked] = useState(false);
+
+//     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//       setIsChecked(e.target.checked);
+//     };
+//     const [startDate,setStartDate]= useState<Date>(new Date())
   
-    return (
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={isChecked} // チェック状態を制御
-            onChange={handleCheckboxChange} // 状態を更新
-          />
-          チェックボックス
-        </label>
-        <p>{isChecked ? "チェックされています" : "チェックされていません"}</p>
-        <input
-        type="datetime-local"
-        placeholder="開始日時を入力"
-        value={dateToIso(startDate)}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setStartDate(IsoToDate(e.target.value));
-            console.log(e)
-        }}
-        />
-      </div>
-    );
+//     return (
+//       <div>
+//         <label>
+//           <input
+//             type="checkbox"
+//             checked={isChecked} // チェック状態を制御
+//             onChange={handleCheckboxChange} // 状態を更新
+//           />
+//           チェックボックス
+//         </label>
+//         <p>{isChecked ? "チェックされています" : "チェックされていません"}</p>
+//         <input
+//         type="datetime-local"
+//         placeholder="開始日時を入力"
+//         value={dateToIso(startDate)}
+//         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+//             setStartDate(IsoToDate(e.target.value));
+//             console.log(e)
+//         }}
+//         />
+//       </div>
+//     );
        
-}
+// }
 
-export default Test
+// export default Test
 
 // "use client"
 

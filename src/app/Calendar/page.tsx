@@ -1,12 +1,12 @@
 "use client";
 import React, { act, useEffect, useState } from "react";
-import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import { Calendar, dateFnsLocalizer, View } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useCouple } from "@/Context/Couple-modified";
 import { dateAndTimeToIso, dateToIso, IsoToDate } from "@/utils/dateUtils";
 
 import { RequireAuth } from "@/components/RequireAuth";
-import { format, getDay, parse, startOfWeek } from "date-fns";
+import { addMonths, format, getDay, parse, startOfWeek, subMonths } from "date-fns";
 import { calendar, calendarEvent, calendarEventShowing } from "@/types/types";
 import { ja } from "date-fns/locale";
 import { ensureCid, ensureString, ensureUser } from "@/utils/typeGare";
@@ -16,6 +16,7 @@ import { addCalendar } from "@/utils/Calendar/addCalendar";
 import { addEvent } from "@/utils/Calendar/addEvents";
 import { deleteEvent } from "@/utils/Calendar/deleteEvent";
 import { uploadEditedEvent } from "@/utils/Calendar/updateEvent";
+import DefaultToolbar from "@/components/calendarToolBar";
 
 const locales = {
   ja: ja,
@@ -58,7 +59,17 @@ const MyCalendar = () => {
     undefined
   );
 
-  const [showModal,setShowModal] = useState<boolean>(false)
+  // カレンダー表示用の状態 
+  const [currentDate, setCurrentDate] = useState<Date>(new Date())
+  const [currentView,setCurrentView] = useState<View>("month")
+
+  const handleNextMonth = () => {
+    setCurrentDate(addMonths(currentDate,1))
+  }
+
+  const handlePreviousMonth = () => {
+    setCurrentDate(subMonths(currentDate,1))
+  }
 
   // カレンダー追加
   const addNewCalendr = async () => {
@@ -105,21 +116,22 @@ const MyCalendar = () => {
     fetchEvents(cid, activeCalendar).then(setEvents);
   }, [cid, activeCalendar, updateEvent]);
 
+
   const handleChangeShare = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShare(e.target.checked);
   };
-
-
   const handleChangeAllDay = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAllDay(e.target.checked);
   };
 
 
+  // イベントを選択
   const handleSelectEvent = (e: calendarEventShowing) => {
     setSelectedEvent(e);
     setEditedEvent(e)
   };
 
+  // 選択したイベントを編集する
   const handleEditEvent = (e:React.ChangeEvent<HTMLInputElement>) => {
     ensureString(editedEvent?.eventId)
     const {name,value,checked} = e.target
@@ -139,13 +151,7 @@ const MyCalendar = () => {
     setEditedEvent({ ...editedEvent,  [name]:value})
   }
 
-
-  const handleDeleteEvent = async (cid:string,activeCalendar:string,eventId:string) =>{
-    await deleteEvent(cid,activeCalendar,eventId)
-    setUpdateEvent(!updateEvent);
-    setSelectedEvent(undefined)
-  }
-
+  // 編集したイベントを反映させる
   const handleUpdateEvent = async () =>{
     if (!editedEvent || !activeCalendar){
       return
@@ -156,6 +162,23 @@ const MyCalendar = () => {
     setEditedEvent(undefined)
     setSelectedEvent(undefined)
   }
+
+  // 選択したイベントを削除
+  const handleDeleteEvent = async (cid:string,activeCalendar:string,eventId:string) =>{
+    await deleteEvent(cid,activeCalendar,eventId)
+    setUpdateEvent(!updateEvent);
+    setSelectedEvent(undefined)
+  }
+  
+  const handleNavigate = (newDate:Date) => {
+    console.log("Navigated to:", newDate);
+    setCurrentDate(newDate);
+  }; 
+
+  const handleViewChange = (newView:View) => {
+    console.log("View changed to:", newView);
+    setCurrentView(newView);
+  };
 
   return (
     <div style={{ height: 500 }}>
@@ -273,14 +296,24 @@ const MyCalendar = () => {
 
         {/* カレンダー表示 */}
         <div>
+        {/* <button onClick={handlePreviousMonth}>Previous</button>
+        <button onClick={() => setCurrentDate(new Date())}>Today</button>
+        <button onClick={handleNextMonth}>Next</button> */}
+
           <Calendar
             localizer={localizer}
             events={events}
+            date = {currentDate}
             startAccessor="start"
             endAccessor="end"
             onSelectEvent={handleSelectEvent}
+            onNavigate = {handleNavigate}
+            onView={handleViewChange}
+            view = {currentView}
             style={{ height: 500, width: "100%" }}
-          />
+            components={{
+              toolbar: DefaultToolbar, // カスタムツールバーを適用
+            }}          />
         </div>
 
         {/* イベント選択時 */}

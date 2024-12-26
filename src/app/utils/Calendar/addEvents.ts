@@ -5,9 +5,6 @@ import { addDoc } from "firebase/firestore";
 import { eventsRef } from "../firestoreRefs";
 
 
-
-
-
 export const addEvent = async(cid:string, activeCalendar:string, event:calendarEvent) =>{
     ensureDate(event.end)
     ensureDate(event.start)

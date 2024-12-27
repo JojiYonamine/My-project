@@ -10,10 +10,11 @@ export const fetchTasks = async (cid:string):Promise<TaskShowing[]> => {
         title: doc.data().title,
         theme:doc.data().theme,
         description:doc.data().description,
+        due:doc.data().due,
         dueDate:doc.data().dueDate.toDate(),
         createdBy: doc.data().createdBy,
         createdAt: doc.data().createdAt.toDate(),
         share:doc.data().share,
-        done:false
+        done:doc.data().done
       }));
 }

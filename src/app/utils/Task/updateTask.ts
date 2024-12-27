@@ -1,9 +1,8 @@
 import { TaskShowing } from "@/types/types";
 import { updateDoc } from "firebase/firestore";
 import { taskRef } from "../firestoreRefs";
-import { ensureCid } from "../typeGare";
 
-export const editTask = async (cid:string,editedTask:TaskShowing) => {
+export const updateTask = async (cid:string,editedTask:TaskShowing) => {
 
     const {taskId,...EditedTask} = editedTask
 
@@ -24,6 +23,15 @@ export const editTask = async (cid:string,editedTask:TaskShowing) => {
     
     try{
         await updateDoc(taskRef(cid,editedTask.taskId),EditedTask)
+    }catch(err:unknown){
+        console.error("エラー",err)
+    }
+}
+
+export const updateDone = async(cid:string,taskId:string,done:boolean ) => {
+    try{
+        console.log("done")
+        await updateDoc(taskRef(cid,taskId),{done:done})
     }catch(err:unknown){
         console.error("エラー",err)
     }

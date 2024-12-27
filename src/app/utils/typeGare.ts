@@ -1,3 +1,4 @@
+import { TaskShowing } from "@/types/types";
 import { FieldValue } from "firebase/firestore";
 
 export function ensureUser(
@@ -27,5 +28,15 @@ export function ensureDate(data:Date|FieldValue):asserts data is Date{
 
 export function ensureString(eventId:string|undefined): asserts eventId is string{
   if(!eventId)
-    throw new Error(`${eventId} is string`)
+    throw new Error(`${eventId} is not string`)
+}
+
+export function ensureTask(task:TaskShowing|null):asserts task is TaskShowing{
+  if(!task)
+    throw new Error("task is null")
+}
+
+export function ensureTasks(tasks:TaskShowing[]|null):asserts tasks is TaskShowing[]{
+  if(!tasks)
+    throw new Error("task is null")
 }

@@ -29,6 +29,7 @@ export interface calendar {
 
 export interface internalTask extends baseEvent{
     theme:string;
+    due:boolean;
     dueDate?:Date;
     share:boolean;
     description:string;

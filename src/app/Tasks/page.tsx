@@ -4,6 +4,7 @@ import { useCouple } from "@/Context/Couple-modified";
 import { TaskShowing } from "@/types/types";
 import { dateToIso, IsoToDate } from "@/utils/dateUtils";
 import { addTask } from "@/utils/Task/addTask";
+import { deleteTask } from "@/utils/Task/deleteTask";
 import { fetchTasks } from "@/utils/Task/fetchTask";
 import { updateDone, updateTask } from "@/utils/Task/updateTask";
 import {
@@ -90,6 +91,7 @@ const Task = () => {
     setEditedTask(task);
   };
 
+//   タスク編集
   const handleEditTask = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
     ensureString(editedTask?.taskId);
@@ -108,13 +110,19 @@ const Task = () => {
     setEditedTask({ ...editedTask, [name]: value });
   };
 
-  //   編集したタスクを反映させる
+  //   編集したタスクを反映
   const handleUpdateTask = async () => {
     ensureTask(editedTask);
     setEditedTask(null);
     await updateTask(cid, editedTask);
     setUpdate(!update);
   };
+
+//   タスク削除
+  const handleDeleteTask = async(task:TaskShowing) =>{
+    await deleteTask(cid,task)
+    setUpdate(!update)
+  }
 
   return (
     <div>
@@ -204,6 +212,13 @@ const Task = () => {
                       }}
                     >
                       編集
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleDeleteTask(task);
+                      }}
+                    >
+                      削除
                     </button>
                   </li>
                 ))}

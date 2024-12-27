@@ -31,6 +31,11 @@ export function ensureString(eventId:string|undefined): asserts eventId is strin
     throw new Error(`${eventId} is not string`)
 }
 
+export function ensureStrings(strings:string[]|null):asserts strings is string[]{
+  if(!strings)
+    throw new Error("this is not string[]")
+}
+
 export function ensureTask(task:TaskShowing|null):asserts task is TaskShowing{
   if(!task)
     throw new Error("task is null")

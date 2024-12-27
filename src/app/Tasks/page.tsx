@@ -6,17 +6,20 @@ import { dateToIso, IsoToDate } from "@/utils/dateUtils";
 import { addTask } from "@/utils/Task/addTask";
 import { deleteTask } from "@/utils/Task/deleteTask";
 import { fetchTasks } from "@/utils/Task/fetchTask";
+import { getThemes } from "@/utils/Task/getThemes";
 import { updateDone, updateTask } from "@/utils/Task/updateTask";
 import {
   ensureCid,
   ensureString,
+  ensureStrings,
   ensureTask,
-  ensureTasks,
   ensureUser,
 } from "@/utils/typeGare";
 import { useEffect, useState } from "react";
 
 const Task = () => {
+  // type doneCriterion = "all"|"done"|"undone"
+
   const cid = useCouple().cid;
   const user = useCouple().user;
   ensureUser(user);
@@ -29,9 +32,8 @@ const Task = () => {
   const [share, setShare] = useState<boolean>(false);
   const [due, setdue] = useState<boolean>(false);
   const [dueDate, setDueDate] = useState<Date>(new Date());
-  const [selectedTheme, setSelectedTheme] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedThemes, setSelectedThemes] = useState<string[]>(["all"]);
+  const [themes, setThemes] = useState<readonly string[]|undefined>(undefined);
 
   const [tasks, setTasks] = useState<TaskShowing[] | null>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
@@ -39,6 +41,7 @@ const Task = () => {
 
   const [editedTask, setEditedTask] = useState<TaskShowing | null>(null);
 
+  const [doneCriterion, setDoneCriterion] = useState<string>("all");
 
   // ボックス変更用
   const handleChangeCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,12 +55,12 @@ const Task = () => {
     }
   };
 
-//   done変更用
-  const handleUpdateDone = async (e: React.ChangeEvent<HTMLInputElement>) =>{
-    const {name,checked} = e.target
-    await updateDone(cid,name,checked)
-    setUpdate(!update)
-  }
+  //   done変更用
+  const handleUpdateDone = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    await updateDone(cid, name, checked);
+    setUpdate(!update);
+  };
 
   // タスク追加
   const addNewTask = async () => {
@@ -81,6 +84,9 @@ const Task = () => {
   // タスク取得
   useEffect(() => {
     fetchTasks(cid).then(setTasks);
+    if (tasks){
+      setThemes(getThemes(tasks))
+    }
   }, [cid, update]);
 
   //タスク編集の方針
@@ -91,7 +97,7 @@ const Task = () => {
     setEditedTask(task);
   };
 
-//   タスク編集
+  //   タスク編集
   const handleEditTask = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked } = e.target;
     ensureString(editedTask?.taskId);
@@ -118,14 +124,79 @@ const Task = () => {
     setUpdate(!update);
   };
 
-//   タスク削除
-  const handleDeleteTask = async(task:TaskShowing) =>{
-    await deleteTask(cid,task)
-    setUpdate(!update)
+  //   タスク削除
+  const handleDeleteTask = async (task: TaskShowing) => {
+    await deleteTask(cid, task);
+    setUpdate(!update);
+  };
+
+  //   終了フィルター用
+  const doneFilter = (tasks: TaskShowing[], criterion: string) => {
+    switch (criterion) {
+      case "done":
+        return tasks.filter((task: TaskShowing) => task.done);
+      case "undone":
+        return tasks.filter((task: TaskShowing) => !task.done);
+      case "all":
+        return tasks;
+      default:
+        return tasks;
+    }
+  };
+
+  // テーマフィルター
+  const themeFilter = (
+    tasks: TaskShowing[],
+    selectedThemes: string[]
+  ) => {
+    if (!selectedThemes) {
+      return tasks;
+    } else {
+      return selectedThemes.map((theme: string) =>
+        tasks.filter((task: TaskShowing) => task.theme == theme)
+      );
+    }
+  };
+
+  const toggleThemeSelect = (theme:string) => {
+    setSelectedThemes((prev)=>prev.includes(theme)?
+    (prev.filter((t)=>t!==theme))
+  :([...prev,theme]))
   }
 
   return (
     <div>
+      {/* 終了フィルター */}
+      <div>
+        <h1>終了フィルター</h1>
+        <select
+          value={doneCriterion}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            setDoneCriterion(e.target.value);
+          }}
+        >
+          <option value="all">全て</option>
+          <option value="undone">未完了</option>
+          <option value="done">完了</option>
+        </select>
+      </div>
+      {/* テーマフィルター */}
+      <div>
+        <h1>テーマフィルター</h1>
+        <select 
+        value={themes}
+        onClick={()=>toggleThemeSelect(theme)}
+        >
+          <option value={undefined}>テーマがありません</option>
+          {themes?.map((theme)=>(
+            <option key = {theme} value={theme}>
+              {theme}
+              {selectedThemes.includes(theme)&&"⭕️"}
+            </option>
+          ))}
+        </select>
+      </div>
+      
       {/* タスク表示 */}
       <div>
         {tasks && (
@@ -194,16 +265,17 @@ const Task = () => {
             ) : (
               <div>
                 <h1>タスクリスト</h1>
-                {tasks.map((task) => (
+                {doneFilter(tasks, doneCriterion).map((task) => (
                   <li key={task.taskId}>
                     <label>
-                        <input
+                      <input
                         type="checkbox"
                         checked={task.done}
                         name={task.taskId}
-                        onChange = {
-                            (e: React.ChangeEvent<HTMLInputElement>) => {handleUpdateDone(e)}}
-                        />
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          handleUpdateDone(e);
+                        }}
+                      />
                     </label>
                     {task.title}
                     <button

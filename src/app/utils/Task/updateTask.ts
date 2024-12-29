@@ -4,6 +4,7 @@ import { taskRef } from "../firestoreRefs";
 
 export const updateTask = async (cid:string,editedTask:TaskShowing) => {
 
+    //taskIdは、firestoreにはふようだからはずす
     const {taskId,...EditedTask} = editedTask
 
         if(!editedTask.title.trim()){
@@ -23,6 +24,7 @@ export const updateTask = async (cid:string,editedTask:TaskShowing) => {
     
     try{
         await updateDoc(taskRef(cid,editedTask.taskId),EditedTask)
+        alert(`${editedTask.title}を登録しました`)
     }catch(err:unknown){
         console.error("エラー",err)
     }

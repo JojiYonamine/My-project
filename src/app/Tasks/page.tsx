@@ -1,7 +1,7 @@
 "use client";
 import { RequireAuth } from "@/components/RequireAuth";
 import { useCouple } from "@/Context/Couple-modified";
-import { TaskShowing } from "@/types/types";
+import { internalTask, TaskShowing } from "@/types/types";
 import { dateToIso, IsoToDate } from "@/utils/dateUtils";
 import { addTask } from "@/utils/Task/addTask";
 import { deleteTask } from "@/utils/Task/deleteTask";
@@ -33,7 +33,7 @@ const Task = () => {
   const [share, setShare] = useState<boolean>(false);
   const [due, setdue] = useState<boolean>(false);
   const [dueDate, setDueDate] = useState<Date>(new Date());
-  const [tasks, setTasks] = useState<TaskShowing[] | null>(null);
+  const [tasks, setTasks] = useState<TaskShowing[]>([]);
 
   // タスク編集用の状態
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
@@ -45,7 +45,6 @@ const Task = () => {
   const [doneCriterion, setDoneCriterion] = useState<string>("all");
 
   const [updateTasks, setUpdateTasks] = useState<boolean>(false);
-
 
   // ボックス変更用
   const handleChangeCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,16 +58,16 @@ const Task = () => {
     }
   };
 
-  //   done変更用
+  //done変更用
   const handleUpdateDone = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     await updateDone(cid, name, checked);
     setUpdateTasks(!updateTasks);
   };
 
-  // タスク追加
+  // タスクをfirestoreに追加、ローカルのtasksにも追加
   const addNewTask = async () => {
-    await addTask(cid, {
+    const newTask:internalTask = {
       title: title,
       createdBy: owner,
       createdAt: new Date(),
@@ -78,17 +77,25 @@ const Task = () => {
       share: share,
       description: description,
       done: false,
-    });
+    }
+
+    const newId:string|undefined= await addTask(cid, newTask);
+
+    if(newId){
+      const NewTask:TaskShowing = {...newTask,taskId:newId}
+      setTasks((prevTasks:TaskShowing[]) => (prevTasks ? [...prevTasks, NewTask] : [NewTask]));
+    }else{
+      alert("タスクの追加に失敗しました");
+    }
     setTitle("");
     setDescription("");
     setTheme("");
-    setUpdateTasks(!updateTasks);
   };
 
-  // タスク取得
+  // タスク取得(初回のみ)
   useEffect(() => {
     fetchTasks(cid).then(setTasks);
-  }, [cid, updateTasks]);
+  }, [cid]);
 
   // テーマ更新
   useEffect(() => {
@@ -96,17 +103,8 @@ const Task = () => {
     if (tasks) setThemes(getThemes(tasks));
   }, [cid, tasks]);
 
-  // useEffect(() => {
-  //   fetchTasks(cid).then(setTasks);
-  //   if (tasks){
-  //     setThemes(getThemes(tasks))
-  //     console.log(themes)
-  //   }
-  // }, []);
-
   //タスク編集の方針
   //title,doneはそのまま編集、その他は開いて編集
-
   const handleSelectTask = (task: TaskShowing) => {
     setSelectedTaskId(task.taskId);
     setEditedTask(task);
@@ -134,9 +132,20 @@ const Task = () => {
   //   編集したタスクを反映
   const handleUpdateTask = async () => {
     ensureTask(editedTask);
+    if(editedTask.theme===""){
+      setEditedTask({...editedTask,theme:"テーマなし"})
+    }
+    setTasks((prevTasks:TaskShowing[]) => {
+      if(!prevTasks) return []
+      else{
+        return(
+          prevTasks.map((task)=>
+            task.taskId === editedTask.taskId ? {...task,...editedTask}:task)
+        )
+      }
+    });
     setEditedTask(null);
     await updateTask(cid, editedTask);
-    setUpdateTasks(!updateTasks);
   };
 
   //   タスク削除
@@ -144,34 +153,6 @@ const Task = () => {
     await deleteTask(cid, task);
     setUpdateTasks(!updateTasks);
   };
-
-  //   終了フィルター用
-  // const doneFilter = (tasks: TaskShowing[], criterion: string) => {
-  //   switch (criterion) {
-  //     case "done":
-  //       return tasks.filter((task: TaskShowing) => task.done);
-  //     case "undone":
-  //       return tasks.filter((task: TaskShowing) => !task.done);
-  //     case "all":
-  //       return tasks;
-  //     default:
-  //       return tasks;
-  //   }
-  // };
-
-  // テーマフィルター
-  // const themeFilter = (
-  //   tasks: TaskShowing[],
-  //   selectedThemes: string[]
-  // ) => {
-  //   if (!selectedThemes) {
-  //     return tasks;
-  //   } else {
-  //     return selectedThemes.map((theme: string) =>
-  //       tasks.filter((task: TaskShowing) => task.theme == theme)
-  //     );
-  //   }
-  // };
 
   // 終了・テーマのフィルター
   const doneThemeFilter = (

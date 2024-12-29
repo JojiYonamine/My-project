@@ -39,7 +39,14 @@ export function ensureStrings(strings:string[]|null):asserts strings is string[]
 export function ensureTask(task:TaskShowing|null):asserts task is TaskShowing{
   if(!task)
     throw new Error("task is null")
+  if (
+    typeof task.taskId !== "string" ||
+    typeof task.title.trim() !== "string" 
+  ) {
+    throw new Error("task has invalid properties");
+  }
 }
+
 
 export function ensureTasks(tasks:TaskShowing[]|null):asserts tasks is TaskShowing[]{
   if(!tasks)

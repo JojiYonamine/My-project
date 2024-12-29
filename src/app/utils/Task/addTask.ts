@@ -8,19 +8,25 @@ export const addTask = async (cid:string,task:internalTask) => {
         return
     }
     if(!task.theme){
-        const newTask = {...task,theme:"テーマなし"}
+        const newTask:internalTask = {...task,theme:"テーマなし"}
         try{
-            await addDoc(tasksRef(cid),newTask)
+            const newTaskRef = tasksRef(cid)
+            const newId:string = newTaskRef.id
+            await addDoc(newTaskRef,newTask)
             alert(`${newTask.title}を登録しました`)
+            return newId
         }catch(err:unknown){
             console.error("エラー",err)
         }
-        return
+        return 
     }
 
     try{
-        await addDoc(tasksRef(cid),task)
+        const newTaskRef = tasksRef(cid)
+        const newId:string = newTaskRef.id
+        await addDoc(newTaskRef,task)
         alert(`${task.title}を登録しました`)
+        return newId
     }catch(err:unknown){
         console.error("エラー",err)
     }

@@ -60,19 +60,19 @@ const Task = () => {
   const handleUpdateDone = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     await updateDone(cid, name, checked);
-    setTasks((prevTasks:TaskShowing[])=>{
-      if(!prevTasks) return []
-      else{
-        return(
-          prevTasks.map((task)=>task.taskId === name ? {...task,done:checked}:task)
-        )
+    setTasks((prevTasks: TaskShowing[]) => {
+      if (!prevTasks) return [];
+      else {
+        return prevTasks.map((task) =>
+          task.taskId === name ? { ...task, done: checked } : task
+        );
       }
-    })
+    });
   };
 
   // タスクをfirestoreに追加、ローカルのtasksにも追加
   const addNewTask = async () => {
-    const newTask:internalTask = {
+    const newTask: internalTask = {
       title: title,
       createdBy: owner,
       createdAt: new Date(),
@@ -82,14 +82,16 @@ const Task = () => {
       share: share,
       description: description,
       done: false,
-    }
+    };
 
-    const newId:string|undefined= await addTask(cid, newTask);
+    const newId: string | undefined = await addTask(cid, newTask);
 
-    if(newId){
-      const NewTask:TaskShowing = {...newTask,taskId:newId}
-      setTasks((prevTasks:TaskShowing[]) => (prevTasks ? [...prevTasks, NewTask] : [NewTask]));
-    }else{
+    if (newId) {
+      const NewTask: TaskShowing = { ...newTask, taskId: newId };
+      setTasks((prevTasks: TaskShowing[]) =>
+        prevTasks ? [...prevTasks, NewTask] : [NewTask]
+      );
+    } else {
       alert("タスクの追加に失敗しました");
     }
     setTitle("");
@@ -137,16 +139,15 @@ const Task = () => {
   //   編集したタスクを反映
   const handleUpdateTask = async () => {
     ensureTask(editedTask);
-    if(editedTask.theme===""){
-      setEditedTask({...editedTask,theme:"テーマなし"})
+    if (editedTask.theme === "") {
+      setEditedTask({ ...editedTask, theme: "テーマなし" });
     }
-    setTasks((prevTasks:TaskShowing[]) => {
-      if(!prevTasks) return []
-      else{
-        return(
-          prevTasks.map((task)=>
-            task.taskId === editedTask.taskId ? {...task,...editedTask}:task)
-        )
+    setTasks((prevTasks: TaskShowing[]) => {
+      if (!prevTasks) return [];
+      else {
+        return prevTasks.map((task) =>
+          task.taskId === editedTask.taskId ? { ...task, ...editedTask } : task
+        );
       }
     });
     setEditedTask(null);
@@ -156,8 +157,10 @@ const Task = () => {
   //   タスク削除
   const handleDeleteTask = async (task: TaskShowing) => {
     await deleteTask(cid, task);
-    const newTasks = tasks.filter((prev:TaskShowing)=>prev.taskId !== task.taskId)
-    setTasks(newTasks)  
+    const newTasks = tasks.filter(
+      (prev: TaskShowing) => prev.taskId !== task.taskId
+    );
+    setTasks(newTasks);
   };
 
   // 終了・テーマのフィルター
@@ -169,30 +172,18 @@ const Task = () => {
     switch (criterion) {
       case "done":
         const doneTasks = tasks.filter((task: TaskShowing) => task.done);
-        if (!selectedThemes || selectedThemes.length === 0) {
-          return doneTasks;
-        } else {
-          return doneTasks.filter((doneTask: TaskShowing) =>
-            selectedThemes.includes(doneTask.theme)
-          );
-        }
+        return doneTasks.filter((doneTask: TaskShowing) =>
+          selectedThemes.includes(doneTask.theme)
+        );
       case "undone":
         const undoneTasks = tasks.filter((task: TaskShowing) => !task.done);
-        if (!selectedThemes || selectedThemes.length === 0) {
-          return undoneTasks;
-        } else {
-          return undoneTasks.filter((undoneTask: TaskShowing) =>
-            selectedThemes.includes(undoneTask.theme)
-          );
-        }
+        return undoneTasks.filter((undoneTask: TaskShowing) =>
+          selectedThemes.includes(undoneTask.theme)
+        );
       case "all":
-        if (!selectedThemes || selectedThemes.length === 0) {
-          return tasks;
-        } else {
-          return tasks.filter((task: TaskShowing) =>
-            selectedThemes.includes(task.theme)
-          );
-        }
+        return tasks.filter((task: TaskShowing) =>
+          selectedThemes.includes(task.theme)
+        );
       default:
         return tasks;
     }
@@ -247,13 +238,6 @@ const Task = () => {
             {theme}
           </label>
         ))}
-        {/* <select multiple onChange={(e:React.ChangeEvent<HTMLSelectElement>)=>{toggleThemeSelect(e.target.value);console.log(e.target.value)}}> */}
-        {/* <option value={undefined}>テーマを選択</option> */}
-        {/* {themes.map((theme)=>(
-            <option key={theme} value={theme}>{theme},{selectedThemes.includes(theme)&&("選択")}</option>
-          ))} */}
-
-        {/* </select> */}
       </div>
 
       {/* タスク表示 */}
@@ -328,42 +312,7 @@ const Task = () => {
                 {/* <select multiple>
                   doneThemeFilter(tasks,selectedThemes,doneCriterion)
                 </select> */}
-                {selectedThemes.length!==0 ?(
-                  doneThemeFilter(tasks, selectedThemes, doneCriterion).map(
-                    (task) => (
-                      <li key={task.taskId}>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={task.done}
-                            name={task.taskId}
-                            onChange={(
-                              e: React.ChangeEvent<HTMLInputElement>
-                            ) => {
-                              handleUpdateDone(e);
-                            }}
-                          />
-                        </label>
-                        {task.title}
-                        <button
-                          onClick={() => {
-                            handleSelectTask(task);
-                          }}
-                        >
-                          編集
-                        </button>
-                        <button
-                          onClick={() => {
-                            handleDeleteTask(task);
-                          }}
-                        >
-                          削除
-                        </button>
-                      </li>
-                    )
-                  )
-                ):(<h1>テーマを選択してください</h1>)}
-                {/* {doneThemeFilter(tasks, selectedThemes, doneCriterion).map(
+                {(selectedThemes.length!==0)&&(doneThemeFilter(tasks, selectedThemes, doneCriterion).map(
                   (task) => (
                     <li key={task.taskId}>
                       <label>
@@ -395,7 +344,7 @@ const Task = () => {
                       </button>
                     </li>
                   )
-                )} */}
+                ))}
               </div>
             )}
           </div>

@@ -59,15 +59,20 @@ const Task = () => {
   // done変更用
   const handleUpdateDone = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    await updateDone(cid, name, checked);
-    setTasks((prevTasks: TaskShowing[]) => {
-      if (!prevTasks) return [];
-      else {
-        return prevTasks.map((task) =>
-          task.taskId === name ? { ...task, done: checked } : task
-        );
-      }
-    });
+    try{
+      await updateDone(cid, name, checked);
+      setTasks((prevTasks: TaskShowing[]) => {
+        if (!prevTasks) return [];
+        else {
+          return prevTasks.map((task) =>
+            task.taskId === name ? { ...task, done: checked } : task
+          );
+        }
+      });
+    }catch(err:unknown){
+      alert(`更新に失敗しました、${err}`,)
+    }
+
   };
 
   // タスクをfirestoreに追加、ローカルのtasksにも追加
@@ -83,9 +88,8 @@ const Task = () => {
       description: description,
       done: false,
     };
-
-    const newId: string | undefined = await addTask(cid, newTask);
-
+    try{
+      const newId: string | undefined = await addTask(cid, newTask);
     if (newId) {
       const NewTask: TaskShowing = { ...newTask, taskId: newId };
       setTasks((prevTasks: TaskShowing[]) =>
@@ -97,6 +101,10 @@ const Task = () => {
     setTitle("");
     setDescription("");
     setTheme("");
+    }catch(err:unknown){
+      alert(`更新に失敗しました、${err}`)
+    }
+    
   };
 
   // タスク取得(初回のみ)
@@ -139,28 +147,36 @@ const Task = () => {
   //   編集したタスクを反映
   const handleUpdateTask = async () => {
     ensureTask(editedTask);
-    if (editedTask.theme === "") {
-      setEditedTask({ ...editedTask, theme: "テーマなし" });
-    }
-    setTasks((prevTasks: TaskShowing[]) => {
-      if (!prevTasks) return [];
-      else {
-        return prevTasks.map((task) =>
-          task.taskId === editedTask.taskId ? { ...task, ...editedTask } : task
-        );
+    try{
+      await updateTask(cid, editedTask);
+      if (editedTask.theme === "") {
+        setEditedTask({ ...editedTask, theme: "テーマなし" });
       }
-    });
-    setEditedTask(null);
-    await updateTask(cid, editedTask);
+      setTasks((prevTasks: TaskShowing[]) => {
+        if (!prevTasks) return [];
+        else {
+          return prevTasks.map((task) =>
+            task.taskId === editedTask.taskId ? { ...task, ...editedTask } : task
+          );
+        }
+      });
+      setEditedTask(null);
+    }catch(err:unknown){
+      alert(`編集に失敗しました,${err}`)
+    }
   };
 
   //   タスク削除
   const handleDeleteTask = async (task: TaskShowing) => {
-    await deleteTask(cid, task);
+    try{
+      await deleteTask(cid, task);
     const newTasks = tasks.filter(
       (prev: TaskShowing) => prev.taskId !== task.taskId
     );
     setTasks(newTasks);
+    }catch(err:unknown){
+      alert(`更新に失敗しました、${err}`)
+    }
   };
 
   // 終了・テーマのフィルター

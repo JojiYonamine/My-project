@@ -328,7 +328,42 @@ const Task = () => {
                 {/* <select multiple>
                   doneThemeFilter(tasks,selectedThemes,doneCriterion)
                 </select> */}
-                {doneThemeFilter(tasks, selectedThemes, doneCriterion).map(
+                {selectedThemes.length!==0 ?(
+                  doneThemeFilter(tasks, selectedThemes, doneCriterion).map(
+                    (task) => (
+                      <li key={task.taskId}>
+                        <label>
+                          <input
+                            type="checkbox"
+                            checked={task.done}
+                            name={task.taskId}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              handleUpdateDone(e);
+                            }}
+                          />
+                        </label>
+                        {task.title}
+                        <button
+                          onClick={() => {
+                            handleSelectTask(task);
+                          }}
+                        >
+                          編集
+                        </button>
+                        <button
+                          onClick={() => {
+                            handleDeleteTask(task);
+                          }}
+                        >
+                          削除
+                        </button>
+                      </li>
+                    )
+                  )
+                ):(<h1>テーマを選択してください</h1>)}
+                {/* {doneThemeFilter(tasks, selectedThemes, doneCriterion).map(
                   (task) => (
                     <li key={task.taskId}>
                       <label>
@@ -360,7 +395,7 @@ const Task = () => {
                       </button>
                     </li>
                   )
-                )}
+                )} */}
               </div>
             )}
           </div>

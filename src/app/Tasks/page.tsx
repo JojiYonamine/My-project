@@ -58,11 +58,18 @@ const Task = () => {
     }
   };
 
-  //done変更用
+  // done変更用
   const handleUpdateDone = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
     await updateDone(cid, name, checked);
-    setUpdateTasks(!updateTasks);
+    setTasks((prevTasks:TaskShowing[])=>{
+      if(!prevTasks) return []
+      else{
+        return(
+          prevTasks.map((task)=>task.taskId === name ? {...task,done:checked}:task)
+        )
+      }
+    })
   };
 
   // タスクをfirestoreに追加、ローカルのtasksにも追加

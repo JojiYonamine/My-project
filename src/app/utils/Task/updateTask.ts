@@ -11,16 +11,6 @@ export const updateTask = async (cid:string,editedTask:TaskShowing) => {
             alert("titleを入力")
             return
         }
-        if(!editedTask.theme){
-            const newTask = {...EditedTask,theme:"テーマなし"}
-            try{
-                await updateDoc(taskRef(cid,editedTask.taskId),newTask)
-                alert(`${newTask.title}を登録しました`)
-            }catch(err:unknown){
-                console.error("エラー",err)
-            }
-            return
-        }
     
     try{
         await updateDoc(taskRef(cid,editedTask.taskId),EditedTask)

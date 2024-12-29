@@ -147,11 +147,11 @@ const Task = () => {
   //   編集したタスクを反映
   const handleUpdateTask = async () => {
     ensureTask(editedTask);
+    if (editedTask.theme === "") {
+      setEditedTask({ ...editedTask, theme: "テーマなし" });
+    }
     try{
       await updateTask(cid, editedTask);
-      if (editedTask.theme === "") {
-        setEditedTask({ ...editedTask, theme: "テーマなし" });
-      }
       setTasks((prevTasks: TaskShowing[]) => {
         if (!prevTasks) return [];
         else {

@@ -44,8 +44,6 @@ const Task = () => {
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [doneCriterion, setDoneCriterion] = useState<string>("all");
 
-  const [updateTasks, setUpdateTasks] = useState<boolean>(false);
-
   // ボックス変更用
   const handleChangeCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name == "share") {
@@ -158,7 +156,8 @@ const Task = () => {
   //   タスク削除
   const handleDeleteTask = async (task: TaskShowing) => {
     await deleteTask(cid, task);
-    setUpdateTasks(!updateTasks);
+    const newTasks = tasks.filter((prev:TaskShowing)=>prev.taskId !== task.taskId)
+    setTasks(newTasks)  
   };
 
   // 終了・テーマのフィルター

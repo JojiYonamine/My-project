@@ -1,13 +1,13 @@
 "use client";
-import React, { act, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer, View } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useCouple } from "@/Context/Couple-modified";
 import { dateAndTimeToIso, dateToIso, IsoToDate } from "@/utils/dateUtils";
 
 import { RequireAuth } from "@/components/RequireAuth";
-import { addMonths, format, getDay, parse, startOfWeek, subMonths } from "date-fns";
-import { calendar, calendarEvent, calendarEventShowing } from "@/types/types";
+import {  format, getDay, parse, startOfWeek } from "date-fns";
+import { calendar, calendarEventShowing } from "@/types/types";
 import { ja } from "date-fns/locale";
 import { ensureCid, ensureString, ensureUser } from "@/utils/typeGare";
 import { fetchCalendars } from "@/utils/Calendar/fetchCalendar";
@@ -63,13 +63,6 @@ const MyCalendar = () => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date())
   const [currentView,setCurrentView] = useState<View>("month")
 
-  const handleNextMonth = () => {
-    setCurrentDate(addMonths(currentDate,1))
-  }
-
-  const handlePreviousMonth = () => {
-    setCurrentDate(subMonths(currentDate,1))
-  }
 
   // カレンダー追加
   const addNewCalendr = async () => {
@@ -85,6 +78,7 @@ const MyCalendar = () => {
     setShare(false);
     setUpdateCalendar(!updateCalendar);
   };
+  
   // カレンダー取得
   useEffect(() => {
     fetchCalendars(cid).then(setCalendars);

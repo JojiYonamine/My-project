@@ -27,6 +27,9 @@ export default function Navbar() {
           <Link href='/Calendar'>Calendar</Link>
           </li>
           <li>
+          <Link href='/Tasks'>Task</Link>
+          </li>
+          <li>
           <Link href='/Test'>test</Link>
           </li>
         </ul>

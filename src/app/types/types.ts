@@ -1,4 +1,4 @@
-import { FieldValue, Timestamp } from "firebase/firestore";
+import { FieldValue } from "firebase/firestore";
 
 export interface baseEvent {
     title:string;
@@ -25,4 +25,17 @@ export interface calendar {
     color?:string;
     share:boolean;
     createdAt:Date|FieldValue;
+}
+
+export interface internalTask extends baseEvent{
+    theme:string;
+    due:boolean;
+    dueDate?:Date;
+    share:boolean;
+    description:string;
+    done:boolean;
+}
+
+export interface TaskShowing extends internalTask{
+    taskId:string
 }

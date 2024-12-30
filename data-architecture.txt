@@ -3,7 +3,8 @@ users(collection){
         cid:"coupleId"(this is unique)
         name:"joji"
         email:"test@test.com"
-        partnerId::"partner's id"
+        partnerId:"partner's id"
+        icon:"icon url"
     }
 }
 

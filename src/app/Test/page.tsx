@@ -1,43 +1,121 @@
-'use client'
-import React, { useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import { DefaultToolbar } from "@/components/calendarToolBar";
+"use client";
 
-const localizer = momentLocalizer(moment);
+import { BasicButton, BasicInputField } from "@/components";
 
-const MyCalendar = ({ events }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [currentView, setCurrentView] = useState("month");
-
-  const handleNavigate = (newDate) => {
-    console.log("Navigated to:", newDate);
-    setCurrentDate(newDate);
-  };
-
-  const handleViewChange = (newView) => {
-    console.log("View changed to:", newView);
-    setCurrentView(newView);
-  };
-
+const testCss = () => {
   return (
-    <Calendar
-      localizer={localizer}
-      events={events}
-      date={currentDate}
-      view={currentView}
-      onNavigate={handleNavigate}
-      onView={handleViewChange}
-      components={{
-        toolbar: DefaultToolbar,
-      }}
-      style={{ height: 500 }}
-    />
+    <div className="bg-pink-200 h-screen flex justify-center text-center items-center">
+      <div className="bg-white rounded-3xl px-10 py-10  max-w-md">
+        <h1 className="text-2xl mb-5">新規登録</h1>
+        <div className="mb-6">
+        <input
+            type="email"
+            placeholder="sample@email.com"
+            className="w-full px-5 py-3 mb-2 border border-gray-300 rounded-2xl"
+          />
+        </div>
+
+        <div className="mb-4">
+          <input
+            type="password"
+            placeholder="新しいパスワード"
+            className="w-full px-5 py-3 mb-1 border border-gray-300 rounded-2xl"
+          />
+          <input
+            type="password"
+            placeholder="パスワード再入力"
+            className="w-full px-5 py-3 border border-gray-300 rounded-2xl"
+          />
+        </div>
+
+        <BasicButton>登録</BasicButton>
+      </div>
+    </div>
   );
 };
 
-export default MyCalendar;
+export default testCss;
+
+// import { InputField } from '@/components';
+// import React, { useState } from 'react';
+
+// const SignupPage: React.FC = () => {
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+
+//   return (
+//     <div>
+
+//       <h1>Signup</h1>
+//       <form>
+//         {/* Email入力フィールド */}
+//         <InputField
+//           label="Email"
+//           type="email"
+//           value={email}
+//           onChange={(e) => setEmail(e.target.value)}
+//           autoComplete='email'
+//           required
+//         />
+
+//         {/* Password入力フィールド */}
+//         <InputField
+//           label="Password"
+//           type="password"
+//           value={password}
+//           onChange={(e) => setPassword(e.target.value)}
+//           autoComplete = "new-password"
+//           required
+//         />
+
+//         {/* サインアップボタン */}
+//         <button type="submit">Sign Up</button>
+//       </form>
+//     </div>
+//   );
+// };
+
+// export default SignupPage;
+
+// import React, { useState } from "react";
+// import { Calendar, momentLocalizer } from "react-big-calendar";
+// import moment from "moment";
+// import "react-big-calendar/lib/css/react-big-calendar.css";
+// import { DefaultToolbar } from "@/components/calendarToolBar";
+
+// const localizer = momentLocalizer(moment);
+
+// const MyCalendar = ({ events }) => {
+//   const [currentDate, setCurrentDate] = useState(new Date());
+//   const [currentView, setCurrentView] = useState("month");
+
+//   const handleNavigate = (newDate) => {
+//     console.log("Navigated to:", newDate);
+//     setCurrentDate(newDate);
+//   };
+
+//   const handleViewChange = (newView) => {
+//     console.log("View changed to:", newView);
+//     setCurrentView(newView);
+//   };
+
+//   return (
+//     <Calendar
+//       localizer={localizer}
+//       events={events}
+//       date={currentDate}
+//       view={currentView}
+//       onNavigate={handleNavigate}
+//       onView={handleViewChange}
+//       components={{
+//         toolbar: DefaultToolbar,
+//       }}
+//       style={{ height: 500 }}
+//     />
+//   );
+// };
+
+// export default MyCalendar;
 
 // "use client"
 
@@ -51,7 +129,7 @@ export default MyCalendar;
 //       setIsChecked(e.target.checked);
 //     };
 //     const [startDate,setStartDate]= useState<Date>(new Date())
-  
+
 //     return (
 //       <div>
 //         <label>
@@ -74,7 +152,7 @@ export default MyCalendar;
 //         />
 //       </div>
 //     );
-       
+
 // }
 
 // export default Test

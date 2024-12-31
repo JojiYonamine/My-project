@@ -9,7 +9,7 @@ interface BasicButtonProps {
 }
 
 const BasicButton:React.FC<BasicButtonProps> = ({ children, onClick, type = "submit",disabled=false}) => {
-  const baseStyles = "py-2 px-36 rounded-lg font-semibold focus:outline-none transition duration-500";
+  const baseStyles = "py-2 px-32 rounded-lg font-semibold focus:outline-none transition duration-500";
   const variants = {
     primary: "bg-pink-400 text-white hover:bg-pink-500",
     error: "bg-pink-400 text-gray-300",

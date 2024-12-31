@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathName:string = usePathname()
-  const noNav:string[] = ["/Test","/Auth/Login","/Auth/SignUp"]
+  const noNav:string[] = ["/Test","/Auth/Login","/Auth/Signup"]
   const showNav:boolean = !noNav.includes(pathName)
   return (
     <html lang="en">

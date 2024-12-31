@@ -6,9 +6,18 @@ import {
 } from "firebase/auth";
 import { auth } from "@/config/firebaseConfig";
 import { BasicButton } from "@/components";
+
+// アイコン
 import { AiOutlineClose } from "react-icons/ai"; // React Iconsを使用
 import { BiShow } from "react-icons/bi";
-import { FaRegCheckCircle } from "react-icons/fa";
+import {
+  FaLine,
+  FaInstagram,
+  FaTwitter,
+  FaRegCheckCircle,
+} from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc"; // シンプルなGoogleアイコン（白背景付き）
+
 export default function SignupPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -104,9 +113,10 @@ export default function SignupPage() {
   }, [password, email, confirm]);
 
   return (
-    <div className="bg-pink-100 h-screen flex justify-center text-center items-center">
-      <div className="bg-white rounded-3xl px-32 py-10  max-w-xl">
-        <h1 className="text-xl mb-5 w-full mb-8">新規登録</h1>
+    <div className="bg-pink-400 h-screen flex justify-center text-center items-center">
+      {/* カード表示 */}
+      <div className="bg-white rounded-3xl m-8 px-12 py-8 w-full max-w-md">
+        <h1 className="text-xl w-full mb-8 font-bold">Sign up</h1>
         <form onSubmit={handleSignUp}>
           {/* メール入力 */}
           <div className="relative mb-8 w-full">
@@ -133,7 +143,7 @@ export default function SignupPage() {
             <input
               type={showPass}
               value={password}
-              placeholder="新しいパスワード"
+              placeholder="Password"
               className="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none "
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setPassword(e.target.value);
@@ -152,7 +162,7 @@ export default function SignupPage() {
           <div className="relative mb-4">
             <input
               type={showPass}
-              placeholder="パスワード再入力"
+              placeholder="confirm password"
               value={confirm}
               className="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none "
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,43 +179,88 @@ export default function SignupPage() {
           </div>
 
           {/* チェックリスト */}
-          <div className='ml-4 mb-8'>
-            <div className="flex mb-2 font-bold">
-              {emailError ? (
+          <div className="ml-6 mb-8">
+            {emailError ? (
+              <div className="flex mb-2 font-bold">
                 <FaRegCheckCircle className="h-4 w-4 text-gray-300" />
-              ) : (
+                <label className="text-xs ml-2 text-gray-400">
+                  メールアドレス
+                </label>
+              </div>
+            ) : (
+              <div className="flex mb-2 font-bold">
                 <FaRegCheckCircle className="h-4 w-4 text-pink-500" />
-              )}
-              <label className="text-xs ml-2 text-gray-700">
-                メールアドレス
-              </label>
-            </div>
+                <label className="text-xs ml-2 text-gray-700">
+                  メールアドレス
+                </label>
+              </div>
+            )}
 
-            <div className="flex mb-2 font-bold">
-              {passError ? (
+            {/* パスワードチェックボックス */}
+            {passError ? (
+              <div className="flex mb-2 font-bold">
                 <FaRegCheckCircle className="h-4 w-4 text-gray-300" />
-              ) : (
+                <label className="text-xs ml-2 text-gray-400">
+                  ６文字以上のパスワード
+                </label>
+              </div>
+            ) : (
+              <div className="flex mb-2 font-bold">
                 <FaRegCheckCircle className="h-4 w-4 text-pink-500" />
-              )}
-              <label className="text-xs ml-2 text-gray-700">
-                ６文字以上のパスワード
-              </label>
-            </div>
+                <label className="text-xs ml-2 text-gray-700">
+                  ６文字以上のパスワード
+                </label>
+              </div>
+            )}
 
-            <div className="flex mb-2 font-bold">
-              {confirmError ? (
+            {/* 再確認チェックボックス */}
+            {confirmError ? (
+              <div className="flex mb-2 font-bold">
                 <FaRegCheckCircle className="h-4 w-4 text-gray-300" />
-              ) : (
+                <label className="text-xs ml-2 text-gray-400">
+                  再確認と一致
+                </label>
+              </div>
+            ) : (
+              <div className="flex mb-2 font-bold">
                 <FaRegCheckCircle className="h-4 w-4 text-pink-500" />
-              )}
-              <label className="text-xs ml-2 text-gray-700">再確認と一致</label>
-            </div>
+                <label className="text-xs ml-2 text-gray-700">
+                  再確認と一致
+                </label>
+              </div>
+            )}
           </div>
 
           <BasicButton disabled={emailError || passError || confirmError}>
             登録
           </BasicButton>
         </form>
+
+        {/* メールとソーシャルを区切る線 */}
+        <div className="flex items-center my-6">
+          <div className="flex-grow h-px bg-gray-300"></div>
+          <span className="m-4 text-gray-500">または</span>
+          <div className="flex-grow h-px bg-gray-300"></div>
+        </div>
+
+        {/* ソーシャルログイン */}
+        <div className="space-x-8 flex mb-8 justify-center text-center items-center">
+        <button>
+            <FcGoogle size={48} />
+          </button>
+          <button className="bg-blue-500 p-2 rounded-full">
+            <FaTwitter size={32} className="text-white" />
+          </button>
+          <button>
+            <FaLine size={48} className="text-green-500" />
+          </button>
+          <button>
+            <FaInstagram size={48} className="text-fuchsia-400" />
+          </button>
+
+        </div>
+
+        <div></div>
       </div>
     </div>
   );

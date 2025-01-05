@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  User,
 } from "firebase/auth";
 import { auth } from "@/config/firebaseConfig";
 import { BasicButton } from "@/components";
-
-// アイコン
-import { AiOutlineClose } from "react-icons/ai"; // React Iconsを使用
+import { AiOutlineClose } from "react-icons/ai";
 import { BiShow } from "react-icons/bi";
 import {
   FaLine,
@@ -16,7 +15,8 @@ import {
   FaTwitter,
   FaRegCheckCircle,
 } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc"; // シンプルなGoogleアイコン（白背景付き）
+import { FcGoogle } from "react-icons/fc";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
   const [email, setEmail] = useState<string>("");
@@ -28,6 +28,8 @@ export default function SignupPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [showPass, setShowPass] = useState<string>("text");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const root = useRouter();
 
   // メールアドレス・パスワードチェック
   const validation = (): void | boolean => {
@@ -59,27 +61,8 @@ export default function SignupPage() {
       setEmaileError(true);
     } else {
       setEmaileError(false);
-      console.log("ok");
     }
   };
-
-  // const validatePassword = () => {
-  //   if (password.length < 6) {
-  //     setPassError(true);
-  //     console.log("pass");
-  //   } else {
-  //     setPassError(false);
-  //   }
-  // };
-
-  // const validateConfirm = () => {
-  //   if (password !== confirm) {
-  //     setConfirmError(true);
-  //     console.log("conf");
-  //   } else {
-  //     setConfirmError(false);
-  //   }
-  // };
 
   const hanldeToggleShow = () => {
     if (showPass === "text") {
@@ -89,9 +72,21 @@ export default function SignupPage() {
     }
   };
 
+  const sendVerification = async (user: User) => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_FIREBASE_AUTH_URL;
+      const actionCodeSettings = {
+        url: `${baseUrl}`,
+        handleCodeInApp: true,
+      };
+      await sendEmailVerification(user, actionCodeSettings);
+    } catch (err: unknown) {
+      alert(err);
+    }
+  };
+
   const handleSignUp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validation()) return;
     try {
       setLoading(true);
       const userCredential = await createUserWithEmailAndPassword(
@@ -99,15 +94,14 @@ export default function SignupPage() {
         email,
         password
       );
-      const user = userCredential.user;
-      await sendEmailVerification(user);
+      await sendVerification(userCredential.user);
+      root.push("/Auth/setProfile");
       setLoading(false);
     } catch (err: unknown) {
       alert(err);
       setLoading(false);
     }
   };
-
   useEffect(() => {
     validation();
   }, [password, email, confirm]);
@@ -230,9 +224,35 @@ export default function SignupPage() {
               </div>
             )}
           </div>
-
-          <BasicButton disabled={emailError || passError || confirmError}>
-            登録
+          <BasicButton
+            disabled={emailError || passError || confirmError || loading}
+          >
+            {loading ? (
+              <div className="flex justify-center items-center">
+              <svg
+                className="animate-spin h-8 w-8 text-white "
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                ></path>
+              </svg>
+              </div>
+            ) : (
+              "登録"
+            )}
           </BasicButton>
         </form>
 
@@ -245,7 +265,7 @@ export default function SignupPage() {
 
         {/* ソーシャルログイン */}
         <div className="space-x-8 flex mb-8 justify-center text-center items-center">
-        <button>
+          <button>
             <FcGoogle size={48} />
           </button>
           <button className="bg-blue-500 p-2 rounded-full">
@@ -257,10 +277,7 @@ export default function SignupPage() {
           <button>
             <FaInstagram size={48} className="text-fuchsia-400" />
           </button>
-
         </div>
-
-        <div></div>
       </div>
     </div>
   );

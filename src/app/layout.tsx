@@ -29,18 +29,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const pathName:string = usePathname()
-  const noNav:string[] = ["/Test","/Auth/Login","/Auth/Signup"]
+  const noNav:string[] = ["/Test","/Auth/Login","/Auth/Signup","/Auth/Confirm-email","/Auth/sentVerification"]
   const showNav:boolean = !noNav.includes(pathName)
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        
-        <CoupleProvider>
+    <div className="bg-pink-400 h-screen flex justify-center text-center items-center">
+    <CoupleProvider>
           {showNav&&<Navbar/>}
           {children}
         </CoupleProvider>
+        </div>
+
       </body>
     </html>
   );

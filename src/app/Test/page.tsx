@@ -1,17 +1,17 @@
-import { AuthCheckList, AuthCheckListProps } from "@/components/checklist/authCheckList"
+// import { AuthCheckList, AuthCheckListProps } from "@/components/checklist/authCheckList"
 
-const Test = () =>{
-  const listss:AuthCheckListProps={lists:[{
-    isValid:false,text:"6文字以上"
-  },{isValid:true,text:"jijojoo"}]}
-  return(
-    <AuthCheckList
-    lists={listss}/>
-  )
-}
+// const Test = () =>{
+//   const listss:AuthCheckListProps={lists:[{
+//     isValid:false,text:"6文字以上"
+//   },{isValid:true,text:"jijojoo"}]}
+//   return(
+//     <AuthCheckList
+//     lists={listss}/>
+//   )
+// }
 
-export default Test
-// "use client";
+// export default Test
+// // "use client";
 
 // import { BasicButton, BasicInputField } from "@/components";
 // import { authCheckList } from "@/components";

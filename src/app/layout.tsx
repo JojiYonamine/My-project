@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 // import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -28,21 +28,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathName:string = usePathname()
-  const noNav:string[] = ["/Test","/Auth/Login","/Auth/Signup","/Auth/Confirm-email","/Auth/sentVerification"]
-  const showNav:boolean = !noNav.includes(pathName)
+  const pathName: string = usePathname();
+  const noNav: string[] = [
+    "/Test",
+    "/Auth/Login",
+    "/Auth/Signup",
+    "/Auth/Confirm-email",
+    "/Auth/sentVerification",
+    "/Auth/setProfile",
+  ];
+  const showNav: boolean = !noNav.includes(pathName);
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-    <div className="bg-pink-400 h-screen flex justify-center text-center items-center">
-    <CoupleProvider>
-          {showNav&&<Navbar/>}
+        <CoupleProvider>
+          {showNav && <Navbar />}
           {children}
         </CoupleProvider>
-        </div>
-
       </body>
     </html>
   );

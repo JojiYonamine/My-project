@@ -40,7 +40,6 @@ export default function SignupPage() {
   const validation = (): void | boolean => {
     if (!emailRegex.test(email)) {
       setEmaileError(true);
-      console.log("error,email");
     } else {
       setEmaileError(false);
     }

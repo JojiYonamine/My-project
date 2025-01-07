@@ -1,3 +1,10 @@
+
+
+// ！！！注意！！！
+// inviterIdは、リンク生成用
+// InviterIdは、リンク経由での登録
+
+
 "use client";
 import { BasicButton } from "@/components";
 import { auth } from "@/config/firebaseConfig";

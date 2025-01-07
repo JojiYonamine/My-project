@@ -7,7 +7,7 @@ export const usersRef = () => {collection(db,"users")}
 
 export const userRef = (uid:string) => (doc(db,"users",uid))
 
-export const coupleRef = (cid:string) => {doc(db,"couples",cid)}
+export const coupleRef = (cid:string) => (doc(db,"couples",cid))
 
 export const calendarsRef = (cid:string) =>(collection(db,"couples",cid,"calendars"))
 

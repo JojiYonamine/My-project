@@ -16,7 +16,7 @@ import {
   FaRegCheckCircle,
 } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function SignupPage() {
   const [email, setEmail] = useState<string>("");
@@ -29,7 +29,11 @@ export default function SignupPage() {
   const [showPass, setShowPass] = useState<string>("text");
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+  // 招待用
   const root = useRouter();
+  const searchParams = useSearchParams()
+  const inviterId = searchParams.get("inviterId")
+
 
   // メールアドレス・パスワードチェック
   const validation = (): void | boolean => {
@@ -95,7 +99,11 @@ export default function SignupPage() {
         password
       );
       await sendVerification(userCredential.user);
-      root.push("/Auth/setProfile");
+      if(inviterId){
+        root.push(`/Auth/setProfile?inviterId=${inviterId}`);
+      }else{
+        root.push("/Auth/setProfile");
+      }
       setLoading(false);
     } catch (err: unknown) {
       alert(err);

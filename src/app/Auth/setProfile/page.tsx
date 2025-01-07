@@ -1,11 +1,12 @@
 "use client";
 import { BasicButton } from "@/components";
 import { auth } from "@/config/firebaseConfig";
+import { RegisterCouple } from "@/utils/Auth/registerCouple";
 import { dateToIso, IsoToDate } from "@/utils/dateUtils";
 import { userRef } from "@/utils/firestoreRefs";
 import { updateCurrentUser, updateProfile, User } from "firebase/auth";
 import { setDoc } from "firebase/firestore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const SetProfile = () => {
@@ -14,6 +15,7 @@ const SetProfile = () => {
   const [name, setName] = useState<string>("");
   const [icon, setICon] = useState<string>("");
   const [birthDay, setBirthDay] = useState<string>("");
+  const [inviterId, setInviterId] = useState<string>("");
   const user = auth.currentUser;
   const root = useRouter();
 
@@ -22,6 +24,8 @@ const SetProfile = () => {
   //     root.push('/Auth/Signup')
   //     return
   //   }
+  const searchParams = useSearchParams();
+  const InviterId = searchParams.get("inviterId");
 
   const registerUserProfile = async (user: User, birthDay: string) => {
     try {
@@ -54,8 +58,12 @@ const SetProfile = () => {
       console.log("now updating");
       await updateProfile(user, { displayName: name, photoURL: icon });
       await registerUserProfile(user, birthDay);
-      alert("ユーザー登録が完了しました");
-      root.push("/");
+      if(InviterId){
+        await RegisterCouple(InviterId,user.uid)
+      }else{
+        setInviterId(user.uid);
+      }
+      setProgress("completed");
     } catch (err: unknown) {
       alert(err);
     }
@@ -74,6 +82,11 @@ const SetProfile = () => {
   const handleSelectIcon = (icon: string) => {
     setICon(icon);
     console.log(icon);
+  };
+
+  const generateInviteLink = (uid: string): string => {
+    const baseUrl = process.env.NEXT_PUBLIC_FIREBASE_INVITE_URL;
+    return `${baseUrl}?inviterId=${encodeURIComponent(uid)}`;
   };
 
   return (
@@ -196,7 +209,7 @@ const SetProfile = () => {
           )}
         </form>
         {/* 招待 */}
-        {progress == "completed" && (
+        {!InviterId && progress == "completed" ? (
           <div>
             <h1 className="text-xl w-full mb-8 font-semibold break-words">
               登録が完了しました！
@@ -204,7 +217,23 @@ const SetProfile = () => {
             <h1 className="text-xl w-full mb-8 font-semibold break-words">
               パートナーを招待しましょう！
             </h1>
+            <h1 className="mb-8">{generateInviteLink(inviterId)}</h1>
+            <BasicButton
+              onClick={() => {
+                root.push("/");
+              }}
+            >
+              ホームへ
+            </BasicButton>
           </div>
+        ) : (
+          <BasicButton
+            onClick={() => {
+              root.push("/");
+            }}
+          >
+            ホームへ
+          </BasicButton>
         )}
       </div>
     </div>

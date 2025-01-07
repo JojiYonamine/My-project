@@ -4,10 +4,10 @@ import { auth } from "@/config/firebaseConfig";
 import { RegisterCouple } from "@/utils/Auth/registerCouple";
 import { IsoToDate } from "@/utils/dateUtils";
 import { getUserNameFromFirestore, userRef } from "@/utils/firestoreRefs";
-import { updateProfile, User } from "firebase/auth";
+import { onAuthStateChanged, updateProfile, User } from "firebase/auth";
 import { setDoc } from "firebase/firestore";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 const SetProfile = () => {
@@ -25,12 +25,20 @@ const SetProfile = () => {
   const [gettingName, setGettingName] = useState<boolean>(false);
 
   const icons = Array.from({ length: 12 }, (_, i) => `/icons/icon${i + 1}.png`);
-  //   if(!user){
-  //     root.push('/Auth/Signup')
-  //     return
-  //   }
+
   const searchParams = useSearchParams();
   const InviterId = searchParams.get("inviterId");
+
+  // Google経由の時名前自動入力
+  useEffect(() => {
+    const unsubcribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.providerData?.length > 0) {
+        const displayName = user.providerData[0].displayName || "";
+        setName(displayName);
+      }
+      return () => unsubcribe();
+    });
+  }, []);
 
   const registerUserProfile = async (user: User, birthDay: string) => {
     try {
@@ -96,10 +104,10 @@ const SetProfile = () => {
   };
 
   const getUserName = async () => {
-    if (!user) {
+    if (!user||!InviterId) {
       return;
     }
-    const InviterName: string = await getUserNameFromFirestore(inviterId);
+    const InviterName: string = await getUserNameFromFirestore(InviterId);
     const InvitedName: string = await getUserNameFromFirestore(user.uid);
     setInviterName(InviterName);
     setInvitedName(InvitedName);

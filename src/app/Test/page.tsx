@@ -1,3 +1,33 @@
+'use client'
+
+import { useEffect, useState } from "react";
+import { getUserNameFromFirestore } from "@/utils/firestoreRefs";
+
+
+const Test = () => {
+  const inviterId = "JIyqVZsXfKacw6UvUWyt9VJicJp1";
+  const invitedId = "MBkynUZv1MWF6fh9ltFU5vypLkB3"
+
+    const [inviterName, setInviterName] = useState<string>("");
+    const [invitedName, setInvitedName] = useState<string>("");
+  const getUserName = async () => {
+    const InviterName: string = await getUserNameFromFirestore(inviterId);
+    const InvitedName: string = await getUserNameFromFirestore(invitedId);
+    setInviterName(InviterName);
+    setInvitedName(InvitedName);
+    console.log(`inviter:${InviterName},invited:${InvitedName}`);
+  };
+  useEffect(()=>{
+    getUserName()
+  },[])
+  return(<div>
+    {inviterName},    {invitedName}
+
+  </div>)
+};
+
+export default Test
+
 // import { AuthCheckList, AuthCheckListProps } from "@/components/checklist/authCheckList"
 
 // const Test = () =>{

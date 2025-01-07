@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter, useSearchParams } from "next/navigation";
+import { loginWithGoogle } from "@/utils/Auth/loginWithGoogle";
 
 export default function SignupPage() {
   const [email, setEmail] = useState<string>("");
@@ -273,7 +274,7 @@ export default function SignupPage() {
 
         {/* ソーシャルログイン */}
         <div className="space-x-8 flex mb-8 justify-center text-center items-center">
-          <button>
+          <button onClick={()=>loginWithGoogle(inviterId)}>
             <FcGoogle size={48} />
           </button>
           <button className="bg-blue-500 p-2 rounded-full">

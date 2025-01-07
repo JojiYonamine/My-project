@@ -24,7 +24,7 @@ export const taskRef = (cid:string,taskId:string) =>doc(db,"couples",cid,"tasks"
 export const getUserNameFromFirestore = async(uid:string) =>  {
     try{
         const doc = await getDoc(userRef(uid))
-        if(!doc.exists()) return
+        if(!doc.exists()) return "ユーザーなし"
         const userName = doc.data().name
         if(!userName) return "ユーザー名なし"
         return userName

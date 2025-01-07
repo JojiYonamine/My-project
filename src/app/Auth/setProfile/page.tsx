@@ -1,15 +1,19 @@
 "use client";
+import { BasicButton } from "@/components";
 import { auth } from "@/config/firebaseConfig";
-import { updateCurrentUser, updateProfile } from "firebase/auth";
+import { dateToIso, IsoToDate } from "@/utils/dateUtils";
+import { userRef } from "@/utils/firestoreRefs";
+import { updateCurrentUser, updateProfile, User } from "firebase/auth";
+import { setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const SetProfile = () => {
-  type progress = "name" | "icon" | "birthDay";
+  type progress = "name" | "icon" | "birthDay" | "completed";
   const [progress, setProgress] = useState<progress>("name");
   const [name, setName] = useState<string>("");
   const [icon, setICon] = useState<string>("");
-  const [birthDay, setBirthDay] = useState<Date>(new Date());
+  const [birthDay, setBirthDay] = useState<string>("");
   const user = auth.currentUser;
   const root = useRouter();
 
@@ -19,10 +23,39 @@ const SetProfile = () => {
   //     return
   //   }
 
-  //   最終的に登録ボタンを押した時に使用する
-  const handleUpadateProfile = async () => {
+  const registerUserProfile = async (user: User, birthDay: string) => {
     try {
-      await updateProfile(user, { displayName: name, photoURL: photo });
+      await setDoc(userRef(user.uid), {
+        name: user.displayName || "Anonymous",
+        email: user.email,
+        cid: null,
+        partnerId: null,
+        birthDay: IsoToDate(birthDay),
+        createdAt: new Date(),
+      });
+      console.log("User registered in Firestore!");
+    } catch (err: unknown) {
+      alert(err);
+    }
+  };
+
+  //   最終的に登録ボタンを押した時に使用する
+  const handleUpadateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(" now loading");
+    if (!user) {
+      console.log("need to login");
+      alert("ログインしてください");
+      root.push("/Auth/Signup");
+      return;
+    }
+
+    try {
+      console.log("now updating");
+      await updateProfile(user, { displayName: name, photoURL: icon });
+      await registerUserProfile(user, birthDay);
+      alert("ユーザー登録が完了しました");
+      root.push("/");
     } catch (err: unknown) {
       alert(err);
     }
@@ -40,7 +73,7 @@ const SetProfile = () => {
 
   const handleSelectIcon = (icon: string) => {
     setICon(icon);
-    console.log(icon)
+    console.log(icon);
   };
 
   return (
@@ -48,7 +81,12 @@ const SetProfile = () => {
     <div className="h-screen flex justify-center text-center items-center">
       {/* カード表示 */}
       <div className="bg-white rounded p-6 w-11/12 sm:mt-0  max-w-lg border border-gray-300">
-        <form>
+        <form
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            handleUpadateProfile(e);
+          }}
+        >
+          {/* 名前 */}
           {progress == "name" && (
             <div>
               <h1 className="text-xl w-full mb-8 font-semibold break-words">
@@ -64,18 +102,21 @@ const SetProfile = () => {
                   setName(e.target.value);
                 }}
               />
-              <button
+              <BasicButton
                 onClick={handleNext}
-                className="
-              bg-pink-400 text-white text-lg font-bold rounded-lg w-full py-2 
-              transition duration-500 hover:bg-pink-500 "
+                disabled={!name}
+                // className=
+                // {!name?("bg-pink-400 text-white text-lg font-bold rounded-lg w-full py-2 transition duration-500 hover:bg-pink-500")
+                //     :("bg-white")}
               >
                 次へ
-              </button>
+              </BasicButton>
             </div>
           )}
+
+          {/* アイコン */}
           {progress == "icon" && (
-            <div >
+            <div>
               <h1 className="text-lg sm:tex-xl w-full mb-8 font-bold">
                 アイコンを決めてください
               </h1>
@@ -84,10 +125,8 @@ const SetProfile = () => {
                   <div
                     key={index}
                     onClick={() => handleSelectIcon(path)}
-                    className={
-                      `flex justify-center items-center cursor-pointer border-4 hover:border-pink-500 rounded-lg
-                      ${path==icon ? "border-pink-500":"border:gray-500"}`
-                    }
+                    className={`flex justify-center items-center cursor-pointer border-4 hover:border-pink-500 rounded-lg
+                      ${path == icon ? "border-pink-500" : "border:gray-500"}`}
                   >
                     <img
                       src={path}
@@ -101,32 +140,72 @@ const SetProfile = () => {
                 <button
                   onClick={handleBack}
                   className="
-              bg-pink-400 text-white text-lg font-bold rounded-lg w-full py-2 
-              transition duration-500 hover:bg-pink-500 "
+              bg-pink-400 text-white text-lg font-semibold rounded-lg w-full py-2 
+              transition duration-500 hover:bg-pink-500 mb-8"
                 >
                   前へ
                 </button>
-                <button
+                <BasicButton
                   onClick={handleNext}
-                  className="
-              bg-pink-400 text-white text-lg font-bold rounded-lg w-full py-2 
-              transition duration-500 hover:bg-pink-500 "
+                  disabled={!icon}
+                  //       className="
+                  //   bg-pink-400 text-white text-lg font-bold rounded-lg w-full py-2
+                  //   transition duration-500 hover:bg-pink-500 "
                 >
                   次へ
-                </button>
+                </BasicButton>
               </div>
             </div>
           )}
 
+          {/* 誕生日 */}
           {progress == "birthDay" && (
-            <div>
+            <div className="relative">
               <h1 className="text-xl w-full mb-8 font-bold">
                 誕生日を入力してください
               </h1>
-              <button onClick={handleBack}>前へ</button>
+              <input
+                type="date"
+                value={birthDay}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setBirthDay(e.target.value);
+                }}
+                className="mb-8 text-center w-full px-4 py-2 border border-gray-300 rounded-lg 
+              shadow-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-gray-700"
+              />
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={handleBack}
+                  className="
+              bg-pink-400 text-white text-lg font-semibold rounded-lg w-full py-2 
+              transition duration-500 hover:bg-pink-500 mb-8"
+                >
+                  前へ
+                </button>
+                <BasicButton
+                  type="submit"
+                  disabled={!birthDay}
+                  //       className="
+                  //   bg-pink-400 text-white text-lg font-bold rounded-lg w-full py-2
+                  //   transition duration-500 hover:bg-pink-500 "
+                >
+                  登録
+                </BasicButton>
+              </div>
             </div>
           )}
         </form>
+        {/* 招待 */}
+        {progress == "completed" && (
+          <div>
+            <h1 className="text-xl w-full mb-8 font-semibold break-words">
+              登録が完了しました！
+            </h1>
+            <h1 className="text-xl w-full mb-8 font-semibold break-words">
+              パートナーを招待しましょう！
+            </h1>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -2,12 +2,13 @@
 import { BasicButton } from "@/components";
 import { auth } from "@/config/firebaseConfig";
 import { RegisterCouple } from "@/utils/Auth/registerCouple";
-import { dateToIso, IsoToDate } from "@/utils/dateUtils";
-import { userRef } from "@/utils/firestoreRefs";
-import { updateCurrentUser, updateProfile, User } from "firebase/auth";
+import { IsoToDate } from "@/utils/dateUtils";
+import { getUserNameFromFirestore, userRef } from "@/utils/firestoreRefs";
+import { updateProfile, User } from "firebase/auth";
 import { setDoc } from "firebase/firestore";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { ClipLoader } from "react-spinners";
 
 const SetProfile = () => {
   type progress = "name" | "icon" | "birthDay" | "completed";
@@ -18,6 +19,10 @@ const SetProfile = () => {
   const [inviterId, setInviterId] = useState<string>("");
   const user = auth.currentUser;
   const root = useRouter();
+  const [inviterName, setInviterName] = useState<string>("");
+  const [invitedName, setInvitedName] = useState<string>("");
+  // trueでロード中
+  const [gettingName, setGettingName] = useState<boolean>(false);
 
   const icons = Array.from({ length: 12 }, (_, i) => `/icons/icon${i + 1}.png`);
   //   if(!user){
@@ -46,23 +51,24 @@ const SetProfile = () => {
   //   最終的に登録ボタンを押した時に使用する
   const handleUpadateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(" now loading");
     if (!user) {
       console.log("need to login");
       alert("ログインしてください");
       root.push("/Auth/Signup");
       return;
     }
-
     try {
       console.log("now updating");
       await updateProfile(user, { displayName: name, photoURL: icon });
       await registerUserProfile(user, birthDay);
-      if(InviterId){
-        await RegisterCouple(InviterId,user.uid)
-      }else{
+      if (InviterId) {
+        await RegisterCouple(InviterId, user.uid);
+      } else {
         setInviterId(user.uid);
       }
+      setName("");
+      setICon("");
+      setBirthDay("");
       setProgress("completed");
     } catch (err: unknown) {
       alert(err);
@@ -89,6 +95,18 @@ const SetProfile = () => {
     return `${baseUrl}?inviterId=${encodeURIComponent(uid)}`;
   };
 
+  const getUserName = async () => {
+    if (!user) {
+      return;
+    }
+    const InviterName: string = await getUserNameFromFirestore(inviterId);
+    const InvitedName: string = await getUserNameFromFirestore(user.uid);
+    setInviterName(InviterName);
+    setInvitedName(InvitedName);
+    console.log(`inviter:${InviterName},invited:${InvitedName}`);
+    setGettingName(false);
+  };
+
   return (
     // ページ表示
     <div className="h-screen flex justify-center text-center items-center">
@@ -97,6 +115,7 @@ const SetProfile = () => {
         <form
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             handleUpadateProfile(e);
+            getUserName();
           }}
         >
           {/* 名前 */}
@@ -207,34 +226,48 @@ const SetProfile = () => {
               </div>
             </div>
           )}
+          {/* 招待 */}
+          {!InviterId && progress == "completed" && (
+            <div>
+              <h1 className="text-xl w-full mb-8 font-semibold break-words">
+                登録が完了しました！
+              </h1>
+              <h1 className="text-xl w-full mb-8 font-semibold break-words">
+                パートナーを招待しましょう！
+              </h1>
+              <h1 className="mb-8">{generateInviteLink(inviterId)}</h1>
+              <BasicButton
+                type="button"
+                onClick={() => {
+                  root.push("/");
+                }}
+              >
+                ホームへ
+              </BasicButton>
+            </div>
+          )}
+          {progress == "completed" && InviterId && (
+            <div>
+              {gettingName ? (
+                <ClipLoader color="#3498db" size={50} />
+              ) : (
+                <div className="text-center">
+                  <h1 className="text-xl w-full mb-8 font-semibold break-words">
+                    {`${inviterName}と${invitedName}のカップルを登録しました!`}
+                  </h1>
+                  <BasicButton
+                    type="button"
+                    onClick={() => {
+                      root.push("/");
+                    }}
+                  >
+                    ホームへ
+                  </BasicButton>
+                </div>
+              )}
+            </div>
+          )}
         </form>
-        {/* 招待 */}
-        {!InviterId && progress == "completed" ? (
-          <div>
-            <h1 className="text-xl w-full mb-8 font-semibold break-words">
-              登録が完了しました！
-            </h1>
-            <h1 className="text-xl w-full mb-8 font-semibold break-words">
-              パートナーを招待しましょう！
-            </h1>
-            <h1 className="mb-8">{generateInviteLink(inviterId)}</h1>
-            <BasicButton
-              onClick={() => {
-                root.push("/");
-              }}
-            >
-              ホームへ
-            </BasicButton>
-          </div>
-        ) : (
-          <BasicButton
-            onClick={() => {
-              root.push("/");
-            }}
-          >
-            ホームへ
-          </BasicButton>
-        )}
       </div>
     </div>
   );

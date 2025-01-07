@@ -1,5 +1,5 @@
 import { db } from "@/config/firebaseConfig"
-import { collection, doc } from "firebase/firestore"
+import { collection, doc, getDoc } from "firebase/firestore"
 
 
 // users コレクションへの参照
@@ -20,3 +20,15 @@ export const eventRef = (cid:string,calendarId:string,eventId:string) => (doc(db
 export const tasksRef = (cid:string) =>(collection(db,"couples",cid,"tasks"))
 
 export const taskRef = (cid:string,taskId:string) =>doc(db,"couples",cid,"tasks",taskId)
+
+export const getUserNameFromFirestore = async(uid:string) =>  {
+    try{
+        const doc = await getDoc(userRef(uid))
+        if(!doc.exists()) return
+        const userName = doc.data().name
+        if(!userName) return "ユーザー名なし"
+        return userName
+    }catch(err:unknown){
+        alert(err)
+    }
+}

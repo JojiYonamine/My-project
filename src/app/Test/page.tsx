@@ -3,6 +3,10 @@
 import { useEffect, useState } from "react";
 import { getUserNameFromFirestore } from "@/utils/firestoreRefs";
 import AuthHeader from "@/components/AuthHeader";
+import Sidebar from "@/components/Sidebar";
+import { auth } from "@/config/firebaseConfig";
+import { ensureUser } from "@/utils/typeGare";
+import Image from "next/image";
 
 
 const Test = () => {
@@ -21,10 +25,17 @@ const Test = () => {
   useEffect(()=>{
     getUserName()
   },[])
-  return(<div>
-    <AuthHeader/>
-    {inviterName},    {invitedName}
+  const current = auth.currentUser
+  return(
+    <div className="h-screen w-64 flex bg-white flex-col">
+    {/* <AuthHeader page="/Auth/Login"/> */}
+    <h1>{current?.photoURL}</h1>
+    <Image src={current?.photoURL} width={20} height={20}/>
 
+    <Sidebar/>
+    <div>
+    
+    </div>
   </div>)
 };
 

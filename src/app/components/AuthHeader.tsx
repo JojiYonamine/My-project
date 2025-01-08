@@ -10,8 +10,8 @@ const AuthHeader: React.FC<AuthHeaderProps> = ({ page }) => {
   const splitedPath = page.split("?");
   const LoginOrSignUp = splitedPath[0].split("/")[2];
   return (
-    <header className="bg-pink-400 ">
-      <div className="container mx-auto flex justify-between items-center py-[20px]">
+    <header className="bg-pink-400 flex justify-center">
+      <div className="bg-pink-400  container flex justify-between items-center py-[20px]">
         {/* ロゴ用 */}
         <div className="flex items-center space-x-2">
           <Image src="/logo1.png" alt="Logo" width={40} height={40} />
@@ -19,7 +19,7 @@ const AuthHeader: React.FC<AuthHeaderProps> = ({ page }) => {
         </div>
 
         {/* ログイン・サインイン用 */}
-        <nav className="flex">
+        <nav className="flex space-x-2 mx-2">
           <Link
             href={page}
             className="bg-pink-300 text-white font-bold px-4 py-2 rounded-3xl"

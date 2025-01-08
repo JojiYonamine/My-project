@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getUserNameFromFirestore } from "@/utils/firestoreRefs";
+import AuthHeader from "@/components/AuthHeader";
 
 
 const Test = () => {
@@ -21,6 +22,7 @@ const Test = () => {
     getUserName()
   },[])
   return(<div>
+    <AuthHeader/>
     {inviterName},    {invitedName}
 
   </div>)

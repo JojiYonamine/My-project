@@ -52,7 +52,7 @@ const InvitePage = () => {
             ? `${inviterName}さんからの招待です！`
             : "招待者情報を取得中。。。"}
         </h1>
-        <BasicButton onClick={()=>root.push(`/Auth/Signup?inviterId=${inviterId}`)}>登録へ進む</BasicButton>
+        <BasicButton onClick={()=>root.push(`/Auth/Login?inviterId=${inviterId}`)}>登録へ進む</BasicButton>
       </div>
     </div>
   );

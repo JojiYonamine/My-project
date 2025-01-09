@@ -3,6 +3,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/config/firebaseConfig";
 import { getDoc } from "firebase/firestore";
 import { userRef } from "@/utils/firestoreRefs";
+import { unsubscribe } from "diagnostics_channel";
 
 interface AuthState {
   // firebase authenticationのユーザー
@@ -11,7 +12,7 @@ interface AuthState {
   loading: boolean;
   setUser: (user: User | null) => void;
   setCid: (cid: string | null) => void;
-  initializeAuthListenr: () => void;
+  initializeAuthListener: () => () => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
@@ -20,9 +21,9 @@ const useAuthStore = create<AuthState>((set) => ({
   loading: true,
   setCid: (cid) => set({ currentCid: cid }),
   setUser: (user) => set({ currentUser: user, loading: false }),
-  initializeAuthListenr: async () => {
+  initializeAuthListener: () => {
     set({ loading: true });
-    onAuthStateChanged(auth, async (user) => {
+    const unsubscribe =  onAuthStateChanged(auth, async (user) => {
       set({ currentUser: user });
       if (user) {
         try {
@@ -30,13 +31,14 @@ const useAuthStore = create<AuthState>((set) => ({
           const cid = userDoc.data()?.cid;
           set({ currentCid: cid, loading: false });
         } catch (err: unknown) {
-          set({ currentCid: "エラー", loading: false });
+          set({ currentCid: null, loading: false });
           alert(err);
         }
       } else {
         set({ currentCid: null, loading: false });
       }
     });
+    return unsubscribe
   },
 }));
 

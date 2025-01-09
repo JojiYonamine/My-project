@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import { auth } from "@/config/firebaseConfig";
 import { ensureUser } from "@/utils/typeGare";
 import Image from "next/image";
+import useAuthStore from "@/Context/authStore";
 
 
 const Test = () => {
@@ -25,12 +26,13 @@ const Test = () => {
   useEffect(()=>{
     getUserName()
   },[])
+
   const current = auth.currentUser
+  const user = useAuthStore((state)=>state.currentUser)
   return(
     <div className="h-screen w-64 flex bg-white flex-col">
     {/* <AuthHeader page="/Auth/Login"/> */}
-    <h1>{current?.photoURL}</h1>
-    <Image src={current?.photoURL} width={20} height={20}/>
+    <Image alt="joji" src={user?.photoURL} width={20} height={20}/>
 
     <Sidebar/>
     <div>

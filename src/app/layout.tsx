@@ -6,6 +6,8 @@ import "./globals.css";
 import Navbar from "./components/navbar";
 import { CoupleProvider } from "./Context/Couple-modified";
 import { usePathname } from "next/navigation";
+import useAuthStore from "./Context/authStore";
+import { useEffect } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -37,16 +39,20 @@ export default function RootLayout({
     "/Auth/sentVerification",
     "/Auth/setProfile",
   ];
+  const initializeAuthListener = useAuthStore((state) => state.initializeAuthListener);
+  useEffect(()=>{
+    const unsubscribe = initializeAuthListener()
+    
+    return () => unsubscribe()
+  }),[]
+
   const showNav: boolean = !noNav.includes(pathName);
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CoupleProvider>
-          {showNav && <Navbar />}
           {children}
-        </CoupleProvider>
       </body>
     </html>
   );

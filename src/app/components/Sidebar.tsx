@@ -4,12 +4,15 @@ import Link from "next/link";
 import { BsChatHeart, BsCalendarHeart } from "react-icons/bs";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { GiSpikedDragonHead } from "react-icons/gi";
+import useAuthStore from "@/Context/authStore";
+import { User } from "firebase/auth";
 
 const Sidebar = () => {
-  const { user, cid: coupleId, loading } = useCouple()
+    const currentUser = useAuthStore((state)=>state.currentUser)
+    const loading = useAuthStore((state)=>state.loading)
   return (
     <div className="h-screen w-64 flex bg-pink-50 flex-col">
-      {/* ロゴ、アプリ名 */}
+      {/* ユーザー情報 */}
       <div className="flex items-center justify-center w-full">
         <Image src="/logo1.png" alt="Logo" width={80} height={80} />
       </div>

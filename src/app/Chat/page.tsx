@@ -1,4 +1,5 @@
 "use client";
+import Sidebar from "@/components/Sidebar";
 import { auth, db } from "@/config/firebaseConfig";
 import { useCouple } from "@/Context/Couple-modified";
 import {
@@ -25,18 +26,19 @@ const Chat = () => {
   const CoupleId = useCouple().cid;
 
   //未ログイン、単身者を弾く
-  useEffect(() => {
-    if (!auth.currentUser) {
-      console.log("you need to login");
-      root.push("/");
-      return;
-    }
-    if (!CoupleId) {
-      console.log("you need to make couple");
-      root.push("/");
-      return;
-    }
-  }, []);
+
+  // useEffect(() => {
+  //   if (!auth.currentUser) {
+  //     console.log("you need to login");
+  //     root.push("/");
+  //     return;
+  //   }
+  //   if (!CoupleId) {
+  //     console.log("you need to make couple");
+  //     root.push("/");
+  //     return;
+  //   }
+  // }, []);
 
   const currentUser = auth.currentUser;
   const [roomName, setRoomName] = useState<string>("");
@@ -144,7 +146,8 @@ const Chat = () => {
   };
 
   return (
-    <div>
+    <div className="flex">
+      <Sidebar/>
       {/* チャットルーム表示 */}
       <div>
         <h1>Chat Rooms</h1>

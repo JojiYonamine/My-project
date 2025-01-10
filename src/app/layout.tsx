@@ -39,12 +39,20 @@ export default function RootLayout({
     "/Auth/sentVerification",
     "/Auth/setProfile",
   ];
-  const initializeAuthListener = useAuthStore((state) => state.initializeAuthListener);
-  useEffect(()=>{
-    const unsubscribe = initializeAuthListener()
-    
-    return () => unsubscribe()
-  }),[]
+  const initializeAuthListener = useAuthStore(
+    (state) => state.initializeAuthListener
+  );
+
+  useEffect(() => {
+    console.log("useEffect on layout.tsx start");
+    const unsubscribe = initializeAuthListener();
+
+    return () => {
+      unsubscribe();
+      console.log("useEffect on layout.tsx ends");
+    };
+  }),
+    [initializeAuthListener];
 
   const showNav: boolean = !noNav.includes(pathName);
   return (
@@ -52,7 +60,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-          {children}
+        {children}
       </body>
     </html>
   );

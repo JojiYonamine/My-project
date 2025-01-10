@@ -1,25 +1,31 @@
 import { create } from "zustand";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/config/firebaseConfig";
-import { getDoc } from "firebase/firestore";
+import { DocumentData, DocumentSnapshot, getDoc } from "firebase/firestore";
 import { userRef } from "@/utils/firestoreRefs";
 import { unsubscribe } from "diagnostics_channel";
+
+// firestoreのユーザーデータの型
+interface FirestoreDoc<T> {
+    id:string;
+    data:T
+}
+
 
 interface AuthState {
   // firebase authenticationのユーザー
   currentUser: User | null;
-  currentCid: string | null;
+  userDoc:DocumentSnapshot<DocumentData>|null;
   loading: boolean;
   setUser: (user: User | null) => void;
-  setCid: (cid: string | null) => void;
   initializeAuthListener: () => () => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
   currentUser: null,
+  userDoc:null,
   currentCid: null,
   loading: true,
-  setCid: (cid) => set({ currentCid: cid }),
   setUser: (user) => set({ currentUser: user, loading: false }),
   initializeAuthListener: () => {
     set({ loading: true });
@@ -28,18 +34,19 @@ const useAuthStore = create<AuthState>((set) => ({
       if (user) {
         try {
           const userDoc = await getDoc(userRef(user.uid));
-          const cid = userDoc.data()?.cid;
-          set({ currentCid: cid, loading: false });
+          set({ userDoc:userDoc, loading: false });
+          console.log("gotten the data")
         } catch (err: unknown) {
-          set({ currentCid: null, loading: false });
+          set({ userDoc: null, loading: false });
           alert(err);
         }
       } else {
-        set({ currentCid: null, loading: false });
+        set({ userDoc: null, loading: false });
       }
     });
     return unsubscribe
   },
-}));
+})
+);
 
 export default useAuthStore;

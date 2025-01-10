@@ -11,33 +11,20 @@ import useAuthStore from "@/Context/authStore";
 
 
 const Test = () => {
-  const inviterId = "JIyqVZsXfKacw6UvUWyt9VJicJp1";
-  const invitedId = "MBkynUZv1MWF6fh9ltFU5vypLkB3"
-
-    const [inviterName, setInviterName] = useState<string>("");
-    const [invitedName, setInvitedName] = useState<string>("");
-  const getUserName = async () => {
-    const InviterName: string = await getUserNameFromFirestore(inviterId);
-    const InvitedName: string = await getUserNameFromFirestore(invitedId);
-    setInviterName(InviterName);
-    setInvitedName(InvitedName);
-    console.log(`inviter:${InviterName},invited:${InvitedName}`);
-  };
-  useEffect(()=>{
-    getUserName()
-  },[])
-
   const current = auth.currentUser
   const user = useAuthStore((state)=>state.currentUser)
+  const size:number = 0
+  const [loading,setLoadng] = useState(false)
   return(
-    <div className="h-screen w-64 flex bg-white flex-col">
-    {/* <AuthHeader page="/Auth/Login"/> */}
-    <Image alt="joji" src={user?.photoURL} width={20} height={20}/>
+    <div className="h-screen">
+      {/* <Spinner size={80}/> */}
+      <Sidebar/>
+      {/* <SpinnerWithIcon size={80} loading={false} icon='/icons/icon2.png'/>
+      <SpinnerWithIcon size={80} loading={true} icon='/icons/icon2.png'/>
+      <SpinnerWithIcon size={80} loading={loading} icon='/icons/icon2.png'/>
+      <button onClick={()=>setLoadng(false)}>false</button>
+      <button onClick={()=>setLoadng(true)}>true</button> */}
 
-    <Sidebar/>
-    <div>
-    
-    </div>
   </div>)
 };
 

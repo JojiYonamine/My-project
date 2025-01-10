@@ -5,7 +5,7 @@ import { BsChatHeart, BsCalendarHeart } from "react-icons/bs";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { LuPanelLeft } from "react-icons/lu";
 import { GiSpikedDragonHead } from "react-icons/gi";
-import { IoIosNotifications } from "react-icons/io";
+import { IoIosNotifications, IoIosCloseCircleOutline,IoIosClose } from "react-icons/io";
 
 import useAuthStore from "@/Context/authStore";
 import { User } from "firebase/auth";
@@ -34,20 +34,25 @@ const Sidebar = () => {
     <div className="ralative">
       {modalOpen && (
         <div
-          className="absolute top-4 left-16 w-60 h-60 z-1
+          className="relative absolute top-4 left-16 w-60 h-60 z-10
             p-4
             flex flex-col justify-center text-center 
             bg-white
             rounded-2xl 
             border border-gray-50 shadow-xl"
         >
-        
-            <SpinnerWithIcon size={70} loading={loading} icon={photoUrl} />
-            <h1 className="font-bold m-4">よなみねじょうじ</h1>
+          <div className="flex absolute right-0 top-0 m-2 bg-pink-100 rounded-full">
+            <button onClick={() => handleToggleModal()}>
+              <IoIosClose  size={30} className="text-white"/>
+            </button>
+          </div>
+
+          <SpinnerWithIcon size={70} loading={loading} icon={photoUrl} />
+          <h1 className="font-bold m-4">よなみねじょうじ</h1>
         </div>
       )}
       <div
-        className={`h-screen flex bg-pink-50 flex-col transition-all duration-300
+        className={`absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0
         ${sideBarOpen ? "w-64" : "w-16"} `}
       >
         {/* オープン・クローズ */}

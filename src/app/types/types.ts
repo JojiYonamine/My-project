@@ -39,3 +39,10 @@ export interface internalTask extends baseEvent{
 export interface TaskShowing extends internalTask{
     taskId:string
 }
+
+export interface message {
+    text:string;
+    sentBy:string;
+    sentAt:Date|FieldValue;
+    read:boolean
+}

@@ -1,6 +1,7 @@
 "use client";
 import Sidebar from "@/components/Sidebar";
 import { auth, db } from "@/config/firebaseConfig";
+import useAuthStore from "@/Context/authStore";
 import { useCouple } from "@/Context/Couple-modified";
 import {
   addDoc,
@@ -24,22 +25,7 @@ const Chat = () => {
   //console.log(CoupleId)
   const root = useRouter();
   const CoupleId = useCouple().cid;
-
-  //未ログイン、単身者を弾く
-
-  // useEffect(() => {
-  //   if (!auth.currentUser) {
-  //     console.log("you need to login");
-  //     root.push("/");
-  //     return;
-  //   }
-  //   if (!CoupleId) {
-  //     console.log("you need to make couple");
-  //     root.push("/");
-  //     return;
-  //   }
-  // }, []);
-
+  const cid = useAuthStore((state)=>state.userDoc)?.data()
   const currentUser = auth.currentUser;
   const [roomName, setRoomName] = useState<string>("");
   const [message, setMessage] = useState<string>("");

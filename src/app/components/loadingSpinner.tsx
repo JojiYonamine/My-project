@@ -51,7 +51,7 @@ export const SpinnerWithIcon: React.FC<SpinnerWithIconProps> = (
     icon = "/icons/icon-no-user.png"
   }
   return (
-    <div>
+    <div className="flex items-center justify-center">
       {loading ? (
         <div
           className={`relative flex items-center justify-center`}

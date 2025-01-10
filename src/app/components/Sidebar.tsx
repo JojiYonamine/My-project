@@ -20,16 +20,35 @@ const Sidebar = () => {
   const userName = currentUser?.displayName;
   const partnerId = userDoc?.data()?.partnerId;
   const loading = useAuthStore((state) => state.loading);
-  const [isOpen, setIsOpen] = useState<boolean>(true);
+  const [sideBarOpen, setSideBarOpen] = useState<boolean>(true);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const handleToggleSidebar = () => {
-    setIsOpen(!isOpen);
+    setSideBarOpen(!sideBarOpen);
   };
+  const handleToggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
+
   return (
-    <div>
+    <div className="ralative">
+      {modalOpen && (
+        <div
+          className="absolute top-4 left-16 w-60 h-60 z-1
+            p-4
+            flex flex-col justify-center text-center 
+            bg-white
+            rounded-2xl 
+            border border-gray-50 shadow-xl"
+        >
+        
+            <SpinnerWithIcon size={70} loading={loading} icon={photoUrl} />
+            <h1 className="font-bold m-4">よなみねじょうじ</h1>
+        </div>
+      )}
       <div
         className={`h-screen flex bg-pink-50 flex-col transition-all duration-300
-        ${isOpen ? "w-64" : "w-16"} `}
+        ${sideBarOpen ? "w-64" : "w-16"} `}
       >
         {/* オープン・クローズ */}
         <div
@@ -47,9 +66,13 @@ const Sidebar = () => {
 
         {/* ユーザー情報 */}
         <div className="flex  items-center justify-between w-full mb-4 overflow-hidden">
-          <div className="pl-3">
+          <button
+            type="button"
+            className="pl-3"
+            onClick={() => handleToggleModal()}
+          >
             <SpinnerWithIcon size={40} loading={loading} icon={photoUrl} />
-          </div>
+          </button>
         </div>
         {/* ナビゲーション */}
         <nav className="grid grid-rows-1 gap-1 w-full overflow-hidden pl-1">

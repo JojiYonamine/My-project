@@ -5,10 +5,8 @@ import useAuthStore from "@/Context/authStore";
 import { message } from "@/types/types";
 import { monitorChatRooms, monitorMessages } from "@/utils/Chat/monitor";
 import { sendMessage } from "@/utils/Chat/sendMessage";
-import { CreateChatRoom } from "@/utils/Chat/CreateChatRoom";
-
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CreateRoomButton } from "@/components/Chat/createRoomButton";
 
 //ログイン、カップル登録していないと出てこないようにする。
 //カップル登録してないユーザーが入れないようにしないとダメ
@@ -19,24 +17,22 @@ import { useEffect, useState } from "react";
 const Chat = () => {
   //チャットルーム作成関数 ルーム名、CIDを必要とする。
   //console.log(CoupleId)
-  const root = useRouter();
   const { userDoc, loading, currentUser } = useAuthStore();
   const [cid, setCid] = useState<string>("");
   const [uid, setUid] = useState<string>("");
-  const [roomName, setRoomName] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<message[]>([]);
   const [chatRooms, setChatRooms] = useState<string[]>([]);
   const [activeRoom, setActiveRoom] = useState<string | null>(null);
   const [ok, setOk] = useState<boolean>(false);
-  const [noRoom, setNoRoom] = useState<boolean>(false);
+
 
   // useAuthStoreのロード終わったら取得
   useEffect(() => {
     // RequireAuthで弾いてるからエラーならんはず
-    const userData = userDoc?.data()!;
+    const userData = userDoc?.data()
     if (!loading && currentUser) {
-      setCid(userData.cid);
+      setCid(userData!.cid);
       setUid(userDoc!.id);
       setOk(true);
     }
@@ -52,7 +48,6 @@ const Chat = () => {
       setChatRooms(updatedRooms);
     });
     if (chatRooms.length == 0) {
-      setNoRoom(true);
     }
     return () => unsubcribe();
   }, [ok]);
@@ -64,109 +59,40 @@ const Chat = () => {
     } else {
       const unsubcribe = monitorMessages(cid, activeRoom, (updatedMessages) => {
         setMessages(updatedMessages);
+        console.log(`${activeRoom}のリスナー開始`)
       });
-      return () => unsubcribe();
+      return () => {unsubcribe();console.log(`${activeRoom}のリスナー解除`)}
     }
   }, [activeRoom]);
 
-  // チャットルーム監視
-  // useEffect(() => {
-  //   if (!CoupleId) return;
-  //   console.log("リスナー開始、チャットルーム");
 
-  //   const ChatRoomsRef = collection(db, "chatRooms");
-  //   const ChatRoomsQuery = query(ChatRoomsRef, where("cid", "==", CoupleId)); //ここで、ログイン中のユーザーのcidを持つチャットルームだけの条件を与えればおk
-  //   const unsubcribe = onSnapshot(ChatRoomsQuery, (snapshot) => {
-  //     const rooms = snapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       name: doc.data().name,
-  //       createdAt: doc.data().createdAt
-  //         ? new Date(doc.data().createdAt.toDate()).toISOString() // タイムスタンプを文字列に変換
-  //         : null,
-  //     }));
-  //     setChatRooms(rooms);
-  //   });
 
-  //   return () => {
-  //     unsubcribe();
-  //     console.log("リスナー解除、チャットルーム");
-  //   };
-  // }, []);
-
-  // メッセージ監視
-  // useEffect(() => {
-  //   if (!activeRoom) {
-  //     console.log("ルーム未選択");
-  //     return;
-  //   }
-  //   console.log(`リスナー開始、メッセージズ、ルーム${activeRoom}`);
-  //   const messagesRef = collection(db, "chatRooms", activeRoom, "messages");
-  //   const unsubcribe = onSnapshot(messagesRef, (snapshot) => {
-  //     const messagesInActiveRoom = snapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       text: doc.data().text,
-  //       sentBy: doc.data().sentBy,
-  //       sentAt: doc.data().sentAt
-  //         ? new Date(doc.data().sentAt.toDate()).toISOString() // タイムスタンプを文字列に変換
-  //         : null,
-  //     }));
-  //     setMessages(messagesInActiveRoom);
-  //   });
-  //   return () => {
-  //     unsubcribe();
-  //     console.log(`リスナー解除、メッセージズ、ルーム${activeRoom}`);
-  //   };
-  // }, [activeRoom]);
 
   return (
     <RequireAuth>
-      <div className="flex justify-left">
+      <div className="flex justify-left relative">
         <Sidebar />
-        <div className="w-16" />
-
-          <div>
-            <h1>Chat Rooms</h1>
-            
-              {chatRooms.map((room) => (
-                  <button key={room} className="w-full bg-white border mb-1"
-                    onClick={() => {
-                      setActiveRoom(room);
-                    }}
-                  >
-                    {room}
-                  </button>
-              ))}
-          </div>
-      
-
         {/* チャットルーム表示 */}
-
-        {/* チャットルーム作成 */}
-        <div className="h-screen bg-pink-100">
-          <form
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              {
-                console.log("send")
-                CreateChatRoom(cid, roomName);
-              }
-              setRoomName("");
-            }}
-          >
-            <input
-              value={roomName}
-              placeholder="ルーム名を入力"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setRoomName(e.target.value);
+        <div className="py-2 bg-pink-100 h-screen">
+          <h1 className="rounded-2xl text-center w-full mb-2 bg-pink-500 text-white font-bold text-xl">Chat Rooms</h1>
+          <CreateRoomButton className={'mb-4'}/>
+          {chatRooms.map((room) => (
+            <button
+              key={room}
+              className="w-full bg-white border mb-1"
+              onClick={() => {
+                setActiveRoom(room);
               }}
-            />
-            <button type="submit">送信!</button>
-          </form>
+            >
+              {room}
+            </button>
+          ))}
         </div>
+
 
         {/* メッセージ */}
         <div>
-          {activeRoom ? (
+          {activeRoom && (
             <div>
               {/* メッセージ表示 */}
               <h1>this room is {activeRoom}</h1>
@@ -183,7 +109,7 @@ const Chat = () => {
                   onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
                     e.preventDefault();
                     {
-                      console.log(activeRoom)
+                      console.log(activeRoom);
                       sendMessage(cid, uid, activeRoom, message);
                       setMessage("");
                     }
@@ -200,8 +126,6 @@ const Chat = () => {
                 </form>
               </div>
             </div>
-          ) : (
-            <div>チャットルームを選択してください</div>
           )}
         </div>
       </div>

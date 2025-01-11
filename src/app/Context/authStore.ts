@@ -15,6 +15,7 @@ interface FirestoreDoc<T> {
 interface AuthState {
   // firebase authenticationのユーザー
   currentUser: User | null;
+  currentCid:string|null
   userDoc:DocumentSnapshot<DocumentData>|null;
   loading: boolean;
   setUser: (user: User | null) => void;
@@ -34,7 +35,11 @@ const useAuthStore = create<AuthState>((set) => ({
       if (user) {
         try {
           const userDoc = await getDoc(userRef(user.uid));
-          set({ userDoc:userDoc, loading: false });
+          if(userDoc.exists()){
+            set({ userDoc:userDoc, currentCid:userDoc.data().cid, loading: false });
+          }else{
+            set({ userDoc:userDoc, loading: false });
+          }
           console.log("gotten the data")
         } catch (err: unknown) {
           set({ userDoc: null, loading: false });

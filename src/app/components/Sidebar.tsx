@@ -1,5 +1,3 @@
-import { useCouple } from "@/Context/Couple-modified";
-import Image from "next/image";
 import Link from "next/link";
 import { BsChatHeart, BsCalendarHeart } from "react-icons/bs";
 import { MdOutlineTaskAlt } from "react-icons/md";
@@ -7,14 +5,11 @@ import { LuPanelLeft } from "react-icons/lu";
 import { GiSpikedDragonHead } from "react-icons/gi";
 import {
   IoIosNotifications,
-  IoIosCloseCircleOutline,
   IoIosClose,
 } from "react-icons/io";
 
 import useAuthStore from "@/Context/authStore";
-import { signOut, User } from "firebase/auth";
-import { useEffect, useState } from "react";
-import ShowIcon from "./showIcon";
+import { useState } from "react";
 import { SpinnerWithIcon } from "./loadingSpinner";
 import { auth } from "@/config/firebaseConfig";
 import { Logout } from "@/utils/Auth/logout";
@@ -22,10 +17,7 @@ import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
-  const userDoc = useAuthStore((state) => state.userDoc);
   const photoUrl = currentUser?.photoURL;
-  const userName = currentUser?.displayName;
-  const partnerId = userDoc?.data()?.partnerId;
   const loading = useAuthStore((state) => state.loading);
   const [sideBarOpen, setSideBarOpen] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -39,11 +31,13 @@ const Sidebar = () => {
   };
 
   const sideBarConditon = sideBarOpen
-    ? `absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-64`
-    : `absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-16`;
+    ? "absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-64"
+    : "absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-16";
 
+  const sideBarConditon2 = sideBarOpen?
+  "realtive w-64 transition-all duration-300":"relative w-16 transition-all duration-300"
   return (
-    <div className="ralative">
+    <div className={sideBarConditon2}>
       {modalOpen && (
         <div
           className="relative absolute top-4 left-16 w-60 h-60 z-10
@@ -63,6 +57,8 @@ const Sidebar = () => {
           <button onClick={() => Logout(auth, root)}>ログアウト</button>
         </div>
       )}
+
+      {/* サイドバー */}
       <div
         className={sideBarConditon}
       >

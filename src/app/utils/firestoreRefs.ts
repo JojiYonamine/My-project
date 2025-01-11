@@ -21,7 +21,7 @@ export const tasksRef = (cid:string) =>(collection(db,"couples",cid,"tasks"))
 
 export const taskRef = (cid:string,taskId:string) =>doc(db,"couples",cid,"tasks",taskId)
 
-export const chatRoomsRef = (cid:string) => collection(db,"couples",cid,"chatrooms")
+export const chatRoomsRef = (cid:string) => (collection(db,"couples",cid,"chatrooms"))
 
 export const chatRoomRef = (cid:string,roomName:string) => doc(db,"couples",cid,"chatrooms",roomName)
 

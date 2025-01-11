@@ -5,13 +5,20 @@ import { BsChatHeart, BsCalendarHeart } from "react-icons/bs";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { LuPanelLeft } from "react-icons/lu";
 import { GiSpikedDragonHead } from "react-icons/gi";
-import { IoIosNotifications, IoIosCloseCircleOutline,IoIosClose } from "react-icons/io";
+import {
+  IoIosNotifications,
+  IoIosCloseCircleOutline,
+  IoIosClose,
+} from "react-icons/io";
 
 import useAuthStore from "@/Context/authStore";
-import { User } from "firebase/auth";
+import { signOut, User } from "firebase/auth";
 import { useEffect, useState } from "react";
 import ShowIcon from "./showIcon";
 import { SpinnerWithIcon } from "./loadingSpinner";
+import { auth } from "@/config/firebaseConfig";
+import { Logout } from "@/utils/Auth/logout";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -20,8 +27,9 @@ const Sidebar = () => {
   const userName = currentUser?.displayName;
   const partnerId = userDoc?.data()?.partnerId;
   const loading = useAuthStore((state) => state.loading);
-  const [sideBarOpen, setSideBarOpen] = useState<boolean>(true);
+  const [sideBarOpen, setSideBarOpen] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const root = useRouter();
 
   const handleToggleSidebar = () => {
     setSideBarOpen(!sideBarOpen);
@@ -29,6 +37,10 @@ const Sidebar = () => {
   const handleToggleModal = () => {
     setModalOpen(!modalOpen);
   };
+
+  const sideBarConditon = sideBarOpen
+    ? `absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-64`
+    : `absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-16`;
 
   return (
     <div className="ralative">
@@ -43,17 +55,16 @@ const Sidebar = () => {
         >
           <div className="flex absolute right-0 top-0 m-2 bg-pink-100 rounded-full">
             <button onClick={() => handleToggleModal()}>
-              <IoIosClose  size={30} className="text-white"/>
+              <IoIosClose size={30} className="text-white" />
             </button>
           </div>
-
           <SpinnerWithIcon size={70} loading={loading} icon={photoUrl} />
           <h1 className="font-bold m-4">よなみねじょうじ</h1>
+          <button onClick={() => Logout(auth, root)}>ログアウト</button>
         </div>
       )}
       <div
-        className={`absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0
-        ${sideBarOpen ? "w-64" : "w-16"} `}
+        className={sideBarConditon}
       >
         {/* オープン・クローズ */}
         <div

@@ -17,7 +17,6 @@ interface LoadingSpinnerWithContentProps extends SpinnerProps {
 }
 
 export const Spinner: React.FC<SpinnerProps> = ({ size }) => {
-  const iconSize = size * 0.65;
   return (
     <div
       className={`relative flex items-center justify-center`}
@@ -30,13 +29,6 @@ export const Spinner: React.FC<SpinnerProps> = ({ size }) => {
             border-4 border-pink-400`}
         style={{ height: `${size}px`, width: `${size}px` }}
       />
-      {/* ユーザーなしアイコン */}
-      <FaUser
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-      "
-        size={iconSize}
-      />
-      {/* <Image className="absolute inset-0 top-0 w-full h-full" src="/icons/icon-no-user.png" alt="not found" height={5} width={5}/> */}
     </div>
   );
 };

@@ -2,7 +2,7 @@
 import { RequireAuth } from "@/components/RequireAuth";
 import Sidebar from "@/components/Sidebar";
 import useAuthStore from "@/Context/authStore";
-import { message } from "@/types/types";
+import { chatRoom, message } from "@/types/types";
 import { monitorChatRooms, monitorMessages } from "@/utils/Chat/monitor";
 import { sendMessage } from "@/utils/Chat/sendMessage";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ const Chat = () => {
   const [uid, setUid] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<message[]>([]);
-  const [chatRooms, setChatRooms] = useState<string[]>([]);
+  const [chatRooms, setChatRooms] = useState<chatRoom[]>([]);
   const [activeRoom, setActiveRoom] = useState<string | null>(null);
   const [ok, setOk] = useState<boolean>(false);
 
@@ -78,13 +78,13 @@ const Chat = () => {
           <CreateRoomButton className={'mb-4'}/>
           {chatRooms.map((room) => (
             <button
-              key={room}
+              key={room.name}
               className="w-full bg-white border mb-1"
               onClick={() => {
-                setActiveRoom(room);
+                setActiveRoom(room.name);
               }}
             >
-              {room}
+              {room.name},{room.lastMessage}
             </button>
           ))}
         </div>

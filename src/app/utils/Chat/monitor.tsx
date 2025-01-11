@@ -1,14 +1,14 @@
 import { Unsubscribe } from "firebase/auth";
 import { onSnapshot } from "firebase/firestore";
-import { chatRoomRef, chatRoomsRef, messagesRef } from "../firestoreRefs";
-import { message } from "@/types/types";
+import { chatRoomsRef, messagesRef } from "../firestoreRefs";
+import { chatRoom, message } from "@/types/types";
 
 
 
 // コールバック関数で、roomsを受け取ること
 export const monitorChatRooms = (
   cid: string,
-  onRoomsUpdate: (rooms: string[]) => void
+  onRoomsUpdate: (rooms:chatRoom[]) => void
 ): Unsubscribe => {
   const unsubscribe = onSnapshot(chatRoomsRef(cid), (snapshot) => {
     const rooms = snapshot.docs.map((doc) => doc.data().name);

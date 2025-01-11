@@ -40,13 +40,7 @@ export interface TaskShowing extends internalTask {
   taskId: string;
 }
 
-export interface message {
-  id: string;
-  text: string;
-  sentBy: string;
-  sentAt: Date;
-  read: boolean;
-}
+
 
 export interface userDoc {
   birthDay: Date | FieldValue;
@@ -57,3 +51,4 @@ export interface userDoc {
   partnerId?: string;
   partnerName?: string;
 }
+

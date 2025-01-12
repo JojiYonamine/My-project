@@ -15,12 +15,14 @@ export const CreateRoomButton: React.FC<CreateRoomButton> = ({className}) => {
   return (
     <div className={className}>
       {openModal ? (
+        //モーダル
         <form
-          className="relative w-60 h-60 rounded-2xl 
+          className="ralative w-60 h-60 rounded-2xl 
           flex flex-col items-center justify-center
-          bg-white border border-gray-50 shadow-xl "
+          bg-white border border-gray-50 shadow-xl
+          absolute top-10
+          z-100"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            console.log("開始")
             e.preventDefault();
             CreateChatRoom(cid, roomName);
             setRoomName("");
@@ -45,7 +47,8 @@ export const CreateRoomButton: React.FC<CreateRoomButton> = ({className}) => {
 
         </form>
       ) : (
-        <button className='w-full bg-pink-500 p-1 text-white font-bold' onClick={() => setOpenModal(true)}>
+        
+        <button className='w-full bg-pink-500 p-1 text-center text-white font-bold' onClick={() => setOpenModal(true)}>
           ルーム作成
           {/* <FaCirclePlus
             className="rounded-full bg-white text-pink-300"

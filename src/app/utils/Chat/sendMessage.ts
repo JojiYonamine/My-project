@@ -21,10 +21,8 @@ export const sendMessage = async (
         cid,
         "chatrooms",
         roomName,
-        "lastMessage"
       );
-      await updateDoc(lastMessageRef, { message });
-      console.log("updated the last message");
+      await updateDoc(lastMessageRef, {lastMessage:message });
     } catch (err: unknown) {
       console.log(err);
       alert("uploadLastMessageでエラー");

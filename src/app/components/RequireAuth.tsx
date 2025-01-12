@@ -23,6 +23,7 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({
 
   // 条件を満たさないユーザーをログイン画面に送る
   useEffect(() => {
+    console.log("useEffect on require auth")
     if(loading){
       return
     }

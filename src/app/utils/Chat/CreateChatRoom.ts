@@ -38,7 +38,6 @@ export const CreateChatRoom = async (cid: string, roomName: string) => {
   console.log(isAvailable)
   if(isAvailable == true){
     try {
-      console.log("ルーム作成に入ります")
       const createdAt = new Date();
       const newChatRoom:chatRoom = {
         name:roomName,
@@ -52,9 +51,8 @@ export const CreateChatRoom = async (cid: string, roomName: string) => {
         }
       }
       await setDoc(chatRoomRef(cid, roomName), newChatRoom);
-      console.log("ルーム作成完了");
     } catch (err: unknown) {
-      console.error("エラーが発生", err);
+      console.error("CreateChatroomでエラー", err);
     }
   }else{
     return 

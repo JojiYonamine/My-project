@@ -30,7 +30,7 @@ const useAuthStore = create<AuthState>((set) => ({
           if(userDoc.exists()){
             set({ userDoc:userDoc, currentCid:userDoc.data().cid, loading: false });
           }else{
-            set({ userDoc:userDoc, loading: false });
+            set({ userDoc:null,currentCid:null, loading: false });
           }
           console.log("gotten the data")
         } catch (err: unknown) {

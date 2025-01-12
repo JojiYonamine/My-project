@@ -3,9 +3,6 @@
 // import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "./components/navbar";
-import { CoupleProvider } from "./Context/Couple-modified";
-import { usePathname } from "next/navigation";
 import useAuthStore from "./Context/authStore";
 import { useEffect } from "react";
 
@@ -30,15 +27,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathName: string = usePathname();
-  const noNav: string[] = [
-    "/Test",
-    "/Auth/Login",
-    "/Auth/Signup",
-    "/Auth/Confirm-email",
-    "/Auth/sentVerification",
-    "/Auth/setProfile",
-  ];
   const initializeAuthListener = useAuthStore(
     (state) => state.initializeAuthListener
   );
@@ -51,10 +39,7 @@ export default function RootLayout({
       unsubscribe();
       console.log("useEffect on layout.tsx ends");
     };
-  }),
-    [initializeAuthListener];
-
-  const showNav: boolean = !noNav.includes(pathName);
+  }, [initializeAuthListener]);
   return (
     <html lang="en">
       <body

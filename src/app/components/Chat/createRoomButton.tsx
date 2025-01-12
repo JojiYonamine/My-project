@@ -20,6 +20,7 @@ export const CreateRoomButton: React.FC<CreateRoomButton> = ({className}) => {
           flex flex-col items-center justify-center
           bg-white border border-gray-50 shadow-xl "
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            console.log("開始")
             e.preventDefault();
             CreateChatRoom(cid, roomName);
             setRoomName("");

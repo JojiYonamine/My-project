@@ -1,6 +1,6 @@
-import { setDoc } from "firebase/firestore";
+import { getDoc, setDoc } from "firebase/firestore";
 import { chatRoomRef } from "../firestoreRefs";
-import { chatRoom } from "@/types/types";
+import { chatRoom } from "@/types/chatTypes";
 
 export const checkRoom = async (
   cid: string,
@@ -9,8 +9,9 @@ export const checkRoom = async (
   try {
     console.log("ルームチャック開始");
     const chatRoomSnapshot = await getDoc(chatRoomRef(cid, roomName));
-    if (!chatRoomSnapshot.exists()) {
-      return false;
+    if (chatRoomSnapshot.exists()) {
+      alert("同名のチャットルームが存在します！")
+      return false
     } else {
       return true;
     }
@@ -33,19 +34,30 @@ export const CreateChatRoom = async (cid: string, roomName: string) => {
     return;
   }
 
-  try {
-    const createdAt = new Date();
-    const newChatRoom:chatRoom = {
-      name:roomName,
-      createdAt:createdAt,
-      lastMessage:{
-        text:"",
-        sentAt:createdAt
+  const isAvailable:boolean = await checkRoom(cid,roomName)
+  console.log(isAvailable)
+  if(isAvailable == true){
+    try {
+      console.log("ルーム作成に入ります")
+      const createdAt = new Date();
+      const newChatRoom:chatRoom = {
+        name:roomName,
+        createdAt:createdAt,
+        lastMessage:{
+          id:"theFistLastMesssage",
+          text:"theFistLastMesssage",
+          sentBy:"developer",
+          sentAt:createdAt,
+          read:false
+        }
       }
+      await setDoc(chatRoomRef(cid, roomName), newChatRoom);
+      console.log("ルーム作成完了");
+    } catch (err: unknown) {
+      console.error("エラーが発生", err);
     }
-    await setDoc(chatRoomRef(cid, roomName), newChatRoom);
-    console.log("ルーム作成完了");
-  } catch (err: unknown) {
-    console.error("エラーが発生", err);
+  }else{
+    return 
   }
+  
 };

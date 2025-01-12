@@ -1,34 +1,19 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from "react";
-import { getUserNameFromFirestore } from "@/utils/firestoreRefs";
-import AuthHeader from "@/components/AuthHeader";
+import { RequireAuth } from "@/components/RequireAuth";
 import Sidebar from "@/components/Sidebar";
-import { auth } from "@/config/firebaseConfig";
-import { ensureUser } from "@/utils/typeGare";
-import Image from "next/image";
-import useAuthStore from "@/Context/authStore";
-
 
 const Test = () => {
-  const current = auth.currentUser
-  const user = useAuthStore((state)=>state.currentUser)
-  const size:number = 0
-  const [loading,setLoadng] = useState(false)
-  return(
-    <div className="h-screen">
-      {/* <Spinner size={80}/> */}
-      <Sidebar/>
-      {/* <SpinnerWithIcon size={80} loading={false} icon='/icons/icon2.png'/>
-      <SpinnerWithIcon size={80} loading={true} icon='/icons/icon2.png'/>
-      <SpinnerWithIcon size={80} loading={loading} icon='/icons/icon2.png'/>
-      <button onClick={()=>setLoadng(false)}>false</button>
-      <button onClick={()=>setLoadng(true)}>true</button> */}
-
-  </div>)
+  return (
+    <RequireAuth>
+      <div className="h-screen">
+        <Sidebar />
+      </div>{" "}
+    </RequireAuth>
+  );
 };
 
-export default Test
+export default Test;
 
 // import { AuthCheckList, AuthCheckListProps } from "@/components/checklist/authCheckList"
 

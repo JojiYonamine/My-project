@@ -1,7 +1,7 @@
 import { Unsubscribe } from "firebase/auth";
 import { onSnapshot } from "firebase/firestore";
 import { chatRoomsRef, messagesRef } from "../firestoreRefs";
-import { chatRoom, message } from "@/types/types";
+import { chatRoom, message } from "@/types/chatTypes";
 
 
 

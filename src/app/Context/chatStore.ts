@@ -1,26 +1,52 @@
 import { chatRoom, message } from "@/types/chatTypes";
+import { chatRoomsRef, messagesRef } from "@/utils/firestoreRefs";
+import { onSnapshot } from "firebase/firestore";
 import { create } from "zustand";
 
 interface chatStore {
   chatRooms: chatRoom[];
   selectedChatRoom: string | null;
-  setChatRooms: (chatRoom: chatRoom[]) => void;
   setSelectedChatRoom: (selectedChatRoomName: string) => void;
-  setLastMessage: (chatRoomName: string, lastMessage: message) => void;
+  initializeChatRoom: (cid: string) => () => void;
+  messages: message[];
+  initializeMessages: (cid: string, roomName: string) => () => void;
 }
 
-const useChatStore = create<chatStore>((set)=>({
-    chatRooms:[],
-    selectedChatRoom:null,
-    setChatRooms:((chatRooms) => set({chatRooms:chatRooms})),
-    setSelectedChatRoom:((chatRoomName)=>set({selectedChatRoom:chatRoomName})),
-    setLastMessage:((chatRoomName,lastMessage)=>
-    set((state)=>({
-        chatRooms:state.chatRooms.map((room)=>(
-            room.name === chatRoomName
-            ?{...room,lastMessage:lastMessage}:room
-        ))
-    })))
-}))
+const useChatStore = create<chatStore>((set) => ({
+  chatRooms: [],
+  messages: [],
+  selectedChatRoom: null,
+  setSelectedChatRoom: (chatRoomName) =>
+    set({ selectedChatRoom: chatRoomName }),
 
-export default useChatStore
+  // チャットルームのリスナー開始用
+  initializeChatRoom: (cid) => {
+    const unsubscribe = onSnapshot(chatRoomsRef(cid), (snapshot) => {
+        const rooms:chatRoom[] = snapshot.docs.map((doc) => ({
+          name:doc.data().name,
+          createdAt:doc.data().createdAt,
+          lastMessage:doc.data().lastMessage
+        }));
+        set({chatRooms:rooms})
+        console.log(rooms)
+      })
+      return unsubscribe
+  },
+
+  //   メッセージのリスナー開始用
+  initializeMessages: (cid, roomName) => {
+    const unsubscribe = onSnapshot(messagesRef(cid, roomName), (snapshot) => {
+        const messages: message[] = snapshot.docs.map((doc) => ({
+          id: doc.data().id,
+          text: doc.data().text,
+          sentBy: doc.data().sentBy,
+          sentAt: doc.data().sentAt,
+          read: doc.data().read,
+        }));
+        set({messages:messages})
+      });
+    return unsubscribe;
+  },
+}));
+
+export default useChatStore;

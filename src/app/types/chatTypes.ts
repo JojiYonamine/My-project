@@ -3,7 +3,7 @@
 export interface chatRoom {
   name: string;
   createdAt: Date;
-  lastMessage: message|null
+  lastMessage: message
 }
 
 export interface message {

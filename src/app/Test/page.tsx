@@ -1,5 +1,6 @@
 "use client";
 
+import { ChatRoomInput } from "@/components/Chat/ChatRoomInput";
 import { RequireAuth } from "@/components/RequireAuth";
 import Sidebar from "@/components/Sidebar";
 
@@ -7,7 +8,7 @@ const Test = () => {
   return (
     <RequireAuth>
       <div className="h-screen">
-        <Sidebar />
+        <ChatRoomInput/>
       </div>{" "}
     </RequireAuth>
   );

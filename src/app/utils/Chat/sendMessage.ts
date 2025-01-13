@@ -2,13 +2,15 @@ import { message } from "@/types/chatTypes";
 import { messagesRef } from "../firestoreRefs";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
+import useAuthStore from "@/Context/authStore";
 
 export const sendMessage = async (
-  cid: string,
-  uid: string,
   roomName: string,
   text: string
 ) => {
+  const {currentCid,currentUser} = useAuthStore()
+  const cid:string = useAuthStore((state)=>state.currentCid)!
+  const uid:string = useAuthStore((state)=>state.currentUser)!.uid
   const uploadLastMessage = async (
     cid: string,
     roomName: string,

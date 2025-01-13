@@ -3,10 +3,7 @@ import { BsChatHeart, BsCalendarHeart } from "react-icons/bs";
 import { MdOutlineTaskAlt } from "react-icons/md";
 import { LuPanelLeft } from "react-icons/lu";
 import { GiSpikedDragonHead } from "react-icons/gi";
-import {
-  IoIosNotifications,
-  IoIosClose,
-} from "react-icons/io";
+import { IoIosNotifications, IoIosClose } from "react-icons/io";
 
 import useAuthStore from "@/Context/authStore";
 import { useState } from "react";
@@ -30,37 +27,92 @@ const Sidebar = () => {
     setModalOpen(!modalOpen);
   };
 
-  const sideBarConditon = sideBarOpen
-    ? "inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-64"
-    : "inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-16";
+  const SideBarNav = ({ isOpen }: { isOpen: boolean }) => {
+    return (
+      <nav
+        className={`grid  grid-rows-1 gap-1 w-full transition-all${
+          sideBarOpen ? "w-64" : "w-16 "
+        } overflow-hidden`}
+      >
+        <Link
+          className={`py-2 pl-4 flex items-center w-full hover:bg-gray-200 ${
+            isOpen ? "w-64" : "w-16"
+          }`}
+          href="/Chat"
+        >
+          <BsChatHeart size={30} />
+          {sideBarOpen && <span className={`ml-4 text-lg`}>CHAT</span>}
+        </Link>
 
-  const sideBarConditon2 = sideBarOpen?
-  "realtive w-64 transition-all duration-300":"relative w-16 transition-all duration-300"
+        <Link
+          className={`py-2 pl-4 flex items-center w-full hover:bg-gray-200${
+            isOpen ? "w-64" : "w-0"
+          }`}
+          href="/Calendar"
+        >
+          <BsCalendarHeart size={30} />
+          {sideBarOpen && <span className={`ml-4 text-lg`}>CALENDAR</span>}
+        </Link>
+        <Link
+          className={`py-2 pl-4 flex items-center w-full hover:bg-gray-200 ${
+            isOpen ? "w-64" : "w-16"
+          }`}
+          href="/Task"
+        >
+          <MdOutlineTaskAlt size={30} />
+          {sideBarOpen && <span className={`ml-4 text-lg`}>TASK</span>}
+        </Link>
+        <Link
+          className={`py-2 pl-4 flex items-center w-full hover:bg-gray-200 ${
+            isOpen ? "w-64" : "w-16"
+          }`}
+          href="/Test"
+        >
+          <GiSpikedDragonHead size={30} />
+          {sideBarOpen && <span className={`ml-4 text-lg`}>TEST</span>}
+        </Link>
+      </nav>
+    );
+  };
+
   return (
-    <div className={sideBarConditon2}>
+    <div
+      className={`
+      bg-pink-100 relative transition-all duration-300
+    ${sideBarOpen ? "w-64" : "w-16"}
+    `}
+    >
       {modalOpen && (
         <div
-          className="relative absolute top-4 left-16 w-60 h-60 z-10
-            p-4
+          className="absolute top-4 left-16 z-10 p-2
+          min-w-52 min-h-52
             flex flex-col justify-center text-center 
             bg-white
             rounded-2xl 
             border border-gray-50 shadow-xl"
         >
-          <div className="flex absolute right-0 top-0 m-2 bg-pink-100 rounded-full">
-            <button onClick={() => handleToggleModal()}>
-              <IoIosClose size={30} className="text-white" />
+          <div className="flex justify-end items-center">
+            <button
+              onClick={() => handleToggleModal()}
+              className="rounded-full bg-pink-200 "
+            >
+              <IoIosClose size={30} className="text-white " />
             </button>
           </div>
+
           <SpinnerWithIcon size={70} loading={loading} icon={photoUrl} />
-          <h1 className="font-bold m-4">よなみねじょうじ</h1>
-          <button onClick={() => Logout(auth, root)}>ログアウト</button>
+          <h1 className="font-bold m-4">{currentUser?.displayName}</h1>
+          <button onClick={() => Logout(auth, root)}
+            className="text-white font-bold bg-pink-200 rounded-xl p-2"
+            >ログアウト</button>
         </div>
       )}
 
       {/* サイドバー */}
       <div
-        className={sideBarConditon}
+        className={`h-screen flex bg-pink-50 flex-col transition-all duration-300
+          ${sideBarOpen ? "w-64" : "w-16"}
+          `}
       >
         {/* オープン・クローズ */}
         <div
@@ -72,7 +124,10 @@ const Sidebar = () => {
           </button>
 
           <div className="pr-1">
-            <IoIosNotifications className='text-gray-700 hover:text-black' size={25} />
+            <IoIosNotifications
+              className="text-gray-700 hover:text-black"
+              size={25}
+            />
           </div>
         </div>
 
@@ -86,76 +141,10 @@ const Sidebar = () => {
             <SpinnerWithIcon size={40} loading={loading} icon={photoUrl} />
           </button>
         </div>
+
         {/* ナビゲーション */}
-        <nav className="grid grid-rows-1 gap-1 w-full overflow-hidden pl-1">
-          
-          <Link
-            className={`pl-4 py-2 flex items-center max-w-64 hover:bg-gray-200`}
-            href="/Chat"
-          >
-            <BsChatHeart size={30}/>
-            <span className={`ml-4 text-lg`}>CHAT</span>
-          </Link>
-          <Link
-            className={`pl-4 py-2 flex items-center max-w-64 hover:bg-gray-200`}
-            href="/Calendar"
-          >
-            <BsCalendarHeart size={30} />
-            <span className={`ml-4 text-lg`}>CALENDAR</span>
-          </Link>
-          <Link
-            className={`pl-4 py-2 flex items-center max-w-64 hover:bg-gray-200`}
-            href="/Task"
-          >
-            <MdOutlineTaskAlt size={30} />
-            <span className={`ml-4 text-lg`}>TASK</span>
-          </Link>
-
-          <Link
-            className={`pl-4 py-2 flex items-center max-w-64 hover:bg-gray-200`}
-            href="/Test"
-          >
-            <GiSpikedDragonHead size={30} />
-            <span className={`ml-4 text-lg`}>TEST</span>
-          </Link>
-        </nav>
+        <SideBarNav isOpen={sideBarOpen} />
       </div>
-
-      {/* <div className="h-screen w-16 flex bg-pink-50 flex-col">
-          <button onClick={() => handleToggleSidebar()} className="m-5">
-            <LuPanelLeft size={30} />
-          </button>
-          <div className="flex items-center justify-center w-full mb-4">
-            <SpinnerWithIcon size={40} loading={loading} icon={photoUrl} />
-          </div>
-
-          <nav className="grid grid-rows-1 gap-1 w-full">
-            <Link
-              className="flex py-2 justify-center items-center max-w-64 hover:bg-gray-200 rounded-lg"
-              href="/Chat"
-            >
-              <BsChatHeart size={30} />
-            </Link>
-            <Link
-              className="flex py-2 justify-center items-center max-w-64 hover:bg-gray-200 rounded-lg"
-              href="/Calendar"
-            >
-              <BsCalendarHeart size={30} />
-            </Link>
-            <Link
-              className="flex py-2 justify-center items-center max-w-64 hover:bg-gray-200 rounded-lg"
-              href="/Task"
-            >
-              <MdOutlineTaskAlt size={30} />
-            </Link>
-            <Link
-              className="flex py-2 justify-center items-center max-w-64 hover:bg-gray-200 rounded-lg"
-              href="/Test"
-            >
-              <GiSpikedDragonHead size={30} />
-            </Link>
-          </nav>
-        </div> */}
     </div>
   );
 };

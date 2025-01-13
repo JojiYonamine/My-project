@@ -12,10 +12,11 @@ import { ChatRoom } from "@/components/Chat/ChatRoom";
 // useEffectはRequireAuthが終わってなくても開始されてしまうので注意
 
 const Chat = () => {
+  
   console.log("chat rendered")
   return (
     <RequireAuth>
-      <div className="flex">
+      <div className="flex relative">
         <Sidebar />
         <ChatRoomList/>
         <ChatRoom/>

@@ -1,7 +1,7 @@
 import { db } from "@/config/firebaseConfig";
 import { chatRoom, message } from "@/types/chatTypes";
 import { chatRoomsRef, messagesRef } from "@/utils/firestoreRefs";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, limit, onSnapshot, orderBy, query } from "firebase/firestore";
 import { create } from "zustand";
 
 interface chatStore {
@@ -11,6 +11,8 @@ interface chatStore {
   initializeChatRoom: (cid: string) => () => void;
   messages: message[];
   initializeMessages: (cid: string, roomName: string) => () => void;
+  sidebarOpen:boolean
+  setSidebarOpen:(open:boolean)=>void
 }
 
 const useChatStore = create<chatStore>((set) => ({
@@ -22,7 +24,6 @@ const useChatStore = create<chatStore>((set) => ({
 
   // チャットルームのリスナー開始用
   initializeChatRoom: (cid) => {
-    console.log("chatRooms:",chatRoomsRef(cid))
     const q = query(chatRoomsRef(cid),orderBy("lastMessage.sentAt","desc"))
     const unsubscribe = onSnapshot(q, (snapshot) => {
         const rooms:chatRoom[] = snapshot.docs.map((doc) => ({
@@ -38,7 +39,8 @@ const useChatStore = create<chatStore>((set) => ({
 
   //   メッセージのリスナー開始用
   initializeMessages: (cid, roomName) => {
-    const unsubscribe = onSnapshot(messagesRef(cid, roomName), (snapshot) => {
+    const q = query(messagesRef(cid,roomName),orderBy("sentAt","desc"),limit(30))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
         const messages: message[] = snapshot.docs.map((doc) => ({
           id: doc.data().id,
           text: doc.data().text,
@@ -46,10 +48,14 @@ const useChatStore = create<chatStore>((set) => ({
           sentAt: doc.data().sentAt,
           read: doc.data().read,
         }));
-        set({messages:messages})
+        const sortedMessages = messages.reverse()
+        set({messages:sortedMessages})
       });
     return unsubscribe;
   },
+
+  sidebarOpen:true,
+  setSidebarOpen:(open)=>set({sidebarOpen:open})
 }));
 
 export default useChatStore;

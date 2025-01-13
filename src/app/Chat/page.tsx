@@ -1,11 +1,6 @@
 "use client";
 import { RequireAuth } from "@/components/RequireAuth";
 import Sidebar from "@/components/Sidebar";
-import useAuthStore from "@/Context/authStore";
-import { sendMessage } from "@/utils/Chat/sendMessage";
-import { useEffect, useState } from "react";
-import { CreateRoomButton } from "@/components/Chat/createRoomButton";
-import useChatStore from "@/Context/chatStore";
 import { ChatRoomList } from "@/components/Chat/ChatRoomList";
 import { ChatRoom } from "@/components/Chat/ChatRoom";
 
@@ -17,9 +12,10 @@ import { ChatRoom } from "@/components/Chat/ChatRoom";
 // useEffectはRequireAuthが終わってなくても開始されてしまうので注意
 
 const Chat = () => {
+  console.log("chat rendered")
   return (
     <RequireAuth>
-      <div className="flex justify-left relative">
+      <div className="flex">
         <Sidebar />
         <ChatRoomList/>
         <ChatRoom/>

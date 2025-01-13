@@ -31,8 +31,8 @@ const Sidebar = () => {
   };
 
   const sideBarConditon = sideBarOpen
-    ? "absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-64"
-    : "absolute inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-16";
+    ? "inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-64"
+    : "inset-0 h-screen flex bg-pink-50 flex-col transition-all duration-300 z-0 w-16";
 
   const sideBarConditon2 = sideBarOpen?
   "realtive w-64 transition-all duration-300":"relative w-16 transition-all duration-300"
@@ -72,7 +72,7 @@ const Sidebar = () => {
           </button>
 
           <div className="pr-1">
-            <IoIosNotifications size={25} />
+            <IoIosNotifications className='text-gray-700 hover:text-black' size={25} />
           </div>
         </div>
 
@@ -88,11 +88,12 @@ const Sidebar = () => {
         </div>
         {/* ナビゲーション */}
         <nav className="grid grid-rows-1 gap-1 w-full overflow-hidden pl-1">
+          
           <Link
             className={`pl-4 py-2 flex items-center max-w-64 hover:bg-gray-200`}
             href="/Chat"
           >
-            <BsChatHeart size={30} />
+            <BsChatHeart size={30}/>
             <span className={`ml-4 text-lg`}>CHAT</span>
           </Link>
           <Link

@@ -1,3 +1,4 @@
+import { Timestamp } from "firebase/firestore";
 
 
 export interface chatRoom {
@@ -10,6 +11,6 @@ export interface message {
   id: string;
   text: string;
   sentBy: string;
-  sentAt: Date;
+  sentAt: Date|Timestamp;
   read: boolean;
 }

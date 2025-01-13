@@ -8,6 +8,7 @@ interface CreateRoomButton{
 }
 
 export const CreateRoomButton: React.FC<CreateRoomButton> = ({className}) => {
+  console.log("create room button rendered")
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [roomName, setRoomName] = useState<string>("");
   // カップル存在する時のみアクセスできるので！でおけかな
@@ -21,7 +22,7 @@ export const CreateRoomButton: React.FC<CreateRoomButton> = ({className}) => {
           flex flex-col items-center justify-center
           bg-white border border-gray-50 shadow-xl
           absolute top-10
-          z-100"
+          z-10"
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             CreateChatRoom(cid, roomName);
@@ -47,7 +48,7 @@ export const CreateRoomButton: React.FC<CreateRoomButton> = ({className}) => {
 
         </form>
       ) : (
-        
+
         <button className='w-full bg-pink-500 p-1 text-center text-white font-bold' onClick={() => setOpenModal(true)}>
           ルーム作成
           {/* <FaCirclePlus

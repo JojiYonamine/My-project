@@ -1,6 +1,7 @@
+import { db } from "@/config/firebaseConfig";
 import { chatRoom, message } from "@/types/chatTypes";
 import { chatRoomsRef, messagesRef } from "@/utils/firestoreRefs";
-import { onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { create } from "zustand";
 
 interface chatStore {
@@ -21,7 +22,9 @@ const useChatStore = create<chatStore>((set) => ({
 
   // チャットルームのリスナー開始用
   initializeChatRoom: (cid) => {
-    const unsubscribe = onSnapshot(chatRoomsRef(cid), (snapshot) => {
+    console.log("chatRooms:",chatRoomsRef(cid))
+    const q = query(chatRoomsRef(cid),orderBy("lastMessage.sentAt","desc"))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
         const rooms:chatRoom[] = snapshot.docs.map((doc) => ({
           name:doc.data().name,
           createdAt:doc.data().createdAt,

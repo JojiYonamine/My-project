@@ -4,6 +4,8 @@ import { sendMessage } from "@/utils/Chat/sendMessage";
 import { useEffect, useState } from "react";
 
 export const ChatRoom = () => {
+  console.log("chat room rendered");
+
   const { currentUser, loading, currentCid } = useAuthStore();
   const [message, setMessage] = useState<string>("");
 
@@ -40,7 +42,12 @@ export const ChatRoom = () => {
                 e.preventDefault();
                 {
                   console.log(selectedChatRoom);
-                  sendMessage(currentCid!, currentUser!.uid, selectedChatRoom, message);
+                  sendMessage(
+                    currentCid!,
+                    currentUser!.uid,
+                    selectedChatRoom,
+                    message
+                  );
                   setMessage("");
                 }
               }}

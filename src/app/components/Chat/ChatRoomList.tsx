@@ -1,6 +1,6 @@
 import useChatStore from "@/Context/chatStore";
 import { CreateRoomButton } from "./createRoomButton";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useAuthStore from "@/Context/authStore";
 import { timestampToString } from "@/utils/dateUtils";
 import { RxDoubleArrowLeft } from "react-icons/rx";
@@ -37,7 +37,7 @@ export const ChatRoomList = () => {
     "relative w-full bg-pink-100 flex justify-center h-14 overflow-hidden max-w-60 hover:bg-gray-100";
 
   const handleToggleSidebar = () => {
-    sidebarOpen ? setSidebarOpen(false) : setSidebarOpen(true);
+    setSidebarOpen(!sidebarOpen)
   };
   return (
     <div

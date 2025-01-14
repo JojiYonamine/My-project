@@ -102,7 +102,7 @@ const Sidebar = () => {
 
           <SpinnerWithIcon size={70} loading={loading} icon={photoUrl} />
           <h1 className="font-bold m-4">{currentUser?.displayName}</h1>
-          <button onClick={() => Logout(auth, root)}
+          <button onClick={() => {Logout(auth, root);root.push("/Auth/Login")}}
             className="text-white font-bold bg-pink-200 rounded-xl p-2"
             >ログアウト</button>
         </div>

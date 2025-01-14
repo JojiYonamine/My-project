@@ -1,4 +1,3 @@
-import useAuthStore from "@/Context/authStore";
 import useChatStore from "@/Context/chatStore";
 import { RxDoubleArrowRight } from "react-icons/rx";
 
@@ -7,10 +6,10 @@ export const ChatHeader = () => {
   const setSidebarOpen = useChatStore((state) => state.setSidebarOpen);
   const selectedChatRoom = useChatStore((state) => state.selectedChatRoom);
   const handleToggleSidebar = () => {
-    sidebarOpen ? setSidebarOpen(false) : setSidebarOpen(true);
+    setSidebarOpen(!sidebarOpen)
   };
   return (
-    <div className="flex w-full justify-between p-2 mb-4">
+    <div className="flex w-full justify-between p-2 mb-4 max-h-[15vh]">
       <button
         className={`transition-all duration-500 ${
           !sidebarOpen ? "" : "opacity-0"

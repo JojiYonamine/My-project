@@ -1,7 +1,7 @@
 // 2025-01-01T01:06
 
-import { addDays, format, getDate, getHours, isToday } from "date-fns";
-import { FieldValue, Timestamp } from "firebase/firestore";
+import { addDays, format, isToday } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 
 //なんか、Date()の引数を変えればこれ使わなくてもいけそう、うーんでも、作っておいた方が後々楽っぽいので少し要素追加して完成させ、date-fnsとうまく組み合わせて
 export const FormatDate = (date: string) => {
@@ -35,12 +35,15 @@ export const timestampToDate = (timestamp: Timestamp): Date => {
   return timestamp.toDate();
 };
 
-export const timestampToString = (timestamp: Timestamp | Date): string => {
+export const timestampToString = (timestamp: Timestamp | Date,message?:boolean): string => {
   let date;
   if (timestamp instanceof Date) {
     date = timestamp;
   } else {
     date = timestamp.toDate();
+  }
+  if(message){
+    return (`${ format(date, `H:mm`)}`);
   }
   if (isToday(date)) {
     return (`${ format(date, `H:mm`)}`);

@@ -9,7 +9,7 @@ export const ChatRoomInput: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   return (
     <form
-      className="bg-white flex justify-left p-4 border-t border-b w-full absolute bottom-0"
+      className="bg-white flex p-4 border-t border-b w-full max-h-[15vh]"
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         {
@@ -19,7 +19,7 @@ export const ChatRoomInput: React.FC = () => {
       }}
     >
       <input
-      className="bg-pink-200 p-4 rounded-xl text-xl w-full"
+      className="bg-pink-200 p-4 rounded-xl text-2xl w-full"
         value={message}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setMessage(e.target.value);

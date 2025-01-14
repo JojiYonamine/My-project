@@ -3,6 +3,7 @@ import useChatStore from "@/Context/chatStore";
 import { useEffect } from "react";
 import { ChatRoomInput } from "./ChatRoomInput";
 import { ChatHeader } from "./ChatHeader";
+import { MessageComponent } from "./MessageComponent";
 
 export const ChatRoom = () => {
   console.log("chat room rendered");
@@ -25,13 +26,14 @@ export const ChatRoom = () => {
 
   if(selectedChatRoom){
     return(
-      <div className="w-full flex flex-col h-screen relative">
+      <div className="w-full flex flex-col h-screen">
           <ChatHeader/>
-          <ul className="max-h-[80vh] overflow-y-auto	">
+          <ul className="min-h-0 flex flex-col overflow-y-auto flex-grow">
             {messages.map((message) => (
-              <li key={message.id} className="h-10">
-                内容:{message.text}、送信者:{message.sentBy}、送信日時:
-              </li>
+              // <li key={message.id} className="h-10">
+              //   内容:{message.text}、送信者:{message.sentBy}、送信日時:
+              // </li>
+              <MessageComponent message={message} key={message.id}/>
             ))}
           </ul>
           <ChatRoomInput />

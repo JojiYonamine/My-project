@@ -15,7 +15,7 @@ export const MessageComponent: React.FC<MessageComponentProps> = ({
   const GetSender = (message: message): boolean => {
     if (message.sentBy == uid) {
       console.log(`${message.sentBy}|||||,${uid}`);
-      return true;
+      return false;
     } else {
       console.log(`${message.sentBy}|||||,${uid}`);
       return false;
@@ -23,26 +23,36 @@ export const MessageComponent: React.FC<MessageComponentProps> = ({
   };
   const isSender = GetSender(message);
   const when = timestampToString(message.sentAt, true);
+  const triangle: string = isSender
+    ? "absolute -right-4 bottom-2 h-0 w-0 border-transparent border-l-white border-l-[20px]  border-t-[10px] "
+    : "absolute -left-3 bottom-1 h-0 w-0 border-transparent border-r-pink-50 border border-t-[20px]  border-r-[20px]";
+
   return (
+    // ボックス
     <div
       className={`${
         isSender
-          ? "bg-white flex items-center justify-end mb-2"
-          : "bg-white flex items-center justify-end mb-2"
+          ? "flex items-center justify-end mb-4"
+          : "flex items-center mb-4"
       }`}
     >
-      <div className="relative rounded-xl bg-pink-200 p-2 mr-5">
-        <h1 className="bg-pink-200">{message.text}</h1>
-        <h1>{when}</h1>
-        <h1>{message.sentBy}</h1>
-        <div className="absolute -right-5 bottom-2 border-l-[20px] border-l-pink-200  h-0 w-0 border-t-[15px] border-b-[15px] border-transparent" />
-        {/* <div
-          className={`
+      {/* 内容・吹き出し */}
+      <div
+        className={`relative rounded-xl py-3 px-4 mb-2 ${
+          isSender ? "bg-white mr-5" : "bg-pink-50 ml-5"
+        }`}
+      >
+        <span>{message.text}</span>
+        <div
+          className={`${
             isSender
-              ? "absolute inset-0 border-l-[6px] border-l-blue-500  h-0 w-0 border-t-[6px] border-b-[6px] border-transparent"
-              : "absolute inset-0 border-r-[6px] border-r-gray-200  h-0 w-0 border-t-[6px] border-b-[6px] border-transparent"
-            `}
-        /> */}
+              ? "absolute -bottom-1 -left-12 text-white"
+              : "absolute -bottom-1 -right-10 text-pink-50"
+          }`}
+        >
+          {when}
+        </div>
+        <div className={triangle} />
       </div>
     </div>
   );

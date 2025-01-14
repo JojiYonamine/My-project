@@ -24,20 +24,20 @@ export const ChatRoom = () => {
     };
   }, [selectedChatRoom]);
 
-  if(selectedChatRoom){
-    return(
-      <div className="w-full flex flex-col h-screen">
-          <ChatHeader/>
-          <ul className="min-h-0 flex flex-col overflow-y-auto flex-grow">
-            {messages.map((message) => (
-              // <li key={message.id} className="h-10">
-              //   内容:{message.text}、送信者:{message.sentBy}、送信日時:
-              // </li>
-              <MessageComponent message={message} key={message.id}/>
-            ))}
-          </ul>
-          <ChatRoomInput />
-        </div>
-    )
+  if (selectedChatRoom) {
+    return (
+      <div className="w-full flex flex-col h-screen bg-pink-100">
+        {/* ヘッダー */}
+        <ChatHeader />
+        {/* チャット画面 */}
+        <ul className="min-h-0 flex flex-col overflow-y-auto flex-grow bg-pink-200">
+          {messages.map((message) => (
+            <MessageComponent message={message} key={message.id} />
+          ))}
+        </ul>
+        {/* 入力 */}
+        <ChatRoomInput />
+      </div>
+    );
   }
 };

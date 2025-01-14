@@ -6,7 +6,7 @@ export const ChatHeader = () => {
   const setSidebarOpen = useChatStore((state) => state.setSidebarOpen);
   const selectedChatRoom = useChatStore((state) => state.selectedChatRoom);
   const handleToggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen)
+    setSidebarOpen(!sidebarOpen);
   };
   return (
     <div className="flex w-full justify-between p-2 mb-4 max-h-[15vh]">

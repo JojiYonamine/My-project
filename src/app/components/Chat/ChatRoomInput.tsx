@@ -1,5 +1,6 @@
+import useAuthStore from "@/Context/authStore";
 import useChatStore from "@/Context/chatStore";
-import { sendMessage } from "@/utils/Chat/sendMessage";
+import SendMessage from "@/utils/Chat/sendMessage";
 import { useState } from "react";
 import { IoIosSend } from "react-icons/io";
 
@@ -7,13 +8,15 @@ import { IoIosSend } from "react-icons/io";
 export const ChatRoomInput: React.FC = () => {
   const selectedChatRoom = useChatStore((state) => state.selectedChatRoom)!;
   const [message, setMessage] = useState<string>("");
+  const cid: string = useAuthStore((state) => state.currentCid)!;
+  const uid: string = useAuthStore((state) => state.currentUser)!.uid;
   return (
     <form
       className="bg-white flex p-4 border-t border-b w-full max-h-[15vh]"
       onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         {
-          sendMessage(selectedChatRoom, message);
+          SendMessage(cid,uid,selectedChatRoom, message);
           setMessage("");
         }
       }}

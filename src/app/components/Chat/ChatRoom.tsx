@@ -5,11 +5,10 @@ import { ChatRoomInput } from "./ChatRoomInput";
 import { ChatHeader } from "./ChatHeader";
 import { ChatRoomMessageList } from "./ChatRoomMessageList";
 
-export const ChatRoom = () => {
+export const ChatRoom:React.FC = () => {
   console.log("chat room rendered");
   const currentCid = useAuthStore((state) => state.currentCid)!;
   const loading = useAuthStore((state) => state.loading);
-
   const { selectedChatRoom, messages, initializeMessages } = useChatStore();
 
   useEffect(() => {
@@ -31,14 +30,13 @@ export const ChatRoom = () => {
         <ChatHeader />
         {/* チャット画面 */}
         <ChatRoomMessageList messages={messages}/>
-        {/* <ul className="min-h-0 flex flex-col overflow-y-auto flex-grow bg-pink-200">
-          {messages.map((message) => (
-            <MessageComponent message={message} key={message.id} />
-          ))}
-        </ul> */}
-        {/* 入力 */}
+        {/* メッセージ送信 */}
         <ChatRoomInput />
       </div>
     );
+  }else{
+    return(
+      <ChatHeader />
+    )
   }
 };

@@ -27,6 +27,8 @@ export const chatRoomRef = (cid:string,roomName:string) => doc(db,"couples",cid,
 
 export const messagesRef = (cid:string, roomName:string) => collection(db,"couples",cid,"chatrooms",roomName,"messages")
 
+export const messageRef = (cid:string,roomName:string,messageId:string) => doc(db,"couples",cid,"chatrooms",roomName,"messages",messageId)
+
 export const getUserNameFromFirestore = async(uid:string) =>  {
     try{
         const doc = await getDoc(userRef(uid))

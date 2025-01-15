@@ -1,6 +1,7 @@
 import { message } from "@/types/chatTypes";
 import { MessageComponent } from "./MessageComponent";
 import { groupMessagesByDate } from "@/utils/Chat/groupMessagesByDate";
+import { useEffect, useRef } from "react";
 
 // チャットルームのメッセージを表示する部分を担当
 interface  ChatRoomMessageListProps{
@@ -9,14 +10,14 @@ interface  ChatRoomMessageListProps{
 
 export const ChatRoomMessageList:React.FC<ChatRoomMessageListProps> = ({messages}) => {
   const messageGroup = groupMessagesByDate(messages);
+  const scrollRef = useRef<HTMLDivElement>(null)
+  useEffect(()=>{
+    if(scrollRef.current)
+   { scrollRef.current.scrollTop = scrollRef.current.scrollHeight};
+  },[messages])
 
   return (
-    //   <ul className="min-h-0 flex flex-col overflow-y-auto flex-grow bg-pink-200">
-    //     {messages.map((message) => (
-    //       <MessageComponent message={message} key={message.id} />
-    //     ))}
-    //   </ul>
-    <div className="min-h-0 flex flex-col overflow-y-auto flex-grow bg-pink-200">
+    <div ref={scrollRef} className="min-h-0 flex flex-col overflow-y-auto flex-grow bg-pink-200">
       {Object.entries(messageGroup).map(([date, messagesOnTheDate]) => (
         <div key={date}>
           {/* 日付*/}

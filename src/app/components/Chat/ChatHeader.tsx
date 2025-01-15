@@ -9,7 +9,7 @@ export const ChatHeader = () => {
     setSidebarOpen(!sidebarOpen);
   };
   return (
-    <div className="flex w-full justify-between p-2 mb-4 max-h-[15vh]">
+    <div className="flex w-full justify-between p-2 mb-2 max-h-[6vh]">
       <button
         className={`transition-all duration-500 ${
           !sidebarOpen ? "" : "opacity-0"

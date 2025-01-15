@@ -1,3 +1,5 @@
+// チャットルームリストを表示するコンポーネント
+
 import useChatStore from "@/Context/chatStore";
 import { CreateRoomButton } from "./createRoomButton";
 import { useEffect } from "react";
@@ -6,8 +8,6 @@ import { timestampToString } from "@/utils/dateUtils";
 import { RxDoubleArrowLeft } from "react-icons/rx";
 
 export const ChatRoomList = () => {
-  console.log("chat room list rendered");
-
   const { loading, currentCid } = useAuthStore();
   const {
     chatRooms,
@@ -18,7 +18,7 @@ export const ChatRoomList = () => {
     setSidebarOpen,
   } = useChatStore();
 
-  //   チャットルーム監視
+  //チャットルームリストのリスナーを開始・終了する
   useEffect(() => {
     if (loading || !currentCid) {
       return;
@@ -31,13 +31,9 @@ export const ChatRoomList = () => {
     };
   }, [currentCid]);
 
-  const isSelected: string =
-    "relative w-full bg-white flex justify-center h-14 overflow-hidden max-w-60 ";
-  const isNotSelected: string =
-    "relative w-full bg-pink-100 flex justify-center h-14 overflow-hidden max-w-60 hover:bg-gray-100";
-
+  // チャットルームリストの開閉用
   const handleToggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen)
+    setSidebarOpen(!sidebarOpen);
   };
   return (
     <div
@@ -54,24 +50,30 @@ export const ChatRoomList = () => {
           <RxDoubleArrowLeft size={25} />
         </button>
       </div>
-      {/* チャットルーム表示 */}
+      {/* チャットルームリスト表示 */}
       <div
         className={` transition-all duration-500 ${
           sidebarOpen ? "max-w-60" : "max-w-0 opacity-50"
         }`}
       >
+        {/* チャットルームを表示 */}
         {chatRooms.map((room) => (
           <button
             key={room.name}
             className={
-              room.name == selectedChatRoom ? isSelected : isNotSelected
+              room.name == selectedChatRoom
+                ? "relative w-full bg-white flex justify-center h-14 overflow-hidden max-w-60 "
+                : "relative w-full bg-pink-100 flex justify-center h-14 overflow-hidden max-w-60 hover:bg-gray-100"
             }
             onClick={() => {
               setSelectedChatRoom(room.name);
             }}
           >
+            {/* ルーム名 */}
             <h1 className="absolute top-0 left-1">{room.name}</h1>
+            {/* 最後のメッセージ */}
             <h1 className="absolute bottom-1 text-sm text-gray-500 overflow-hidden max-h-5">{`${room.lastMessage.text}`}</h1>
+            {/* 最後のメッセージの送信された時間 */}
             <h1 className="absolute top-0 right-1 text-gray-400">
               {timestampToString(room.lastMessage.sentAt)}
             </h1>

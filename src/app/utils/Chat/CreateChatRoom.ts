@@ -1,7 +1,10 @@
+// チャットルームを作成するための関数
+
 import { getDoc, setDoc } from "firebase/firestore";
 import { chatRoomRef } from "../firestoreRefs";
 import { chatRoom } from "@/types/chatTypes";
 
+// 同名のチャットルームの存在をチェックする関数
 export const checkRoom = async (
   cid: string,
   roomName: string
@@ -10,8 +13,8 @@ export const checkRoom = async (
     console.log("ルームチャック開始");
     const chatRoomSnapshot = await getDoc(chatRoomRef(cid, roomName));
     if (chatRoomSnapshot.exists()) {
-      alert("同名のチャットルームが存在します！")
-      return false
+      alert("同名のチャットルームが存在します！");
+      return false;
     } else {
       return true;
     }
@@ -22,6 +25,7 @@ export const checkRoom = async (
   }
 };
 
+// チャットルーム作成関数
 export const CreateChatRoom = async (cid: string, roomName: string) => {
   console.log("start creating room");
 
@@ -34,28 +38,26 @@ export const CreateChatRoom = async (cid: string, roomName: string) => {
     return;
   }
 
-  const isAvailable:boolean = await checkRoom(cid,roomName)
-  console.log(isAvailable)
-  if(isAvailable == true){
+  const isAvailable: boolean = await checkRoom(cid, roomName);
+  if (isAvailable == true) {
     try {
       const createdAt = new Date();
-      const newChatRoom:chatRoom = {
-        name:roomName,
-        createdAt:createdAt,
-        lastMessage:{
-          id:"theFistLastMesssage",
-          text:"theFistLastMesssage",
-          sentBy:"developer",
-          sentAt:createdAt,
-          read:false
-        }
-      }
+      const newChatRoom: chatRoom = {
+        name: roomName,
+        createdAt: createdAt,
+        lastMessage: {
+          id: "theFistLastMesssage",
+          text: "theFistLastMesssage",
+          sentBy: "developer",
+          sentAt: createdAt,
+          read: false,
+        },
+      };
       await setDoc(chatRoomRef(cid, roomName), newChatRoom);
     } catch (err: unknown) {
       console.error("CreateChatroomでエラー", err);
     }
-  }else{
-    return 
+  } else {
+    return;
   }
-  
 };

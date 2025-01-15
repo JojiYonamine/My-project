@@ -1,3 +1,5 @@
+// メッセージ送信用の関数
+
 import { message } from "@/types/chatTypes";
 import { messagesRef } from "../firestoreRefs";
 import {
@@ -9,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 
+// メッセージの送信・チャットルームのラストメッセージを更新
 const sendMessageAndLastMessage = async (
   message: message,
   messageDocRef: DocumentReference<DocumentData>,
@@ -28,13 +31,14 @@ const sendMessageAndLastMessage = async (
   }
 };
 
-// 呼び出し用;
+// 呼び出すとき用;
 const SendMessage = (
   cid: string,
   uid: string,
   roomName: string,
   text: string
 ) => {
+  // firestoreのIDをmessageに持たせる
   const messagesCollection = messagesRef(cid, roomName);
   const messageDocRef = doc(messagesCollection);
   const lastMessageRef = doc(db, "couples", cid, "chatrooms", roomName);

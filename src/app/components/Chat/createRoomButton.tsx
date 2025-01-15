@@ -1,3 +1,5 @@
+// チャットルーム作成用モーダル・モーダルの開閉用ボタン
+
 import useAuthStore from "@/Context/authStore";
 import { CreateChatRoom } from "@/utils/Chat/CreateChatRoom";
 import { useState } from "react";
@@ -12,21 +14,26 @@ export const CreateRoomButton: React.FC<CreateRoomButton> = ({ className }) => {
   console.log("create room button rendered");
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [roomName, setRoomName] = useState<string>("");
-  const toggeleModal = () =>{
-    openModal?setOpenModal(false):setOpenModal(true)
-  }
+  const toggeleModal = () => {
+    setOpenModal((prev) => !prev);
+  };
   // カップル存在する時のみアクセスできるので！でおけかな
   const cid: string = useAuthStore((state) => state.currentCid)!;
   return (
     <div className={className}>
-      <button onClick={()=>toggeleModal()} className="flex items-center justify-center">
+      {/* チャットルーム作成用モーダルの開閉ボタン */}
+      <button
+        onClick={() => toggeleModal()}
+        className="flex items-center justify-center"
+      >
         <FaCirclePlus
           className="rounded-full bg-white text-pink-300"
           size={25}
         />
       </button>
+
+      {/* チャットルーム作成用モーダル */}
       {openModal && (
-        //モーダル
         <form
           className="ralative w-60 h-60 rounded-2xl 
           flex flex-col items-center justify-center

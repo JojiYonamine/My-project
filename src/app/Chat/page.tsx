@@ -1,25 +1,24 @@
+// チャット機能
+// useEffectはRequireAuthが終わってなくても開始されてしまうので注意
+
 "use client";
 import { RequireAuth } from "@/components/RequireAuth";
 import Sidebar from "@/components/Sidebar";
 import { ChatRoomList } from "@/components/Chat/ChatRoomList";
 import { ChatRoom } from "@/components/Chat/ChatRoom";
 
-//ログイン、カップル登録していないと出てこないようにする。
-//カップル登録してないユーザーが入れないようにしないとダメ
-//一応、cidなしっ弾くようにするか
-// メッセ送受作ったらlastSentMessageとlastSentByをつける
-//ルームを常に監視するんじゃなくて、ルーム作成時のエフェクトで更新すればリソース減らせる気がする
-// useEffectはRequireAuthが終わってなくても開始されてしまうので注意
-
 const Chat = () => {
-  
-  console.log("chat rendered")
+  console.log("chat rendered");
   return (
+    // 未ログイン・カップル未登録を入れないようにする
     <RequireAuth>
       <div className="flex relative">
+        {/* サイドバー */}
         <Sidebar />
-        <ChatRoomList/>
-        <ChatRoom/>
+        {/* チャットルームリスト（チャット用のサイドバー） */}
+        <ChatRoomList />
+        {/* チャットルーム（メッセージが表示される部分） */}
+        <ChatRoom />
       </div>
     </RequireAuth>
   );

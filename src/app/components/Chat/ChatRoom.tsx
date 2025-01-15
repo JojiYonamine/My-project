@@ -1,3 +1,5 @@
+// 選択中のチャットルーム部分を担当するコンポーネント
+
 import useAuthStore from "@/Context/authStore";
 import useChatStore from "@/Context/chatStore";
 import { useEffect } from "react";
@@ -11,6 +13,7 @@ export const ChatRoom:React.FC = () => {
   const loading = useAuthStore((state) => state.loading);
   const { selectedChatRoom, messages, initializeMessages } = useChatStore();
 
+  // 選択中のチャットルームのメッセージのリスナーを開始・終了する
   useEffect(() => {
     if (loading || !selectedChatRoom) {
       return;
@@ -23,6 +26,7 @@ export const ChatRoom:React.FC = () => {
     };
   }, [selectedChatRoom]);
 
+  // チャットルーム選択中のみメッセージを表示
   if (selectedChatRoom) {
     return (
       <div className="w-full flex flex-col h-screen bg-pink-100">
@@ -34,7 +38,9 @@ export const ChatRoom:React.FC = () => {
         <ChatRoomInput />
       </div>
     );
-  }else{
+  }
+  // チャットルーム未選択でサイドバーの開閉用ボタンだけ表示
+  else{
     return(
       <ChatHeader />
     )

@@ -1,3 +1,5 @@
+// メッセージの表示用
+
 import useAuthStore from "@/Context/authStore";
 import useChatStore from "@/Context/chatStore";
 import { message } from "@/types/chatTypes";
@@ -19,7 +21,7 @@ export const MessageComponent: React.FC<MessageComponentProps> = ({
   const cid = useAuthStore((state) => state.currentCid)!;
   const roomName = useChatStore((state) => state.selectedChatRoom)!;
 
-  // 自分が送信者 true 相手が送信者 false
+  // 自分が送信者でtrue 相手が送信者でfalse
   const GetSender = (message: message): boolean => {
     if (message.sentBy == uid) {
       return true;
@@ -29,13 +31,14 @@ export const MessageComponent: React.FC<MessageComponentProps> = ({
   };
   const isSender = GetSender(message);
   const when = timestampToString(message.sentAt, true);
+  // 吹き出しの三角の部分
   const triangle: string = isSender
     ? "absolute -right-4 bottom-2 h-0 w-0 border-transparent border-l-white border-l-[20px]  border-t-[10px] "
     : "absolute -left-3 bottom-1 h-0 w-0 border-transparent border-r-pink-50 border border-t-[20px]  border-r-[20px]";
 
   // メッセージが未読かつ送信者が相手の時updateMesasgeを呼び出す
   useEffect(() => {
-    if (!message.read && !isSender) updateMessage(message, uid, cid, roomName);
+    if (!message.read && !isSender) updateMessage(message, cid, roomName);
   }, []);
 
   const isRead: string =
@@ -43,7 +46,7 @@ export const MessageComponent: React.FC<MessageComponentProps> = ({
       ? "absolute -left-5 top-1 text-white"
       : "hidden h-0 w-0";
   return (
-    // ボックス
+    // ボックス全体
     <div
       className={`${
         isSender
@@ -51,7 +54,7 @@ export const MessageComponent: React.FC<MessageComponentProps> = ({
           : "flex items-center mb-4"
       }`}
     >
-      {/* 内容・吹き出し */}
+      {/* 内容・吹き出し・既読表示 */}
       <div
         className={`relative rounded-xl py-3 px-4 mb-2 ${
           isSender ? "bg-white mr-5" : "bg-pink-50 ml-5"

@@ -3,7 +3,7 @@ import useChatStore from "@/Context/chatStore";
 import { useEffect } from "react";
 import { ChatRoomInput } from "./ChatRoomInput";
 import { ChatHeader } from "./ChatHeader";
-import { MessageComponent } from "./MessageComponent";
+import { ChatRoomMessageList } from "./ChatRoomMessageList";
 
 export const ChatRoom = () => {
   console.log("chat room rendered");
@@ -30,11 +30,12 @@ export const ChatRoom = () => {
         {/* ヘッダー */}
         <ChatHeader />
         {/* チャット画面 */}
-        <ul className="min-h-0 flex flex-col overflow-y-auto flex-grow bg-pink-200">
+        <ChatRoomMessageList messages={messages}/>
+        {/* <ul className="min-h-0 flex flex-col overflow-y-auto flex-grow bg-pink-200">
           {messages.map((message) => (
             <MessageComponent message={message} key={message.id} />
           ))}
-        </ul>
+        </ul> */}
         {/* 入力 */}
         <ChatRoomInput />
       </div>

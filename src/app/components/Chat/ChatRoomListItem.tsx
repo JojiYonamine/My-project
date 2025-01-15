@@ -1,7 +1,7 @@
 // チャットルームリストに表示するチャットルームのコンポーネント
 
 import useChatStore from "@/Context/chatStore";
-import { chatRoom, message } from "@/types/chatTypes";
+import { chatRoom } from "@/types/chatTypes";
 import { timestampToString } from "@/utils/dateUtils";
 
 interface ChatRoomListItemProps {

@@ -15,7 +15,7 @@ export const MessageComponent: React.FC<MessageComponentProps> = ({
   const GetSender = (message: message): boolean => {
     if (message.sentBy == uid) {
       console.log(`${message.sentBy}|||||,${uid}`);
-      return false;
+      return true;
     } else {
       console.log(`${message.sentBy}|||||,${uid}`);
       return false;

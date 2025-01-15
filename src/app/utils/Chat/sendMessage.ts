@@ -1,10 +1,19 @@
 import { message } from "@/types/chatTypes";
 import { messagesRef } from "../firestoreRefs";
-import { doc, DocumentData, DocumentReference, setDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  DocumentData,
+  DocumentReference,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@/config/firebaseConfig";
 
-
-const sendMessageAndLastMessage = async (message:message,messageDocRef:DocumentReference<DocumentData>,lastMessageRef:DocumentReference<DocumentData> ) => {
+const sendMessageAndLastMessage = async (
+  message: message,
+  messageDocRef: DocumentReference<DocumentData>,
+  lastMessageRef: DocumentReference<DocumentData>
+) => {
   try {
     await setDoc(messageDocRef, message);
   } catch (err: unknown) {
@@ -20,9 +29,12 @@ const sendMessageAndLastMessage = async (message:message,messageDocRef:DocumentR
 };
 
 // 呼び出し用;
-const SendMessage = (cid:string,uid:string,roomName: string, text: string) => {
-  // const cid: string = useAuthStore((state) => state.currentCid)!;
-  // const uid: string = useAuthStore((state) => state.currentUser)!.uid;
+const SendMessage = (
+  cid: string,
+  uid: string,
+  roomName: string,
+  text: string
+) => {
   const messagesCollection = messagesRef(cid, roomName);
   const messageDocRef = doc(messagesCollection);
   const lastMessageRef = doc(db, "couples", cid, "chatrooms", roomName);
@@ -34,7 +46,7 @@ const SendMessage = (cid:string,uid:string,roomName: string, text: string) => {
     sentAt: sentAt,
     read: false,
   };
-  sendMessageAndLastMessage(message,messageDocRef,lastMessageRef)
+  sendMessageAndLastMessage(message, messageDocRef, lastMessageRef);
 };
 
-export default SendMessage
+export default SendMessage;

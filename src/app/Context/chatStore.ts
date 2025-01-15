@@ -1,4 +1,5 @@
 import { chatRoom, message } from "@/types/chatTypes";
+import { timestampToDate } from "@/utils/dateUtils";
 import { chatRoomsRef, messagesRef } from "@/utils/firestoreRefs";
 import { limit, onSnapshot, orderBy, query } from "firebase/firestore";
 import { create } from "zustand";
@@ -48,7 +49,7 @@ const useChatStore = create<chatStore>((set) => ({
         id: doc.data().id,
         text: doc.data().text,
         sentBy: doc.data().sentBy,
-        sentAt: doc.data().sentAt,
+        sentAt: timestampToDate(doc.data().sentAt),
         read: doc.data().read,
       }));
       const sortedMessages = messages.reverse();

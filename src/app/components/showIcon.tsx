@@ -1,5 +1,4 @@
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
 
 interface showIconProps {
   src: string | null | undefined;

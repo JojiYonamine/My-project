@@ -1,50 +1,122 @@
-// カレンダーを新規作成するボタン
-import { AddCalendar } from "@/utils/Calendar/addCalendar";
+// カレンダー新規作成ボタン
+
+import { useAddCalendar } from "@/utils/Calendar/addCalendar";
 import { useState } from "react";
+import { FaCirclePlus } from "react-icons/fa6";
+import { FaRegCheckCircle } from "react-icons/fa";
 
-export const CreateCalendarButton: React.FC = () => {
-      const [description, setDescription] = useState<string>("");
-      const [share, setShare] = useState<boolean>(false);
-      const [theme, setTheme] = useState<string>("");
+export const CreateCalendar: React.FC = () => {
+  const [description, setDescription] = useState<string>("");
+  const [share, setShare] = useState<boolean>(false);
+  const [theme, setTheme] = useState<string>("");
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const addCalendar = useAddCalendar();
 
-      const addNewCalendar = () => {
-        AddCalendar(theme,share,description)
-        setTheme("");
-        setDescription("");
-        setShare(false);
-      };
+  const AddNewCalendar = () => {
+    addCalendar(theme, share, description);
+    setTheme("");
+    setDescription("");
+  };
 
-        const handleChangeShare = (e: React.ChangeEvent<HTMLInputElement>) => {
-          setShare(e.target.checked);
-        };
+  const toggeleModal = () => {
+    setOpenModal((prev) => !prev);
+  };
+
+  const toggleShare = () => {
+    setShare((prev) => !prev);
+  };
+
+  const validate = ():boolean =>{
+    console.log(description.trim().length == 0)
+    if(theme.trim().length == 0){
+      return true
+    }else{
+      return false
+    }
+  }
+
   return (
-    <form
-      onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        addNewCalendar();
-      }}
-    >
-      <input
-        type="text"
-        placeholder="テーマを入力"
-        value={theme}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setTheme(e.target.value);
-        }}
-      />
-      <label>
-        <input type="checkbox" checked={share} onChange={handleChangeShare} />
-        共有
-      </label>
-      <input
-        type="text"
-        placeholder="説明を入力"
-        value={description}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setDescription(e.target.value);
-        }}
-      />
-      <button type="submit">カレンダーを登録</button>
-    </form>
+    <div className="flex items-center">
+      {/* カレンダー作成用モーダルの開閉ボタン */}
+      <button
+        onClick={() => toggeleModal()}
+        className="flex items-center justify-center"
+      >
+        <FaCirclePlus
+          className="rounded-full bg-white text-pink-300"
+          size={25}
+        />
+      </button>
+
+      {/* カレンダー作成モーダル */}
+      {openModal && (
+        <form
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            AddNewCalendar();
+          }}
+          className="ralative w-96 h-96 rounded-2xl p-6
+          flex flex-col gap-2
+          bg-white border border-gray-50 shadow-xl
+          absolute top-10 z-10"
+        >
+          <h1 className="text-center tex-2xl font-bold"> カレンダー設定</h1>
+
+          {/* テーマ入力 */}
+          <div className="w-full flex flex-col p-2 mb-2">
+            <h1 className="font-semibold">テーマ</h1>
+            <div className="bg-gray-100 px-2 pt-2 rounded-md">
+              <input
+                type="text"
+                value={theme}
+                placeholder="テーマを入力"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setTheme(e.target.value);
+                }}
+                className="w-full focus:outline-none bg-gray-100 px-1  focus:font-bold border-b-2 pb-1 border-gray-100 focus:border-pink-500"
+              />
+            </div>
+          </div>
+
+          {/* 説明入力 */}
+          <div className="w-full flex flex-col p-2 mb-2">
+            <h1 className="font-semibold">説明</h1>
+            <div className="bg-gray-100 px-2 pt-2 rounded-md ">
+              <input
+                type="text"
+                placeholder="説明を入力"
+                value={description}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setDescription(e.target.value);
+                }}
+                className="w-full focus:outline-none bg-gray-100 px-1  focus:font-bold border-b-2 pb-1 border-gray-100 focus:border-pink-500"
+              />
+            </div>
+          </div>
+
+          {/* 共有 */}
+          <div className="w-full flex justify-between px-2">
+            <h1 className="font-semibold">共有</h1>
+            <button type="button" onClick={() => toggleShare()}>
+              <FaRegCheckCircle
+                size={30}
+                className={`${share ? "text-pink-500" : "text-gray-500"}`}
+              />
+            </button>
+          </div>
+
+          {/* 送信・キャンセルボタン */}
+          <div className="grow flex justify-end items-end">
+            <button onClick={() => toggeleModal()}
+            className={`px-2 py-2 mx-1 rounded-md border border-gray-200 text-gray-400 font-semibold tex duration-500 hover:text-gray-500 hover:bg-gray-300`} type="button">
+              キャンセル
+            </button>
+            <button disabled={validate()} className={`px-6 py-2 mx-1 rounded-md font-bold border ${validate()?"border-gray-200 text-gray-400":"bg-pink-400  text-white border-pink-400 duration-500 hover:bg-pink-600"}`} type="submit">
+              作成
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
   );
 };

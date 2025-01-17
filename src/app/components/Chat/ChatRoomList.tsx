@@ -50,6 +50,7 @@ export const ChatRoomList = () => {
           <RxDoubleArrowLeft size={25} />
         </button>
       </div>
+
       {/* チャットルームリスト表示 */}
       <div
         className={` transition-all duration-500 ${

@@ -26,7 +26,7 @@ export const ChatRoomInput: React.FC = () => {
       }}
     >
       <input
-      className="bg-pink-200 p-4 rounded-xl text-2xl w-full"
+      className="bg-pink-200 p-4 rounded-xl text-2xl w-full outline-none"
         value={text}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           setText(e.target.value);

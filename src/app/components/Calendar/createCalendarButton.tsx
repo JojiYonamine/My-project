@@ -26,14 +26,14 @@ export const CreateCalendar: React.FC = () => {
     setShare((prev) => !prev);
   };
 
-  const validate = ():boolean =>{
-    console.log(description.trim().length == 0)
-    if(theme.trim().length == 0){
-      return true
-    }else{
-      return false
+  const validate = (): boolean => {
+    console.log(description.trim().length == 0);
+    if (theme.trim().length == 0) {
+      return true;
+    } else {
+      return false;
     }
-  }
+  };
 
   return (
     <div className="flex items-center">
@@ -54,12 +54,14 @@ export const CreateCalendar: React.FC = () => {
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             AddNewCalendar();
+            toggeleModal();
           }}
           className="ralative w-96 h-96 rounded-2xl p-6
           flex flex-col gap-2
           bg-white border border-gray-50 shadow-xl
           absolute top-10 z-10"
         >
+          
           <h1 className="text-center tex-2xl font-bold"> カレンダー設定</h1>
 
           {/* テーマ入力 */}
@@ -107,11 +109,22 @@ export const CreateCalendar: React.FC = () => {
 
           {/* 送信・キャンセルボタン */}
           <div className="grow flex justify-end items-end">
-            <button onClick={() => toggeleModal()}
-            className={`px-2 py-2 mx-1 rounded-md border border-gray-200 text-gray-400 font-semibold tex duration-500 hover:text-gray-500 hover:bg-gray-300`} type="button">
+            <button
+              onClick={() => toggeleModal()}
+              className={`px-2 py-2 mx-1 rounded-md border border-gray-200 text-gray-400 font-semibold tex duration-500 hover:text-gray-500 hover:bg-gray-300`}
+              type="button"
+            >
               キャンセル
             </button>
-            <button disabled={validate()} className={`px-6 py-2 mx-1 rounded-md font-bold border ${validate()?"border-gray-200 text-gray-400":"bg-pink-400  text-white border-pink-400 duration-500 hover:bg-pink-600"}`} type="submit">
+            <button
+              disabled={validate()}
+              className={`px-6 py-2 mx-1 rounded-md font-bold border ${
+                validate()
+                  ? "border-gray-200 text-gray-400"
+                  : "bg-pink-400  text-white border-pink-400 duration-500 hover:bg-pink-600"
+              }`}
+              type="submit"
+            >
               作成
             </button>
           </div>

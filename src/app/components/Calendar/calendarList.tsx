@@ -11,7 +11,7 @@ export const CalendarList: React.FC = () => {
     calendars,
     sidebarOpen,
     setSidebarOpen,
-    // // selectedTheme,
+    selectedCalendar,
     setSelectedCalendar,
     initializeCalendar,
   } = useCalendarStore();
@@ -42,15 +42,20 @@ export const CalendarList: React.FC = () => {
       }
       `}
     >
+      {/* サイドバーの開閉・カレンダーの新規作成ボタン */}
       <div className="mb-4 flex justify-between items-center p-2">
         <CreateCalendar/>
         <button onClick={() => handleToggleSidebar()}>
           <RxDoubleArrowLeft size={25} />
         </button>
       </div>
+
+      {/* カレンダーリスト */}
       {calendars.map((calendar) => (
         <button
-          className={`w-full h-14 bg-pink-100 hover:bg-gray-100`}
+          className={`w-full h-14 hover:bg-gray-100 ${
+            calendar.calendarId == selectedCalendar?.calendarId ? "bg-gray-200":"bg-pink-100"
+          }`}
           key={calendar.calendarId}
           onClick={() => setSelectedCalendar(calendar)}
         >

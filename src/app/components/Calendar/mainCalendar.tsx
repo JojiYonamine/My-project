@@ -2,14 +2,13 @@
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { calendarEvent } from "@/types/calendarTypes";
-import { getDay, startOfWeek } from "date-fns";
+import { format, getDay, parse, startOfWeek } from "date-fns";
 import { ja } from "date-fns/locale";
-import { format, parse } from "path";
 import { useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer, View } from "react-big-calendar";
-import DefaultToolbar from "../calendarToolBar";
 import useAuthStore from "@/Context/authStore";
 import useCalendarStore from "@/Context/calendarStore";
+import { CalendarHeader } from "./calendarHeader";
 
 export const MainCalendar: React.FC = () => {
   const locales = {
@@ -27,6 +26,7 @@ export const MainCalendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [currentView, setCurrentView] = useState<View>("month");
   const handleNavigate = (newDate: Date) => {
+    console.log(newDate);
     setCurrentDate(newDate);
   };
   const { events, selectedCalendar, setSelectedEvent, initializeEvents } =
@@ -53,20 +53,22 @@ export const MainCalendar: React.FC = () => {
   }, [selectedCalendar]);
 
   return (
-    <Calendar
-      localizer={localizer}
-      events={events}
-      date={currentDate}
-      startAccessor="start"
-      endAccessor="end"
-      onSelectEvent={handleSelectEvent}
-      onNavigate={handleNavigate}
-      onView={handleViewChange}
-      view={currentView}
-      style={{ height: 500, width: "100%" }}
-      components={{
-        toolbar: DefaultToolbar, // カスタムツールバーを適用
-      }}
-    />
+    <div>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        date={currentDate}
+        startAccessor="start"
+        endAccessor="end"
+        onSelectEvent={handleSelectEvent}
+        onNavigate={handleNavigate}
+        onView={handleViewChange}
+        view={currentView}
+        style={{ height: 500, width: "100%" }}
+        components={{
+          toolbar: CalendarHeader, // カスタムツールバーを適用
+        }}
+      />
+    </div>
   );
 };

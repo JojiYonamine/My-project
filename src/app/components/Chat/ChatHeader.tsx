@@ -3,7 +3,6 @@
 
 import useChatStore from "@/Context/chatStore";
 import { RxDoubleArrowRight } from "react-icons/rx";
-
 export const ChatHeader:React.FC = () => {
   const sidebarOpen = useChatStore((state) => state.sidebarOpen);
   const setSidebarOpen = useChatStore((state) => state.setSidebarOpen);
@@ -24,7 +23,7 @@ export const ChatHeader:React.FC = () => {
         <RxDoubleArrowRight size={25} />
       </button>
 
-      {/* チャットルームリストを表示 */}
+      {/* 選択中のチャットルームの名前を表示 */}
       <div className="w-full flex items-center justify-center">
         <h1 className="text-2xl font-bold">{selectedChatRoom}</h1>
       </div>

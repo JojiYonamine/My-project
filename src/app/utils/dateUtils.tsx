@@ -1,6 +1,7 @@
 // 2025-01-01T01:06
 
 import { addDays, format, isToday } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { Timestamp } from "firebase/firestore";
 
 //なんか、Date()の引数を変えればこれ使わなくてもいけそう、うーんでも、作っておいた方が後々楽っぽいので少し要素追加して完成させ、date-fnsとうまく組み合わせて
@@ -20,11 +21,15 @@ export const FormatDate = (date: string) => {
 };
 
 export const dateAndTimeToIso = (date: Date) => {
-  return date.toISOString().slice(0, 16);
+  // 2025-01-22T15:00:00.000Z
+  const day = formatInTimeZone(date,"Asia/Tokyo","yyyy-MM-dd")
+  const product = day + "T12:00"
+  return product
 };
 
 export const dateToIso = (date: Date) => {
-  return date.toISOString().slice(0, 10);
+  
+  return formatInTimeZone(date,"Asia/Tokyo","yyyy-MM-dd")
 };
 
 export const IsoToDate = (ISO: string) => {

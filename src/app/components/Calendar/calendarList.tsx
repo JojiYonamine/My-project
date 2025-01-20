@@ -43,7 +43,7 @@ export const CalendarList: React.FC = () => {
       `}
     >
       {/* サイドバーの開閉・カレンダーの新規作成ボタン */}
-      <div className="mb-4 flex justify-between items-center p-2">
+      <div className="m-2 flex justify-between items-center p-2">
         <CreateCalendar/>
         <button onClick={() => handleToggleSidebar()}>
           <RxDoubleArrowLeft size={25} />

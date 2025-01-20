@@ -12,6 +12,7 @@ type AddCalendarFunction = (
     description: string | undefined
   ) => Promise<void>;
 
+
 export const useAddCalendar = ():AddCalendarFunction => {
   const { currentCid, currentUser } = useAuthStore();
   const uid = currentUser!.uid;

@@ -3,11 +3,8 @@ import React from "react";
 import { RequireAuth } from "@/components/RequireAuth";
 import Sidebar from "@/components/Sidebar";
 import { CalendarList } from "@/components/Calendar/calendarList";
-import { CreateCalendar } from "@/components/Calendar/createCalendarButton";
-import { CreateNewEvent } from "@/components/Calendar/createNewEvent";
-import { EditEvent } from "@/components/Calendar/editEvent";
 import { MainCalendar } from "@/components/Calendar/mainCalendar";
-import { CalendarHeader } from "@/components/Calendar/calendarHeader";
+import { EventSidebar } from "@/components/Calendar/eventSidebar";
 
 const MyCalendar = () => {
   return (
@@ -18,15 +15,13 @@ const MyCalendar = () => {
         <CalendarList />
         {/* イベント登録 */}
         {/* <CreateNewEvent /> */}
-        <div className="w-full">
-          {/* ヘッダー */}
-          {/* <CalendarHeader /> */}
+        <div className="w-full h-full">
           {/* カレンダー表示 */}
           <MainCalendar />
         </div>
 
         {/* イベント選択時 */}
-        {/* <EditEvent /> */}
+        <EventSidebar isEdit={true}/>
       </div>
     </RequireAuth>
   );

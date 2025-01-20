@@ -10,7 +10,7 @@ export interface calendar {
 }
 
 export interface calendarEvent {
-  eventId: string; //firebaseの各イベントのidをいれる
+  eventId?: string; //firebaseの各イベントのidをいれる
   title: string;
   createdBy: string;
   createdAt: Date;

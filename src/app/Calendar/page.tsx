@@ -21,7 +21,7 @@ const MyCalendar = () => {
         </div>
 
         {/* イベント選択時 */}
-        <EventSidebar isEdit={true}/>
+        <EventSidebar/>
       </div>
     </RequireAuth>
   );

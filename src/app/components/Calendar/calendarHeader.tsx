@@ -23,7 +23,6 @@ export const CalendarHeader: React.FC<ToolbarProps> = ({
 }) => {
   const sidebarOpen = useCalendarStore((state) => state.sidebarOpen);
   const setSidebarOpen = useCalendarStore((state) => state.setSidebarOpen);
-  // const selectedCalendar = useCalendarStore((state) => state.selectedCalendar);
 
   // month:true week:falseで管理する
   const [currentView, setCurrentView] = useState<boolean>(true);
@@ -37,6 +36,8 @@ export const CalendarHeader: React.FC<ToolbarProps> = ({
   const handleToggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  
 
   return (
     <div className="flex justify-start gap-4 w-full items-center p-2 mb-2 h-full max-h-[7vh] bg-pink-100">

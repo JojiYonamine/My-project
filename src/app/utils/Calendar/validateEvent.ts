@@ -2,7 +2,7 @@
 
 import useCalendarStore from "@/Context/calendarStore";
 import { calendarEvent } from "@/types/calendarTypes";
-import { isBefore } from "date-fns";
+import { addDays, isBefore } from "date-fns";
 
 type validateEventFunction = (event:calendarEvent) => string[];
 
@@ -30,6 +30,9 @@ export const useValidateEvent = (): validateEventFunction => {
       // 終日でなく、終了日が開始日より早い時
       if (isBefore(end, start) && !allDay) {
         errors.push("終了日は開始日より後にしてください");
+      }
+      if (allDay && isBefore(addDays(end,1),start)){
+        errors.push("終了日は開始日より後にしてください")
       }
       return errors;
     }

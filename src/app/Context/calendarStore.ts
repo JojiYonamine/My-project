@@ -17,6 +17,8 @@ interface calendarStore {
   setEvents: (events: calendarEvent[]) => void;
   initializeEvents: (cid: string, calendarId: string) => () => void;
   setSidebarOpen: (open: boolean) => void;
+  isEdit:boolean;
+  setIsEdit:(isEdit:boolean)=>void
 }
 
 const useCalendarStore = create<calendarStore>((set) => ({
@@ -59,6 +61,8 @@ const useCalendarStore = create<calendarStore>((set) => ({
     return unsubscribe;
   },
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
+  isEdit:false,
+  setIsEdit:(isEdit) =>set({isEdit:isEdit})
 }));
 
 export default useCalendarStore;

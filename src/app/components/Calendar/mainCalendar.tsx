@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer, SlotInfo, View } from "react-big-calendar";
 import useAuthStore from "@/Context/authStore";
 import useCalendarStore from "@/Context/calendarStore";
-import { CalendarHeader } from "./calendarHeader";
+// import { CalendarHeader } from "./calendarHeader";
 
 export const MainCalendar: React.FC = () => {
   const locales = {
@@ -21,29 +21,39 @@ export const MainCalendar: React.FC = () => {
     getDay,
     locales,
   });
+
   const loading = useAuthStore((state) => state.loading);
   const cid = useAuthStore((state) => state.currentCid);
-  const uid = useAuthStore((state)=>state.currentUser)!.uid
+  const uid = useAuthStore((state) => state.currentUser)!.uid;
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [currentView, setCurrentView] = useState<View>("month");
-  const handleNavigate = (newDate: Date) => {
-    console.log(newDate);
-    setCurrentDate(newDate);
-  };
-  const { events, selectedCalendar, setSelectedEvent, initializeEvents } =
-    useCalendarStore();
 
+  const {
+    events,
+    selectedCalendar,
+    setSelectedEvent,
+    initializeEvents,
+    setIsEdit,
+  } = useCalendarStore();
+
+  // 表示を変更
   const handleViewChange = (newView: View) => {
     setCurrentView(newView);
   };
 
-  // イベントを選択
-  const handleSelectEvent = (e: calendarEvent) => {
-    console.log(e)
-    setSelectedEvent(e);
+  // 表示する日を変更
+  const handleNavigate = (newDate: Date) => {
+    setCurrentDate(newDate);
   };
 
-  const handleSelectSlot = (e:SlotInfo) =>{
+  // イベントを選択
+  const handleSelectEvent = (e: calendarEvent) => {
+    setSelectedEvent(e);
+    setIsEdit(true);
+  };
+
+  // 空スロットを選択
+  const handleSelectSlot = (e: SlotInfo) => {
     const newEvent: calendarEvent = {
       eventId: "",
       title: "",
@@ -54,8 +64,9 @@ export const MainCalendar: React.FC = () => {
       end: e.start,
       color: "",
     };
-    setSelectedEvent(newEvent)
-  }
+    setSelectedEvent(newEvent);
+    setIsEdit(false);
+  };
 
   // イベントリスナーの開始終了
   useEffect(() => {
@@ -68,8 +79,16 @@ export const MainCalendar: React.FC = () => {
     };
   }, [selectedCalendar]);
 
+  // イベントの色を取得
+  const eventColorGetter = (event: calendarEvent) => {
+    return {
+      style: {
+        backgroundColor: event.color || "#ff7fbf",
+      },
+    };
+  };
+
   return (
-    <div>
       <Calendar
         localizer={localizer}
         events={events}
@@ -83,10 +102,11 @@ export const MainCalendar: React.FC = () => {
         onView={handleViewChange}
         view={currentView}
         style={{ height: 500, width: "100%" }}
-        components={{
-          toolbar: CalendarHeader, // カスタムツールバーを適用
-        }}
+        eventPropGetter={eventColorGetter}
+        toolbar={false}
+        // components={{
+        //   toolbar: CalendarHeader,
+        // }}
       />
-    </div>
   );
 };

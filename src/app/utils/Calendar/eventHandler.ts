@@ -15,6 +15,7 @@ export const useEvent = (action: "create" | "edit") => {
     (state) => state.selectedEvent
   ) as calendarEvent;
   const validate = useValidateEvent();
+  const setSelectedEvent = useCalendarStore((state)=>state.setSelectedEvent)
 
   const eventHandler = async () => {
     // バリデーション
@@ -37,6 +38,7 @@ export const useEvent = (action: "create" | "edit") => {
     try {
       await setDoc(ref, newEvent);
       alert("イベントを更新しました");
+      setSelectedEvent(null)
     } catch (err: unknown) {
       console.log(err, "addEventでエラー");
     }

@@ -18,4 +18,14 @@ export interface calendarEvent {
   start: Date; //|FieldValue;
   end: Date; //|FieldValue; //all day trueの時は、startに等しくなる
   color: string;
+  advanced?:{
+    location?:string;
+    memo?:string;
+    repeat:{
+      frequncy:"daily"|"weekly"|"monthly"|"yearly";
+      interval:number;
+      endDate?:Date;
+      count?:number
+    }
+  }
 }

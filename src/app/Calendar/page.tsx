@@ -5,23 +5,25 @@ import Sidebar from "@/components/Sidebar";
 import { CalendarList } from "@/components/Calendar/calendarList";
 import { MainCalendar } from "@/components/Calendar/mainCalendar";
 import { EventSidebar } from "@/components/Calendar/eventSidebar";
+import { CalendarHeader } from "@/components/Calendar/calendarHeader";
 
 const MyCalendar = () => {
   return (
     <RequireAuth>
       <div className="flex">
         <Sidebar />
-        {/* カレンダーリスト表示 */}
+        {/* カレンダーリスト*/}
         <CalendarList />
-        {/* イベント登録 */}
-        {/* <CreateNewEvent /> */}
-        <div className="w-full h-full">
-          {/* カレンダー表示 */}
-          <MainCalendar />
+        <div className="flex flex-col w-full">
+          {/* ヘッダー・ツールバー */}
+          <CalendarHeader />
+          <div className="flex h-full w-full ">
+            {/* カレンダー */}
+            <MainCalendar />
+            {/* イベント作成・編集 */}
+            <EventSidebar />
+          </div>
         </div>
-
-        {/* イベント選択時 */}
-        <EventSidebar/>
       </div>
     </RequireAuth>
   );

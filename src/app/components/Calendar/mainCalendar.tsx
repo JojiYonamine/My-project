@@ -4,10 +4,11 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { calendarEvent } from "@/types/calendarTypes";
 import { format, getDay, parse, startOfWeek } from "date-fns";
 import { ja } from "date-fns/locale";
-import { useEffect, useState } from "react";
-import { Calendar, dateFnsLocalizer, SlotInfo, View } from "react-big-calendar";
+import { useEffect } from "react";
+import { Calendar, dateFnsLocalizer, SlotInfo } from "react-big-calendar";
 import useAuthStore from "@/Context/authStore";
 import useCalendarStore from "@/Context/calendarStore";
+import useShowCalendarStore from "@/Context/showCalendarStore";
 // import { CalendarHeader } from "./calendarHeader";
 
 export const MainCalendar: React.FC = () => {
@@ -25,9 +26,7 @@ export const MainCalendar: React.FC = () => {
   const loading = useAuthStore((state) => state.loading);
   const cid = useAuthStore((state) => state.currentCid);
   const uid = useAuthStore((state) => state.currentUser)!.uid;
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const [currentView, setCurrentView] = useState<View>("month");
-
+  const {currentDate,currentView} = useShowCalendarStore()
   const {
     events,
     selectedCalendar,
@@ -37,14 +36,6 @@ export const MainCalendar: React.FC = () => {
   } = useCalendarStore();
 
   // 表示を変更
-  const handleViewChange = (newView: View) => {
-    setCurrentView(newView);
-  };
-
-  // 表示する日を変更
-  const handleNavigate = (newDate: Date) => {
-    setCurrentDate(newDate);
-  };
 
   // イベントを選択
   const handleSelectEvent = (e: calendarEvent) => {
@@ -98,15 +89,10 @@ export const MainCalendar: React.FC = () => {
         onSelectEvent={handleSelectEvent}
         selectable
         onSelectSlot={handleSelectSlot}
-        onNavigate={handleNavigate}
-        onView={handleViewChange}
         view={currentView}
-        style={{ height: 500, width: "100%" }}
+        style={{ height:"100%", width: "100%" }}
         eventPropGetter={eventColorGetter}
         toolbar={false}
-        // components={{
-        //   toolbar: CalendarHeader,
-        // }}
       />
   );
 };

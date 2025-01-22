@@ -20,7 +20,7 @@ const ColorPicker: React.FC = () => {
     setSelectedEvent({ ...selectedEvent, color: color });
   };
   return (
-    <div className="bg-white flex items-center justify-between w-full max-w-72">
+    <div className="bg-white flex items-center justify-between w-full px-1">
       {Object.entries(colorTags).map(([color, text]) => (
         <div key={color}>
           <div

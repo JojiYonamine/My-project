@@ -4,13 +4,13 @@ import useCalendarStore from "@/Context/calendarStore";
 import { calendarEvent } from "@/types/calendarTypes";
 import { addDays, isBefore } from "date-fns";
 
-type validateEventFunction = (event:calendarEvent) => string[];
+type validateEventFunction = (event: calendarEvent) => string[];
 
 export const useValidateEvent = (): validateEventFunction => {
   const calendarId = useCalendarStore(
     (state) => state.selectedCalendar
   )?.calendarId;
-  const validateEvent = (event:calendarEvent) => {
+  const validateEvent = (event: calendarEvent) => {
     const errors: string[] = [];
     // カレンダーが未選択の時
     if (!calendarId) {
@@ -31,8 +31,8 @@ export const useValidateEvent = (): validateEventFunction => {
       if (isBefore(end, start) && !allDay) {
         errors.push("終了日は開始日より後にしてください");
       }
-      if (allDay && isBefore(addDays(end,1),start)){
-        errors.push("終了日は開始日より後にしてください")
+      if (allDay && isBefore(addDays(end, 1), start)) {
+        errors.push("終了日は開始日より後にしてください");
       }
       return errors;
     }

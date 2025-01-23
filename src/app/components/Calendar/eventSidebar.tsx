@@ -111,7 +111,7 @@ export const EventSidebar: React.FC = () => {
               <h1 className="font-semibold">開始</h1>
               <div className="flex items-center justify-center gap-2">
                 <InputDate startOrEnd="start" />
-                {selectedEvent?.allDay && <InputTime startOrEnd="start" />}
+                {!selectedEvent?.allDay && <InputTime startOrEnd="start" />}
               </div>
             </div>
 
@@ -120,7 +120,7 @@ export const EventSidebar: React.FC = () => {
               <h1 className="font-semibold">終了</h1>
               <div className="flex items-center justify-center gap-2">
                 <InputDate startOrEnd="end" />
-                {selectedEvent?.allDay && <InputTime startOrEnd="end" />}
+                {!selectedEvent?.allDay && <InputTime startOrEnd="end" />}
               </div>
             </div>
           </div>

@@ -40,7 +40,7 @@ export const useEvent = (action: "create" | "edit") => {
       alert("イベントを更新しました");
       setSelectedEvent(null)
     } catch (err: unknown) {
-      console.log(err, "addEventでエラー");
+      console.log(err, "eventHndlerでエラー");
     }
   };
 

@@ -45,13 +45,18 @@ couples(collection){
             }
         }
         tasks(subcollection):{
-            taskId(doccument):{
-                createdBy:"joji"
-                title:"purchase bread"
-                share:true
-                dueDate:"2024-12-26"
-                theme:"buying"
-                createdAt:"2024-12-21"
+            theme1("buying")(doccument):{
+                icon:"hoge.png"
+                tasks(subcollection):{
+                    taskId(doccument):{
+                        createdBy:"joji"
+                        title:"purchase bread"
+                        share:true
+                        dueDate:"2024-12-26"
+                        theme:"buying"
+                        createdAt:"2024-12-21"
+                    }
+                }
             }
         }
     }

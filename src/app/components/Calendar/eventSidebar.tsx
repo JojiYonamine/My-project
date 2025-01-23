@@ -3,17 +3,14 @@
 import useCalendarStore from "@/Context/calendarStore";
 import { calendarEvent } from "@/types/calendarTypes";
 import { useEvent } from "@/utils/Calendar/eventHandler";
-import { dateAndTimeToIso, dateToIso, IsoToDate } from "@/utils/dateUtils";
-import { FaRegCheckCircle } from "react-icons/fa";
 import ColorPicker from "./colorPicker";
 import { useValidateEvent } from "@/utils/Calendar/validateEvent";
 import { InputDate, InputTime } from "@/Test/page";
 import { CiCalendar } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
-import useAuthStore from "@/Context/authStore";
+import { BasicCheckBox } from "../buttons/basicCheckBox";
+import {  useEditObject } from "@/utils/others/editObject";
 
-// イベント作成時 createEventを呼び出す
-// イベント編集時 editEventを呼び出す
 
 export const EventSidebar: React.FC = () => {
   // 新規作成時には、selectedEventは、null
@@ -22,9 +19,6 @@ export const EventSidebar: React.FC = () => {
   const handleEvent = useEvent(isEdit ? "edit" : "create");
   const validateEvent = useValidateEvent();
 
-  // 終日か否かで変更する用
-  const inputType = selectedEvent?.allDay ? "date" : "datetime-local";
-  const dateFormat = selectedEvent?.allDay ? dateToIso : dateAndTimeToIso;
 
   //   フォーム送信時に実行する関数
   const HandleEvent = () => {
@@ -35,23 +29,8 @@ export const EventSidebar: React.FC = () => {
     } as calendarEvent);
   };
 
-  const validateValue = (name: string, value: string) => {
-    if (name == "start" || name == "end") {
-      return IsoToDate(value);
-    } else {
-      return value;
-    }
-  };
-
   //   インプット編集時に実行する関数
-  const editEvent = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-    const newEvent = {
-      ...selectedEvent,
-      [name]: validateValue(name, value),
-    } as calendarEvent;
-    setSelectedEvent(newEvent);
-  };
+  const editEvent = useEditObject(selectedEvent,setSelectedEvent)
 
   //   終日の変更を行う関数
   const toggleAllday = () => {
@@ -127,14 +106,7 @@ export const EventSidebar: React.FC = () => {
 
           {/* 終日 */}
           <div className="w-full flex justify-end items-center gap-2 px-10 py-2 ">
-            <button type="button" onClick={() => toggleAllday()}>
-              <FaRegCheckCircle
-                size={30}
-                className={`${
-                  selectedEvent?.allDay ? "text-pink-500" : "text-gray-500"
-                }`}
-              />
-            </button>
+            <BasicCheckBox onClick={()=>toggleAllday()} checked={selectedEvent?.allDay!}/>
             <h1 className="font-semibold">終日</h1>
           </div>
         </div>

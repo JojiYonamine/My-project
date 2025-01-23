@@ -1,24 +1,24 @@
 import { FieldValue } from "firebase/firestore";
 
-export interface baseEvent {
-  title: string;
-  createdBy: string;
-  createdAt: Date | FieldValue;
-}
+// export interface baseEvent {
+//   title: string;
+//   createdBy: string;
+//   createdAt: Date | FieldValue;
+// }
 
 
-export interface internalTask extends baseEvent {
-  theme: string;
-  due: boolean;
-  dueDate?: Date;
-  share: boolean;
-  description: string;
-  done: boolean;
-}
+// export interface internalTask extends baseEvent {
+//   theme: string;
+//   due: boolean;
+//   dueDate?: Date;
+//   share: boolean;
+//   description: string;
+//   done: boolean;
+// }
 
-export interface TaskShowing extends internalTask {
-  taskId: string;
-}
+// export interface TaskShowing extends internalTask {
+//   taskId: string;
+// }
 
 
 

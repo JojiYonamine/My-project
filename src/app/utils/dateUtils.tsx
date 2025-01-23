@@ -27,9 +27,9 @@ export const dateAndTimeToIso = (date: Date) => {
   return product
 };
 
-export const dateToIso = (date: Date) => {
-  
-  return formatInTimeZone(date,"Asia/Tokyo","yyyy-MM-dd")
+export const dateToIso = (date: Date|null|undefined) => {
+  const newDate = date?date:new Date()
+  return formatInTimeZone(newDate,"Asia/Tokyo","yyyy-MM-dd")
 };
 
 export const IsoToDate = (ISO: string) => {

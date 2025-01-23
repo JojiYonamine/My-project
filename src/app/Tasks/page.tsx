@@ -1,7 +1,9 @@
 "use client";
 import { RequireAuth } from "@/components/RequireAuth";
+import { EditTaskSidebar } from "@/components/Task/editSidebar/EditTaskSidebar";
+import { TaskSidebar } from "@/components/Task/sidebar-filter/TaskSIdebar";
+import { TaskList } from "@/components/Task/taskList/taskList";
 import { useCouple } from "@/Context/Couple-modified";
-import { internalTask, TaskShowing } from "@/types/types";
 import { dateToIso, IsoToDate } from "@/utils/dateUtils";
 import { addTask } from "@/utils/Task/addTask";
 import { deleteTask } from "@/utils/Task/deleteTask";
@@ -36,13 +38,9 @@ const Task = () => {
   const [tasks, setTasks] = useState<TaskShowing[]>([]);
 
   // タスク編集用の状態
-  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [editedTask, setEditedTask] = useState<TaskShowing | null>(null);
 
   // フィルター用の状態
-  const [themes, setThemes] = useState<string[]>([]);
-  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const [doneCriterion, setDoneCriterion] = useState<string>("all");
 
   // ボックス変更用
   const handleChangeCheckBox = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,25 +52,6 @@ const Task = () => {
       setdue(e.target.checked);
       return;
     }
-  };
-
-  // done変更用
-  const handleUpdateDone = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    try{
-      await updateDone(cid, name, checked);
-      setTasks((prevTasks: TaskShowing[]) => {
-        if (!prevTasks) return [];
-        else {
-          return prevTasks.map((task) =>
-            task.taskId === name ? { ...task, done: checked } : task
-          );
-        }
-      });
-    }catch(err:unknown){
-      alert(`更新に失敗しました、${err}`,)
-    }
-
   };
 
   // タスクをfirestoreに追加、ローカルのtasksにも追加
@@ -88,23 +67,22 @@ const Task = () => {
       description: description,
       done: false,
     };
-    try{
+    try {
       const newId: string | undefined = await addTask(cid, newTask);
-    if (newId) {
-      const NewTask: TaskShowing = { ...newTask, taskId: newId };
-      setTasks((prevTasks: TaskShowing[]) =>
-        prevTasks ? [...prevTasks, NewTask] : [NewTask]
-      );
-    } else {
-      alert("タスクの追加に失敗しました");
+      if (newId) {
+        const NewTask: TaskShowing = { ...newTask, taskId: newId };
+        setTasks((prevTasks: TaskShowing[]) =>
+          prevTasks ? [...prevTasks, NewTask] : [NewTask]
+        );
+      } else {
+        alert("タスクの追加に失敗しました");
+      }
+      setTitle("");
+      setDescription("");
+      setTheme("");
+    } catch (err: unknown) {
+      alert(`更新に失敗しました、${err}`);
     }
-    setTitle("");
-    setDescription("");
-    setTheme("");
-    }catch(err:unknown){
-      alert(`更新に失敗しました、${err}`)
-    }
-    
   };
 
   // タスク取得(初回のみ)
@@ -114,16 +92,8 @@ const Task = () => {
 
   // テーマ更新
   useEffect(() => {
-    console.log("theme updated");
     if (tasks) setThemes(getThemes(tasks));
   }, [cid, tasks]);
-
-  //タスク編集の方針
-  //title,doneはそのまま編集、その他は開いて編集
-  const handleSelectTask = (task: TaskShowing) => {
-    setSelectedTaskId(task.taskId);
-    setEditedTask(task);
-  };
 
   //   タスク編集
   const handleEditTask = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,305 +114,18 @@ const Task = () => {
     setEditedTask({ ...editedTask, [name]: value });
   };
 
-  //   編集したタスクを反映
-  const handleUpdateTask = async () => {
-    ensureTask(editedTask);
-    if (editedTask.theme === "") {
-      setEditedTask({ ...editedTask, theme: "テーマなし" });
-    }
-    try{
-      await updateTask(cid, editedTask);
-      setTasks((prevTasks: TaskShowing[]) => {
-        if (!prevTasks) return [];
-        else {
-          return prevTasks.map((task) =>
-            task.taskId === editedTask.taskId ? { ...task, ...editedTask } : task
-          );
-        }
-      });
-      setEditedTask(null);
-    }catch(err:unknown){
-      alert(`編集に失敗しました,${err}`)
-    }
-  };
 
-  //   タスク削除
-  const handleDeleteTask = async (task: TaskShowing) => {
-    try{
-      await deleteTask(cid, task);
-    const newTasks = tasks.filter(
-      (prev: TaskShowing) => prev.taskId !== task.taskId
-    );
-    setTasks(newTasks);
-    }catch(err:unknown){
-      alert(`更新に失敗しました、${err}`)
-    }
-  };
-
-  // 終了・テーマのフィルター
-  const doneThemeFilter = (
-    tasks: TaskShowing[],
-    selectedThemes: string[],
-    criterion: string
-  ): TaskShowing[] => {
-    switch (criterion) {
-      case "done":
-        const doneTasks = tasks.filter((task: TaskShowing) => task.done);
-        return doneTasks.filter((doneTask: TaskShowing) =>
-          selectedThemes.includes(doneTask.theme)
-        );
-      case "undone":
-        const undoneTasks = tasks.filter((task: TaskShowing) => !task.done);
-        return undoneTasks.filter((undoneTask: TaskShowing) =>
-          selectedThemes.includes(undoneTask.theme)
-        );
-      case "all":
-        return tasks.filter((task: TaskShowing) =>
-          selectedThemes.includes(task.theme)
-        );
-      default:
-        return tasks;
-    }
-  };
-
-  // テーマの複数選択用
-  const toggleThemeSelect = (theme: string) => {
-    if (selectedThemes.includes(theme)) {
-      setSelectedThemes((prev) => prev.filter((t) => t !== theme));
-    } else {
-      setSelectedThemes((prev) => [...prev, theme]);
-    }
-  };
-
-  // 全選択・解除
-  const handleSelectAll = () => {
-    if (selectedThemes.length == themes.length) setSelectedThemes([]);
-    else setSelectedThemes(themes);
-  };
-
-  return (
-    <div>
-      {/* 終了フィルター */}
-      <div>
-        <h1>終了フィルター</h1>
-        <select
-          value={doneCriterion}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            setDoneCriterion(e.target.value);
-          }}
-        >
-          <option value="all">全て</option>
-          <option value="undone">未完了</option>
-          <option value="done">完了</option>
-        </select>
-      </div>
-
-      {/* テーマフィルター */}
-      <div>
-        <h1>テーマフィルター</h1>
-        <button onClick={handleSelectAll}>全選択</button>
-        {themes.map((theme) => (
-          <label key={theme}>
-            <input
-              type="checkbox"
-              checked={selectedThemes.includes(theme)}
-              value={theme}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                toggleThemeSelect(e.target.value);
-              }}
-            />
-            {theme}
-          </label>
-        ))}
-      </div>
-
-      {/* タスク表示 */}
-      <div>
-        {tasks && (
-          <div>
-            {selectedTaskId && editedTask ? (
-              // タスク編集
-              <form
-                onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-                  e.preventDefault();
-                  handleUpdateTask();
-                }}
-              >
-                <h1>タスク編集画面</h1>
-                <input
-                  type="text"
-                  placeholder="タイトルを入力"
-                  name="title"
-                  value={editedTask.title}
-                  onChange={handleEditTask}
-                />
-                <input
-                  type="text"
-                  placeholder="説明"
-                  name="description"
-                  value={editedTask.description}
-                  onChange={handleEditTask}
-                />
-                <input
-                  type="text"
-                  placeholder="テーマを入力"
-                  name="theme"
-                  value={editedTask.theme}
-                  onChange={handleEditTask}
-                />
-                <label>
-                  <input
-                    type="checkbox"
-                    name="share"
-                    checked={editedTask.share}
-                    onChange={handleEditTask}
-                  />
-                  共有
-                </label>
-                <label>
-                  <input
-                    type="checkbox"
-                    name="due"
-                    checked={editedTask.due}
-                    onChange={handleEditTask}
-                  />
-                  期限
-                </label>
-
-                {editedTask.due && (
-                  <input
-                    type="date"
-                    placeholder="期日を入力"
-                    name="duedate"
-                    value={dateToIso(dueDate)}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      setDueDate(IsoToDate(e.target.value));
-                    }}
-                  />
-                )}
-                <button type="submit">更新</button>
-              </form>
-            ) : (
-              <div>
-                <h1>タスクリスト</h1>
-                {/* <select multiple>
-                  doneThemeFilter(tasks,selectedThemes,doneCriterion)
-                </select> */}
-                {(selectedThemes.length!==0)&&(doneThemeFilter(tasks, selectedThemes, doneCriterion).map(
-                  (task) => (
-                    <li key={task.taskId}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={task.done}
-                          name={task.taskId}
-                          onChange={(
-                            e: React.ChangeEvent<HTMLInputElement>
-                          ) => {
-                            handleUpdateDone(e);
-                          }}
-                        />
-                      </label>
-                      {task.title}
-                      <button
-                        onClick={() => {
-                          handleSelectTask(task);
-                        }}
-                      >
-                        編集
-                      </button>
-                      <button
-                        onClick={() => {
-                          handleDeleteTask(task);
-                        }}
-                      >
-                        削除
-                      </button>
-                    </li>
-                  )
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* 新規タスク作成 */}
-      {!editedTask && (
-        <form
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-            addNewTask();
-          }}
-        >
-          <h1>タスク作成</h1>
-          <input
-            type="text"
-            placeholder="タスクを入力"
-            value={title}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setTitle(e.target.value);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="説明を入力"
-            value={description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setDescription(e.target.value);
-            }}
-          />
-          <input
-            type="theme"
-            placeholder="テーマを入力"
-            value={theme}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setTheme(e.target.value);
-            }}
-          />
-          <label>
-            <input
-              type="checkbox"
-              name="share"
-              checked={share}
-              onChange={handleChangeCheckBox}
-            />
-            共有
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="due"
-              checked={due}
-              onChange={handleChangeCheckBox}
-            />
-            期限
-          </label>
-
-          {due && (
-            <input
-              type="date"
-              placeholder="期日を入力"
-              value={dateToIso(dueDate)}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setDueDate(IsoToDate(e.target.value));
-              }}
-            />
-          )}
-          <button type="submit">タスクを登録</button>
-        </form>
-      )}
-    </div>
-  );
-};
-
-// export default Task
-const TaskFeat = () => {
   return (
     <RequireAuth>
-      <Task />
+      {/* サイドバー、フィルターを表示する */}
+      <TaskSidebar/>
+      {/* タスク表示 */}
+      <TaskList/>
+
+      {/* 新規タスク作成 */}
+      <EditTaskSidebar isEdit={true}/>
     </RequireAuth>
   );
 };
 
-export default TaskFeat;
+export default Task;

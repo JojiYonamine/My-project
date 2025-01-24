@@ -1,6 +1,6 @@
 // イベントを追加する関数
 import { doc, setDoc } from "firebase/firestore";
-import { eventRef, eventsRef } from "../firestoreRefs";
+import { eventRef, eventsRef } from "../others/firestoreRefs";
 import useAuthStore from "@/Context/authStore";
 import useCalendarStore from "@/Context/calendarStore";
 import { useValidateEvent } from "./validateEvent";

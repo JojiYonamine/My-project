@@ -1,10 +1,10 @@
 // 終了フィルター
 
-import useTaskStore from "@/Context/taskStore";
+import useTaskOtherStore from "@/Context/Task/taskOtherStore";
 
 export const DoneFilter = () => {
-    const doneCriterion = useTaskStore((state)=>state.doneCriterion)
-    const setDoneCriterion = useTaskStore((state)=>state.setDoneCriterion)
+    const doneCriterion = useTaskOtherStore((state)=>state.doneCriterion)
+    const setDoneCriterion = useTaskOtherStore((state)=>state.setDoneCriterion)
   return (
     <div>
       <h1>終了フィルター</h1>

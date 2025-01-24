@@ -9,8 +9,8 @@
 import { BasicButton } from "@/components";
 import { auth } from "@/config/firebaseConfig";
 import { RegisterCouple } from "@/utils/Auth/registerCouple";
-import { IsoToDate } from "@/utils/dateUtils";
-import { getUserNameFromFirestore, userRef } from "@/utils/firestoreRefs";
+import { IsoToDate } from "@/utils/others/dateUtils";
+import { getUserNameFromFirestore, userRef } from "@/utils/others/firestoreRefs";
 import { onAuthStateChanged, updateProfile, User } from "firebase/auth";
 import { setDoc } from "firebase/firestore";
 import { useRouter, useSearchParams } from "next/navigation";

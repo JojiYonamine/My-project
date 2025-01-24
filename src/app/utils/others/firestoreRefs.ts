@@ -17,7 +17,11 @@ export const eventsRef = (cid:string,calendarId:string) => (collection(db,"coupl
 
 export const eventRef = (cid:string,calendarId:string,eventId:string) => doc(db,"couples",cid,"calendars",calendarId,"events",eventId)
 
-export const tasksRef = (cid:string) =>(collection(db,"couples",cid,"tasks"))
+export const taskThemesRef = (cid:string) => collection(db,"couples",cid,"taskThemes")
+
+export const taskThemeRef = (cid:string,theme:string) => doc(db,"couples",cid,"taskThemes",theme)
+
+export const tasksRef = (cid:string) =>collection(db,"couples",cid,"tasks")
 
 export const taskRef = (cid:string,taskId:string) =>doc(db,"couples",cid,"tasks",taskId)
 

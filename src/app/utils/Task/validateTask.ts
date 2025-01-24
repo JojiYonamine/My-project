@@ -11,7 +11,7 @@ export const validateTask = (task: Task | null): string[] => {
   if (!task.title) {
     errors.push("タイトルを入力してください");
   }
-  if (!task.theme) {
+  if (!task.themeId) {
     errors.push("テーマを選択してください");
   }
   return errors;

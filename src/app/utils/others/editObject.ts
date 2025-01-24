@@ -1,6 +1,7 @@
 // イベントや、タスクなどのオブジェクトの編集用
+//input onChangeに設定することを想定してる
 import { isValid, parseISO } from "date-fns";
-import { IsoToDate } from "../dateUtils";
+import { IsoToDate } from "./dateUtils";
 
 type EditObjectType<T> = (
   object: T,

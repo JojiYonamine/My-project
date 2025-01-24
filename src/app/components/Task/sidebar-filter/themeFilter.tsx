@@ -1,15 +1,17 @@
 // テーマフィルター
-import useTaskStore from "@/Context/taskStore";
+import useTaskThemeStore from "@/Context/Task/taskThemeStore";
+import { TaskTheme } from "@/types/taskTypes";
+
 
 export const ThemeFilter = () => {
-  const themes = useTaskStore((state)=>state.themes)
-  const selectedThemes = useTaskStore((state)=>state.selectedThemes)
-  const setSelectedThemes = useTaskStore((state)=>state.setSelectedThemes)
+  const themes = useTaskThemeStore((state) => state.taskThemes);
+  const selectedThemes = useTaskThemeStore((state) => state.selectedThemes);
+  const setSelectedThemes = useTaskThemeStore((state) => state.setSelectedThemes);
 
   //   テーマの選択
-  const toggleThemeSelect = (theme: string) => {
+  const toggleThemeSelect = (theme: TaskTheme) => {
     if (selectedThemes.includes(theme)) {
-      const newThemes = selectedThemes.filter((t) => t !== theme);
+      const newThemes = selectedThemes.filter((t) => t.taskThemeId !== theme.taskThemeId);
       setSelectedThemes(newThemes);
     } else {
       const newThemes = [...selectedThemes, theme];
@@ -28,16 +30,16 @@ export const ThemeFilter = () => {
       <h1>テーマフィルター</h1>
       <button onClick={handleSelectAll}>全選択</button>
       {themes.map((theme) => (
-        <label key={theme}>
+        <label key={theme.taskThemeId}>
           <input
             type="checkbox"
             checked={selectedThemes.includes(theme)}
-            value={theme}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              toggleThemeSelect(e.target.value);
+            value={theme.name}
+            onChange={() => {
+              toggleThemeSelect(theme);
             }}
           />
-          {theme}
+          {theme.name}
         </label>
       ))}
     </div>

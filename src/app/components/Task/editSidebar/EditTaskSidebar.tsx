@@ -1,6 +1,6 @@
 import { BasicCheckBox } from "@/components/buttons/basicCheckBox";
-import useTaskStore from "@/Context/taskStore";
-import { dateToIso } from "@/utils/dateUtils";
+import useTaskStore from "@/Context/Task/taskStore";
+import { dateToIso } from "@/utils/others/dateUtils";
 import { useEditObject } from "@/utils/others/editObject";
 import { useTask } from "@/utils/Task/taskHandler";
 import { useState } from "react";
@@ -55,7 +55,7 @@ export const EditTaskSidebar:React.FC<EditTaskSidebarProps> = ({isEdit}) => {
           <input
             type="theme"
             placeholder="テーマを入力"
-            value={editingTask.theme}
+            value={editingTask.themeId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 handleEditTask(e)
             }}

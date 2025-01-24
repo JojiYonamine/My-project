@@ -1,5 +1,5 @@
 import { setDoc } from "firebase/firestore"
-import { coupleRef, userRef} from "../firestoreRefs"
+import { coupleRef, userRef} from "../others/firestoreRefs"
 
 // １、両者のIDからカップルを生成する。２、両者に、CID、お互いのIDを付与
 export const RegisterCouple = async(inviterId:string,invitedId:string) =>{

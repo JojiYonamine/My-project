@@ -3,7 +3,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 
 interface BasicCheckBoxProps {
     onClick:()=>void;
-    checked:boolean
+    checked:boolean|undefined|null
 }
 
 export const BasicCheckBox:React.FC<BasicCheckBoxProps> = ({onClick,checked}) => {

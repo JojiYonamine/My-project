@@ -1,5 +1,5 @@
-import { TaskShowing } from "@/types/types";
+import { Task } from "@/types/taskTypes"
 
-export const getThemes = (tasks:TaskShowing[]):string[] =>{
-    return Array.from(new Set(tasks.map((task:TaskShowing)=>task.theme)))
+export const getThemes = (tasks:Task[]):string[] =>{
+    return Array.from(new Set(tasks.map((task:Task)=>task.themeId)))
 }

@@ -1,7 +1,7 @@
 // カレンダーの状態を管理する
 
 import { calendar, calendarEvent } from "@/types/calendarTypes";
-import { calendarsRef, eventsRef } from "@/utils/firestoreRefs";
+import { calendarsRef, eventsRef } from "@/utils/others/firestoreRefs";
 import { onSnapshot } from "firebase/firestore";
 import { create } from "zustand";
 

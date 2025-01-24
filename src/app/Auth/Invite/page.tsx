@@ -1,7 +1,7 @@
 "use client";
 
 import { BasicButton } from "@/components";
-import { userRef } from "@/utils/firestoreRefs";
+import { userRef } from "@/utils/others/firestoreRefs";
 import { getDoc } from "firebase/firestore";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";

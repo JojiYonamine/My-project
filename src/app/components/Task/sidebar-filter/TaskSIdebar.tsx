@@ -1,4 +1,4 @@
-import useTaskStore from "@/Context/taskStore";
+import useTaskStore from "@/Context/Task/taskStore";
 import { RxDoubleArrowLeft } from "react-icons/rx";
 import { ThemeFilter } from "./themeFilter";
 import { DoneFilter } from "./doneFilter";

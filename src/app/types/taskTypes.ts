@@ -3,10 +3,18 @@ export interface Task {
   title: string;
   createdBy: string;
   createdAt: Date;
-  theme: string;
-//   due: boolean;
+  themeId: string;
   dueDate?: Date;
   share: boolean;
   description?: string;
   done: boolean;
+}
+
+export interface TaskTheme {
+    taskThemeId?:string;
+    createdAt:Date
+    name:string;
+    color:string;
+    share:boolean
+    icon?:string;
 }

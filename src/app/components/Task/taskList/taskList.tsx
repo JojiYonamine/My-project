@@ -12,6 +12,7 @@ export const TaskList = () => {
       {filteredTasks.map((task) => (
         <TaskItem task={task} key={task.taskId}/>
       ))}
+      
     </div>
   );
 };

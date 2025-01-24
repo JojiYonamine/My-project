@@ -4,7 +4,7 @@ import useAuthStore from "@/Context/authStore";
 import useChatStore from "@/Context/chatStore";
 import { message } from "@/types/chatTypes";
 import { updateMessage } from "@/utils/Chat/updateMessage";
-import { timestampToString } from "@/utils/dateUtils";
+import { timestampToString } from "@/utils/others/dateUtils";
 import { useEffect } from "react";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 

@@ -1,7 +1,7 @@
 // 既読つける用の関数
 import { message } from "@/types/chatTypes";
 import { updateDoc } from "firebase/firestore";
-import { messageRef } from "../firestoreRefs";
+import { messageRef } from "../others/firestoreRefs";
 
 export const updateMessage = async (
   message: message,

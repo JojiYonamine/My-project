@@ -1,7 +1,7 @@
 // メッセージ送信用の関数
 
 import { message } from "@/types/chatTypes";
-import { messagesRef } from "../firestoreRefs";
+import { messagesRef } from "../others/firestoreRefs";
 import {
   doc,
   DocumentData,

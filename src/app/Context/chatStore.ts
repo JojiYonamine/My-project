@@ -1,6 +1,6 @@
 import { chatRoom, message } from "@/types/chatTypes";
-import { timestampToDate } from "@/utils/dateUtils";
-import { chatRoomsRef, messagesRef } from "@/utils/firestoreRefs";
+import { timestampToDate } from "@/utils/others/dateUtils";
+import { chatRoomsRef, messagesRef } from "@/utils/others/firestoreRefs";
 import { limit, onSnapshot, orderBy, query } from "firebase/firestore";
 import { create } from "zustand";
 

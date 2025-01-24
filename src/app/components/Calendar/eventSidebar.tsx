@@ -106,7 +106,7 @@ export const EventSidebar: React.FC = () => {
 
           {/* 終日 */}
           <div className="w-full flex justify-end items-center gap-2 px-10 py-2 ">
-            <BasicCheckBox onClick={()=>toggleAllday()} checked={selectedEvent?.allDay!}/>
+            <BasicCheckBox onClick={()=>toggleAllday()} checked={selectedEvent?.allDay}/>
             <h1 className="font-semibold">終日</h1>
           </div>
         </div>

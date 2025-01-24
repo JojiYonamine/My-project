@@ -1,5 +1,5 @@
 import { deleteDoc } from "firebase/firestore";
-import { eventRef } from "../firestoreRefs";
+import { eventRef } from "../others/firestoreRefs";
 import { calendar, calendarEvent } from "@/types/calendarTypes";
 import useCalendarStore from "@/Context/calendarStore";
 import useAuthStore from "@/Context/authStore";

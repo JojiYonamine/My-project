@@ -1,7 +1,7 @@
 // チャットルームを作成するための関数
 
 import { getDoc, setDoc } from "firebase/firestore";
-import { chatRoomRef } from "../firestoreRefs";
+import { chatRoomRef } from "../others/firestoreRefs";
 import { chatRoom } from "@/types/chatTypes";
 
 // 同名のチャットルームの存在をチェックする関数

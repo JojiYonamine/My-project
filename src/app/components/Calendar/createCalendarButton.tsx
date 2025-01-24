@@ -3,7 +3,8 @@
 import { useAddCalendar } from "@/utils/Calendar/addCalendar";
 import { useState } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
-import { FaRegCheckCircle } from "react-icons/fa";
+import { InputFieldBold } from "../inputs/inputFieldBold";
+import { BasicCheckBox } from "../buttons/basicCheckBox";
 
 export const CreateCalendar: React.FC = () => {
   const [description, setDescription] = useState<string>("");
@@ -67,44 +68,20 @@ export const CreateCalendar: React.FC = () => {
           {/* テーマ入力 */}
           <div className="w-full flex flex-col p-2 mb-2">
             <h1 className="font-semibold">テーマ</h1>
-            <div className="bg-gray-100 px-2 pt-2 rounded-md">
-              <input
-                type="text"
-                value={theme}
-                placeholder="テーマを入力"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setTheme(e.target.value);
-                }}
-                className="w-full focus:outline-none bg-gray-100 px-1  focus:font-bold border-b-2 pb-1 border-gray-100 focus:border-pink-500"
-              />
-            </div>
+            <InputFieldBold value={theme} onChange={setTheme} placeholder="テーマを入力"/>
+
           </div>
 
           {/* 説明入力 */}
           <div className="w-full flex flex-col p-2 mb-2">
             <h1 className="font-semibold">説明</h1>
-            <div className="bg-gray-100 px-2 pt-2 rounded-md ">
-              <input
-                type="text"
-                placeholder="説明を入力"
-                value={description}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setDescription(e.target.value);
-                }}
-                className="w-full focus:outline-none bg-gray-100 px-1  focus:font-bold border-b-2 pb-1 border-gray-100 focus:border-pink-500"
-              />
-            </div>
+            <InputFieldBold value={description} onChange={setDescription} placeholder="説明を入力"/>
           </div>
 
           {/* 共有 */}
           <div className="w-full flex justify-between px-2">
             <h1 className="font-semibold">共有</h1>
-            <button type="button" onClick={() => toggleShare()}>
-              <FaRegCheckCircle
-                size={30}
-                className={`${share ? "text-pink-500" : "text-gray-500"}`}
-              />
-            </button>
+            <BasicCheckBox onClick={toggleShare} checked={share}/>
           </div>
 
           {/* 送信・キャンセルボタン */}

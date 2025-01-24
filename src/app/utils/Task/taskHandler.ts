@@ -5,9 +5,9 @@
 // 終了時 action='delete'で呼び出す
 
 import useAuthStore from "@/Context/authStore";
-import useTaskStore from "@/Context/taskStore";
+import useTaskStore from "@/Context/Task/taskStore";
 import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
-import { taskRef, tasksRef } from "../firestoreRefs";
+import { taskRef, tasksRef } from "../others/firestoreRefs";
 import { Task } from "@/types/taskTypes";
 import { useEffect } from "react";
 import { validateTask } from "./validateTask";

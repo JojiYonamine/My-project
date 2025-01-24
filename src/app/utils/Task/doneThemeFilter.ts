@@ -1,9 +1,9 @@
-import useTaskStore from "@/Context/taskStore";
+import useTaskStore from "@/Context/Task/taskStore";
 import { Task } from "@/types/taskTypes";
 
 export const useFilter = () => {
   const tasks = useTaskStore((state) => state.tasks);
-  const selectedThemes = useTaskStore((state) => state.selectedThemes);
+  const selectedThemes = useTaskStore((state) => state.selectedTheme);
   const criterion = useTaskStore((state) => state.doneCriterion);
   const doneThemeFilter = (): Task[] => {
     switch (criterion) {

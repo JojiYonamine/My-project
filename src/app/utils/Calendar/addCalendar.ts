@@ -1,5 +1,5 @@
 // カレンダーを追加すカスタムフック
-import { calendarsRef } from "../firestoreRefs";
+import { calendarsRef } from "../others/firestoreRefs";
 import { doc, setDoc } from "firebase/firestore";
 import { checkThemeExists } from "./checkThemeExists";
 import { calendar } from "@/types/calendarTypes";

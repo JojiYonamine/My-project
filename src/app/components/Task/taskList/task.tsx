@@ -1,6 +1,6 @@
 // タスクリストに表示するタスク
 
-import useTaskStore from "@/Context/taskStore";
+import useTaskStore from "@/Context/Task/taskStore";
 import { Task } from "@/types/taskTypes";
 import { useTask } from "@/utils/Task/taskHandler";
 

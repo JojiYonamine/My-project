@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "@/config/firebaseConfig";
 import { DocumentData, DocumentSnapshot, getDoc } from "firebase/firestore";
-import { userRef } from "@/utils/firestoreRefs";
+import { userRef } from "@/utils/others/firestoreRefs";
 
 interface AuthState {
   // firebase authenticationのユーザー

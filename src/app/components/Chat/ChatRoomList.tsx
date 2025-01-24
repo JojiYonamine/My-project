@@ -4,7 +4,7 @@ import useChatStore from "@/Context/chatStore";
 import { CreateRoomButton } from "./createRoomButton";
 import { useEffect } from "react";
 import useAuthStore from "@/Context/authStore";
-import { timestampToString } from "@/utils/dateUtils";
+import { timestampToString } from "@/utils/others/dateUtils";
 import { RxDoubleArrowLeft } from "react-icons/rx";
 
 export const ChatRoomList = () => {

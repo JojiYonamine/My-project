@@ -1,9 +1,9 @@
 // カレンダーのヘッダー
 import useCalendarStore from "@/Context/calendarStore";
 import { addMonths, addWeeks, format, subMonths, subWeeks } from "date-fns";
-import { RxDoubleArrowRight } from "react-icons/rx";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import useShowCalendarStore from "@/Context/showCalendarStore";
+import { ToggleSidebarButton } from "../buttons/toggleSidebarButton";
 
 export const CalendarHeader: React.FC = ({}) => {
   const sidebarOpen = useCalendarStore((state) => state.sidebarOpen);
@@ -42,13 +42,7 @@ export const CalendarHeader: React.FC = ({}) => {
   return (
     <div className="flex justify-start gap-4 w-full items-center p-2 h-full max-h-[7vh] bg-pink-100">
       {/* サイドバーの開閉用 */}
-      <button
-        className={`transition-all duration-500 ${sidebarOpen && "opacity-0"}`}
-        disabled={sidebarOpen}
-        onClick={() => handleToggleSidebar()}
-      >
-        <RxDoubleArrowRight size={25} />
-      </button>
+      <ToggleSidebarButton onClick={()=>handleToggleSidebar()} isOpen={sidebarOpen}/>
 
       <div className="flex h-full items-center gap-5">
         {/* 今日にナビゲートするボタン */}

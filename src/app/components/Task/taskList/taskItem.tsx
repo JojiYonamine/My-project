@@ -10,8 +10,6 @@ import { useTask } from "@/utils/Task/taskHandler";
 import { SelectTheme } from "./selectTheme";
 import { CustumCheckBox } from "@/components/buttons/custumCheckBox";
 import { InputDate } from "@/components/inputs/inputDate";
-import { CancelButton } from "@/components/buttons/cancelButton";
-import SubmitButton from "@/components/buttons/SubmitButton";
 import { MySubmitButton } from "@/components/buttons/MySubmitButton";
 import { validateTask } from "@/utils/Task/validateTask";
 import { useEditBoolean } from "@/utils/others/editObjectBoolean";
@@ -45,6 +43,11 @@ export const TaskItem: React.FC<taskItemProps> = ({ task }) => {
     }
   };
 
+  const setDate = (date:Date) => {
+    if(!editingTask) return
+    setEditngTask({...editingTask,dueDate:date})
+  } 
+
   const toggleShare = useEditBoolean(editingTask,setEditngTask,"share")
   return (
     <div>
@@ -67,7 +70,7 @@ export const TaskItem: React.FC<taskItemProps> = ({ task }) => {
           <div className="flex">
             <CustumCheckBox onClick={() => checkboxFunc()} checked={editingTask?.dueDate ? true : false} text="期日" />
             {typeof editingTask.dueDate === "object" && (
-              <InputDate obj={editingTask} setObj={setEditngTask} dateKey="dueDate" />
+              <InputDate date={editingTask.dueDate} setDate={setDate}  />
             )}
           </div>
 

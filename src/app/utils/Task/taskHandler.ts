@@ -12,14 +12,15 @@ import { Task } from "@/types/taskTypes";
 
 export const useTask = () => {
   const setEditingTask = useTaskStore((state) => state.setEditingTask);
-  const currentCid = useAuthStore((state) => state.currentCid)!;
+  const currentCid = useAuthStore((state) => state.currentCid);
 
   const taskHandler = async (action: "create" | "edit" | "delete" | "complete", task: Task) => {
+    if(!currentCid) return
     // 参照を作成
-    const ref = action === "create" ? doc(tasksRef(currentCid)) : taskRef(currentCid, task?.taskId!);
+    const ref = action === "create"||!task.taskId ? doc(tasksRef(currentCid)) : taskRef(currentCid, task.taskId);
 
     const newTask: Task = {
-      ...task!,
+      ...task,
       taskId: action === "create" ? ref.id : task?.taskId,
     };
 

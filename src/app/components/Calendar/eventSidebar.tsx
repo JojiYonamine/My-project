@@ -5,11 +5,12 @@ import { calendarEvent } from "@/types/calendarTypes";
 import { useEvent } from "@/utils/Calendar/eventHandler";
 import ColorPicker from "./colorPicker";
 import { useValidateEvent } from "@/utils/Calendar/validateEvent";
-import { InputDate, InputTime } from "@/Test/page";
 import { CiCalendar } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
 import { BasicCheckBox } from "../buttons/basicCheckBox";
 import {  useEditObject } from "@/utils/others/editObject";
+import { InputDate } from "../inputs/inputDate";
+import { InputTime } from "../inputs/inputTime";
 
 
 export const EventSidebar: React.FC = () => {
@@ -53,6 +54,16 @@ export const EventSidebar: React.FC = () => {
     }
   };
 
+  const setStart = (date:Date) => {
+    if(!selectedEvent)return
+    setSelectedEvent({...selectedEvent,start:date})
+  }
+  const setEnd = (date:Date) => {
+    if(!selectedEvent)return
+    setSelectedEvent({...selectedEvent,end:date})
+  }
+ 
+ 
   return (
     <div
       className={`duration-500 transition-all h-full w-full overflow-hidden ${
@@ -89,8 +100,9 @@ export const EventSidebar: React.FC = () => {
             <div className="flex justify-between items-center p-1 w-full">
               <h1 className="font-semibold">開始</h1>
               <div className="flex items-center justify-center gap-2">
-                <InputDate startOrEnd="start" />
-                {!selectedEvent?.allDay && <InputTime startOrEnd="start" />}
+                {selectedEvent&&<InputDate date={selectedEvent.start} setDate={setStart}/>}
+                {/* <InputDate startOrEnd="start" /> */}
+                {!selectedEvent?.allDay && <InputTime time={selectedEvent?.start} setTime={setStart}/>}
               </div>
             </div>
 
@@ -98,8 +110,8 @@ export const EventSidebar: React.FC = () => {
             <div className="flex justify-between items-center p-1 w-full">
               <h1 className="font-semibold">終了</h1>
               <div className="flex items-center justify-center gap-2">
-                <InputDate startOrEnd="end" />
-                {!selectedEvent?.allDay && <InputTime startOrEnd="end" />}
+              {selectedEvent&&<InputDate date={selectedEvent.end} setDate={setEnd}/>}
+              {!selectedEvent?.allDay && <InputTime time={selectedEvent?.end} setTime={setEnd}/>}
               </div>
             </div>
           </div>

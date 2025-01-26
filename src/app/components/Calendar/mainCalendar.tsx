@@ -1,5 +1,4 @@
 // カレンダー本体を表示する部分
-
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { calendarEvent } from "@/types/calendarTypes";
 import { format, getDay, parse, startOfWeek } from "date-fns";
@@ -9,7 +8,6 @@ import { Calendar, dateFnsLocalizer, SlotInfo } from "react-big-calendar";
 import useAuthStore from "@/Context/authStore";
 import useCalendarStore from "@/Context/calendarStore";
 import useShowCalendarStore from "@/Context/showCalendarStore";
-// import { CalendarHeader } from "./calendarHeader";
 
 export const MainCalendar: React.FC = () => {
   const locales = {

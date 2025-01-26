@@ -1,7 +1,6 @@
 "use client";
 import { RequireAuth } from "@/components/RequireAuth";
 import Sidebar from "@/components/Sidebar";
-import { EditTaskSidebar } from "@/components/Task/editSidebar/EditTaskSidebar";
 import { TaskHeader } from "@/components/Task/header/taskHeader";
 import { TaskSidebar } from "@/components/Task/sidebar-filter/TaskSIdebar";
 import { TaskList } from "@/components/Task/taskList/taskList";

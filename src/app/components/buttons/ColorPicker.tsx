@@ -30,7 +30,7 @@ export const ColorPicker = <T extends colorObject>({ object, setObject }: ColorP
   };
   return (
     <div className="bg-white flex items-center justify-between w-full px-1">
-      {Object.entries(colorTags).map(([color, text]) => (
+      {Object.entries(colorTags).map(([color]) => (
         <div key={color}>
           <div
             onClick={() => handleSelectColor(color)}

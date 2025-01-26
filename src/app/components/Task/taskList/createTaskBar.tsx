@@ -54,6 +54,10 @@ export const CreateTaskBar: React.FC = () => {
     uploadTask("create", task);
     setTask(newTask);
   };
+
+  const setDate = (date:Date) => {
+    setTask({...task,dueDate:date})
+  }
   return (
     <div className="w-full bg-gray-100 ">
       <form
@@ -76,7 +80,7 @@ export const CreateTaskBar: React.FC = () => {
         {/* 期日の有無・決定 */}
         <div className="flex">
           <CustumCheckBox onClick={() => checkboxFunc()} checked={due} text="期日" />
-          {due && <InputDate obj={task} setObj={setTask} dateKey="dueDate" />}
+          {due && <InputDate date={task.dueDate} setDate={setDate}/>}
         </div>
 
         {/* 共有・送信ボタン */}

@@ -7,7 +7,7 @@ import { MySubmitButton } from "@/components/buttons/MySubmitButton";
 import { InputFieldBold } from "@/components/inputs/inputFieldBold";
 import useTaskThemeStore from "@/Context/Task/taskThemeStore";
 import { useEditObject } from "@/utils/others/editObject";
-import { useEditBoolean } from "@/utils/others/editObjectBoolean";
+// import { useEditBoolean } from "@/utils/others/editObjectBoolean";
 import { useTaskTheme } from "@/utils/Task/taskThemeHandler";
 import { validateTheme } from "@/utils/Task/validateTheme";
 
@@ -17,7 +17,7 @@ export const EditThemeModal = () => {
   const uploadTheme = useTaskTheme(isEdit ? "edit" : "create");
   const deleteTheme = useTaskTheme("delete");
   const editTheme = useEditObject(editingTheme, setEditingTheme);
-  const toggleShare = useEditBoolean(editingTheme, setEditingTheme, "share");
+  // const toggleShare = useEditBoolean(editingTheme, setEditingTheme, "share");
   const validate = (): boolean => {
     const errors = validateTheme(editingTheme);
     if (errors.length > 0) {
@@ -26,6 +26,14 @@ export const EditThemeModal = () => {
       return false;
     }
   };
+
+  const toggleShare = () => {
+    if(!editingTheme){
+      return
+    }
+    const newShare = editingTheme?.share ? false:true
+    setEditingTheme({...editingTheme,share:newShare})
+  }
   return (
     <div className="flex items-center">
       {editingTheme && (

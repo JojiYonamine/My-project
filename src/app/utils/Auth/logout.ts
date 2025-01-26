@@ -1,6 +1,5 @@
 import { Auth, signOut } from "firebase/auth"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
-import { useRouter } from "next/navigation"
 
 export const Logout = async (auth:Auth,root:AppRouterInstance) =>{
     try{

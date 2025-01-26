@@ -31,7 +31,7 @@ export const EventSidebar: React.FC = () => {
   };
 
   //   インプット編集時に実行する関数
-  const editEvent = useEditObject(selectedEvent,setSelectedEvent)
+  const editEvent = useEditObject<calendarEvent>(selectedEvent,setSelectedEvent)
 
   //   終日の変更を行う関数
   const toggleAllday = () => {

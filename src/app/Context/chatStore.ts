@@ -49,7 +49,7 @@ const useChatStore = create<chatStore>((set) => ({
         id: doc.data().id,
         text: doc.data().text,
         sentBy: doc.data().sentBy,
-        sentAt: timestampToDate(doc.data().sentAt),
+        sentAt: timestampToDate(doc.data().sentAt)!,
         read: doc.data().read,
       }));
       const sortedMessages = messages.reverse();

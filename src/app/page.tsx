@@ -4,9 +4,13 @@
 //Next.js13以降らしい、Viteとは全く違う感じがするので注意していこう
 
 "use client"
+
+import Sidebar from "./components/Sidebar";
+
 const home =()=>{
   return(
     <div>
+      <Sidebar/>
       <h1>ようこそ</h1>
     </div>
   )

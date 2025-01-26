@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { FaUserCircle } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 
 interface SpinnerProps {
@@ -11,10 +10,10 @@ interface SpinnerWithIconProps extends SpinnerProps {
   icon?: string|null;
 }
 
-interface LoadingSpinnerWithContentProps extends SpinnerProps {
-  content: React.ReactNode;
-  loading?: boolean;
-}
+// interface LoadingSpinnerWithContentProps extends SpinnerProps {
+//   content: React.ReactNode;
+//   loading?: boolean;
+// }
 
 export const Spinner: React.FC<SpinnerProps> = ({ size }) => {
   return (

@@ -1,8 +1,8 @@
 // タスク機能の状態管理用
 
-import { Task, TaskTheme } from "@/types/taskTypes";
+import { Task } from "@/types/taskTypes";
 import { timestampToDate } from "@/utils/others/dateUtils";
-import { tasksRef, taskThemesRef } from "@/utils/others/firestoreRefs";
+import { tasksRef } from "@/utils/others/firestoreRefs";
 import { onSnapshot, orderBy, query } from "firebase/firestore";
 import { create } from "zustand";
 

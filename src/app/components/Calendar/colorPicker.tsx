@@ -21,7 +21,7 @@ const ColorPicker: React.FC = () => {
   };
   return (
     <div className="bg-white flex items-center justify-between w-full px-1">
-      {Object.entries(colorTags).map(([color, text]) => (
+      {Object.entries(colorTags).map(([color]) => (
         <div key={color}>
           <div
             onClick={() => handleSelectColor(color)}

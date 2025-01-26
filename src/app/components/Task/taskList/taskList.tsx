@@ -1,6 +1,4 @@
 // タスクリスト
-
-import { useFilter } from "@/utils/Task/doneThemeFilter";
 import { TaskItem } from "./taskItem";
 import { CreateTaskBar } from "./createTaskBar";
 import { useEffect } from "react";

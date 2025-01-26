@@ -3,7 +3,6 @@
 import { TaskTheme } from "@/types/taskTypes";
 import { timestampToDate } from "@/utils/others/dateUtils";
 import { taskThemesRef } from "@/utils/others/firestoreRefs";
-import { compareAsc, parseISO } from "date-fns";
 import { onSnapshot, orderBy, query } from "firebase/firestore";
 import { create } from "zustand";
 

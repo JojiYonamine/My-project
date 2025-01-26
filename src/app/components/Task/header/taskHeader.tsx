@@ -13,9 +13,9 @@ export const TaskHeader: React.FC = () => {
 
   return (
     <div className="flex justify-start gap-4 w-full items-center p-2 h-full max-h-[7vh] bg-pink-100">
-      <ToggleSidebarButton onClick={() => handleToggleSidebar()} isOpen={sidebarOpen} />
+      <ToggleSidebarButton onClick={() => handleToggleSidebar()} disabled={sidebarOpen} which="open" />
         {selectedThemes.map((theme)=>(
-        <span>{theme.name}</span>
+        <span key={theme.taskThemeId}>{theme.name}</span>
         ))}
     </div>
   );

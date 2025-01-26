@@ -27,8 +27,9 @@ export const dateAndTimeToIso = (date: Date) => {
   return product
 };
 
-export const dateToIso = (date: Date|null|undefined) => {
+export const dateToIso = (date: Date|null|undefined):string => {
   const newDate = date?date:new Date()
+  console.log(date,newDate)
   return formatInTimeZone(newDate,"Asia/Tokyo","yyyy-MM-dd")
 };
 
@@ -36,8 +37,12 @@ export const IsoToDate = (ISO: string) => {
   return new Date(ISO);
 };
 
-export const timestampToDate = (timestamp: Timestamp): Date => {
-  return timestamp.toDate();
+export const timestampToDate = (timestamp: Timestamp|null): Date|null => {
+  if(!timestamp){
+    return null
+  }else{
+    return timestamp.toDate();
+  }
 };
 
 export const timestampToString = (timestamp: Timestamp | Date,message?:boolean): string => {

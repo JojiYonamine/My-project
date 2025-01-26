@@ -42,7 +42,7 @@ export const CalendarHeader: React.FC = ({}) => {
   return (
     <div className="flex justify-start gap-4 w-full items-center p-2 h-full max-h-[7vh] bg-pink-100">
       {/* サイドバーの開閉用 */}
-      <ToggleSidebarButton onClick={()=>handleToggleSidebar()} isOpen={sidebarOpen}/>
+      <ToggleSidebarButton which="open" onClick={()=>handleToggleSidebar()} disabled={sidebarOpen}/>
 
       <div className="flex h-full items-center gap-5">
         {/* 今日にナビゲートするボタン */}

@@ -1,8 +1,9 @@
 // タスク機能の状態管理用
 
 import { Task, TaskTheme } from "@/types/taskTypes";
+import { timestampToDate } from "@/utils/others/dateUtils";
 import { tasksRef, taskThemesRef } from "@/utils/others/firestoreRefs";
-import { onSnapshot } from "firebase/firestore";
+import { onSnapshot, orderBy, query } from "firebase/firestore";
 import { create } from "zustand";
 
 interface taskStore {
@@ -18,14 +19,15 @@ const useTaskStore = create<taskStore>((set) => ({
   // フィルター前のタスク
   tasks: [],
   initializeTask: (cid) => {
-    const unsubscribe = onSnapshot(tasksRef(cid), (snapshot) => {
+    const q = query(tasksRef(cid), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
       const tasks: Task[] = snapshot.docs.map((doc) => ({
         taskId: doc.id,
         title: doc.data().title,
         createdBy: doc.data().createdBy,
-        createdAt: doc.data().createdAt,
+        createdAt: timestampToDate(doc.data().createdAt)!,
         themeId: doc.data().themeId,
-        dueDate: doc.data().dueDate,
+        dueDate: timestampToDate(doc.data().dueDate),
         share: doc.data().share,
         description: doc.data().description,
         done: doc.data().done,

@@ -68,7 +68,7 @@ export const CreateCalendar: React.FC = () => {
           {/* テーマ入力 */}
           <div className="w-full flex flex-col p-2 mb-2">
             <h1 className="font-semibold">テーマ</h1>
-            <InputFieldBold value={theme} onChange={setTheme} placeholder="テーマを入力"/>
+            <InputFieldBold value={theme} onChange={()=>setTheme} placeholder="テーマを入力"/>
 
           </div>
 

@@ -1,8 +1,6 @@
 "use client";
 import useCalendarStore from "@/Context/calendarStore";
-import { calendarEvent } from "@/types/calendarTypes";
-import { format } from "date-fns";
-import React, { useState } from "react";
+import React from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 

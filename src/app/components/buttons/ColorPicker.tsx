@@ -11,7 +11,7 @@ interface ColorPickerProps<T extends colorObject> {
   setObject: (obj: T) => void;
 }
 
-const ColorPicker = <T extends colorObject>({ object, setObject }: ColorPickerProps<T>) => {
+export const ColorPicker = <T extends colorObject>({ object, setObject }: ColorPickerProps<T>) => {
     if(!object){
         return(<h1>エラー</h1>)
     }

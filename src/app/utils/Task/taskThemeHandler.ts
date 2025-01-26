@@ -10,16 +10,19 @@ export const useTaskTheme = (action: "create" | "edit" | "delete") => {
   const { editingTheme, setEditingTheme } = useTaskThemeStore();
   const currentCid = useAuthStore((state) => state.currentCid)!;
 
-  //   参照を作成
-  const ref =
-    action === "create" ? doc(taskThemesRef(currentCid)) : taskThemeRef(currentCid, editingTheme?.taskThemeId!);
-
-  const newTheme: TaskTheme = {
-    ...editingTheme!,
-    taskThemeId: action === "create" ? ref.id : editingTheme?.taskThemeId,
-  };
-
   const themeHandler = async () => {
+    if (!editingTheme) {
+      return console.log("useTaskThemeでエラー");
+    }
+    //   参照を作成
+    const ref = !editingTheme?.taskThemeId
+      ? doc(taskThemesRef(currentCid))
+      : taskThemeRef(currentCid, editingTheme?.taskThemeId);
+
+    const newTheme: TaskTheme = {
+      ...editingTheme,
+      taskThemeId: action === "create" ? ref.id : editingTheme?.taskThemeId,
+    };
     try {
       if (action === "delete") {
         await deleteDoc(ref);

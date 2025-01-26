@@ -38,7 +38,7 @@ const Task = () => {
           <TaskHeader/>
           <div className="flex h-full w-full ">
             <TaskList/>
-            <EditTaskSidebar isEdit={true}/>
+            {/* <EditTaskSidebar isEdit={true}/> */}
           </div>
         </div>
       </div>

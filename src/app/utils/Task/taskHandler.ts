@@ -9,46 +9,25 @@ import useTaskStore from "@/Context/Task/taskStore";
 import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { taskRef, tasksRef } from "../others/firestoreRefs";
 import { Task } from "@/types/taskTypes";
-import { useEffect } from "react";
-import { validateTask } from "./validateTask";
 
-export const useTask = (editingTaskProp?: Task) => {
-  const editingTask = useTaskStore((state) => state.editingTask);
+export const useTask = () => {
   const setEditingTask = useTaskStore((state) => state.setEditingTask);
   const currentCid = useAuthStore((state) => state.currentCid)!;
 
-  //   タスクプロップがある時に代入
-  useEffect(() => {
-    if (editingTaskProp && !editingTask) {
-      setEditingTask(editingTaskProp);
-    }
-  }, [editingTaskProp]);
-
-  const taskHandler = async (
-    action: "create" | "edit" | "delete" | "complete"
-  ) => {
-
-    // バリデーション
-    const errors = validateTask(editingTask);
-    if (errors.length > 0) {
-      alert(errors.join("\n"));
-      return;
-    }
-
+  const taskHandler = async (action: "create" | "edit" | "delete" | "complete", task: Task) => {
     // 参照を作成
-    const ref =
-      action === "create"
-        ? doc(tasksRef(currentCid))
-        : taskRef(currentCid, editingTask?.taskId!);
+    const ref = action === "create" ? doc(tasksRef(currentCid)) : taskRef(currentCid, task?.taskId!);
 
     const newTask: Task = {
-      ...editingTask!,
-      taskId: action === "create" ? ref.id : editingTask?.taskId,
+      ...task!,
+      taskId: action === "create" ? ref.id : task?.taskId,
     };
+
     try {
       if (action === "delete") {
         await deleteDoc(ref);
         alert("タスクを削除しました");
+        return 
       }
       if (action === "complete") {
         const doneStatus = !newTask?.done;

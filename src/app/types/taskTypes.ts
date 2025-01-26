@@ -4,9 +4,9 @@ export interface Task {
   createdBy: string;
   createdAt: Date;
   themeId: string;
-  dueDate?: Date;
+  dueDate: Date|null;
   share: boolean;
-  description?: string;
+  description: string|null;
   done: boolean;
 }
 
@@ -16,5 +16,5 @@ export interface TaskTheme {
     name:string;
     color:string;
     share:boolean
-    icon?:string;
+    icon:string|null;
 }

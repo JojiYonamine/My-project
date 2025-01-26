@@ -9,6 +9,8 @@ interface taskOtherStore {
   setDoneCriterion: (criterion: doneCriterion) => void;
   isEdit:"edit"|"create"|null
   setIsEdit:(isEdit:"edit"|"create"|null)=>void
+  openModal:boolean;
+  setOpenModal:(open:boolean) => void
 }
 
 const useTaskOtherStore = create<taskOtherStore>((set) => ({
@@ -20,7 +22,9 @@ const useTaskOtherStore = create<taskOtherStore>((set) => ({
   sidebarOpen: true,
   setSidebarOpen: (open) => set({ sidebarOpen: open }),
   isEdit:null,
-  setIsEdit:(isEdit)=>set({isEdit:isEdit})
+  setIsEdit:(isEdit)=>set({isEdit:isEdit}),
+  openModal:false,
+  setOpenModal:(open)=>set({openModal:open})
 }));
 
 

@@ -37,6 +37,7 @@ const Sidebar = () => {
             <LuPanelLeft size={25} />
           </button>
 
+          {/* 通知用 */}
           <div className="pr-1">
             <IoIosNotifications className="text-gray-700 hover:text-black" size={25} />
           </div>

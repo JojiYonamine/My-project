@@ -12,7 +12,7 @@ import { CustumCheckBox } from "@/components/buttons/custumCheckBox";
 import { InputDate } from "@/components/inputs/inputDate";
 import { MySubmitButton } from "@/components/buttons/MySubmitButton";
 import { validateTask } from "@/utils/Task/validateTask";
-import { useEditBoolean } from "@/utils/others/editObjectBoolean";
+// import { useEditBoolean } from "@/utils/others/editObjectBoolean";
 
 interface taskItemProps {
   task: Task;
@@ -48,7 +48,15 @@ export const TaskItem: React.FC<taskItemProps> = ({ task }) => {
     setEditngTask({...editingTask,dueDate:date})
   } 
 
-  const toggleShare = useEditBoolean(editingTask,setEditngTask,"share")
+  // const toggleShare = useEditBoolean(editingTask,setEditngTask,"share")
+
+  const toggleShare = () => {
+    if(!editingTask){
+      return
+    }
+    const newShare = editingTask?.share ? false:true
+    setEditngTask({...editingTask,share:newShare})
+  }
   return (
     <div>
       {isEditing && editingTask ? (

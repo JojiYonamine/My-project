@@ -75,7 +75,7 @@ export const CreateCalendar: React.FC = () => {
           {/* 説明入力 */}
           <div className="w-full flex flex-col p-2 mb-2">
             <h1 className="font-semibold">説明</h1>
-            <InputFieldBold value={description} onChange={setDescription} placeholder="説明を入力"/>
+            <InputFieldBold value={description} onChange={()=>setDescription} placeholder="説明を入力"/>
           </div>
 
           {/* 共有 */}

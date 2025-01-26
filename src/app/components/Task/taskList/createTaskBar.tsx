@@ -4,7 +4,6 @@ import { InputFieldBold } from "@/components/inputs/inputFieldBold";
 import useAuthStore from "@/Context/authStore";
 import { Task } from "@/types/taskTypes";
 import { useEditObject } from "@/utils/others/editObject";
-import { useEditBoolean } from "@/utils/others/editObjectBoolean";
 import { validateTask } from "@/utils/Task/validateTask";
 import { useState } from "react";
 import { SelectTheme } from "./selectTheme";
@@ -25,13 +24,25 @@ export const CreateTaskBar: React.FC = () => {
     description: null,
   };
   const [task, setTask] = useState<Task>(newTask);
+  const SetTask = (task:Task|null) => {
+    if(!task){
+      return
+    }
+    setTask(task)
+  }
   const [due, setDue] = useState<boolean>(false);
-  const editTask = useEditObject(task, setTask);
-  const toggleDue = useEditBoolean(due, setDue);
-  const toggleShare = useEditBoolean(task, setTask, "share");
+  const editTask = useEditObject<Task>(task, SetTask);
   const uploadTask = useTask();
   const setEditingTask = useTaskStore((state) => state.setEditingTask);
+  const toggleDue = () =>{
+    const newDue = due?false:true
+    setDue(newDue)
+  }
 
+  const toggleShare = () => {
+    const newShare = task.share?false:true
+    setTask({...task,share:newShare})
+  }
   // 期日有無を変更する関数
   const checkboxFunc = () => {
     const newDate = new Date();

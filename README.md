@@ -8,7 +8,14 @@
 
 
 ## デプロイリンク
--  [https://my-project-yftg.vercel.app](https://my-project-yftg.vercel.app)
+-  [https://my-project-yftg.vercel.app](https://my-project-yftg.vercel.app)  
+※ ログイン機能を利用するには以下のサンプルアカウントを使用してください：
+- サンプルアカウント１
+  - メール：test1@test.com
+  - パスワード：testtest
+- サンプルアカウント２
+  - メール：test2@test.com
+  - パスワード：testtest
 
 ## 使用技術
 - **フロントエンド**: Next.js@15.1.2, React@18.3.1, TypeScript@5.6.3, TailwindCSS@3.4.14
@@ -86,11 +93,12 @@
   - 自前のバックエンドを作って移行
 
 **取り組み中**
-- 初回ログイン時のルーティング
-- タスク機能のフィルターを修正して実装
+- 1.タスク機能のフィルターを修正して実装
+- 2.共有オンのみにアクセスするようにfirestore rulesを設定
+- 3.zustandを使って認証機能周辺をリファクタリング
 
-**最終更新日**
-2025年1月27日12:50
+**最終更新**
+2025年1月27日17:00
 
 
 

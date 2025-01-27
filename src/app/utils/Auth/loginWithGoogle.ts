@@ -14,6 +14,8 @@ export const loginWithGoogle = async(inviterId:string|null) =>{
                 }else{
                     window.location.href='/Auth/setProfile'
                 }
+            }else{
+                window.location.href = '/Calendar'
             }
         }
     } catch (err:unknown) {

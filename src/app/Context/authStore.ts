@@ -12,6 +12,7 @@ interface AuthState {
   loading: boolean;
   setUser: (user: User | null) => void;
   initializeAuthListener: () => () => void;
+  setCurrentCid:(sid:string)=> void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
@@ -24,6 +25,7 @@ const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true });
     const unsubscribe =  onAuthStateChanged(auth, async (user) => {
       set({ currentUser: user });
+      console.log("initialize Auth")
       if (user) {
         try {
           const userDoc = await getDoc(userRef(user.uid));
@@ -43,6 +45,7 @@ const useAuthStore = create<AuthState>((set) => ({
     });
     return unsubscribe
   },
+  setCurrentCid:(cid)=>set({currentCid:cid})
 })
 );
 

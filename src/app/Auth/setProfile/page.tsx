@@ -1,14 +1,13 @@
-
-
 // ！！！注意！！！
 // inviterIdは、リンク生成用
 // InviterIdは、リンク経由での登録
 
-
 "use client";
 import { BasicButton } from "@/components";
+import { RequireAuth } from "@/components/RequireAuth";
 import { auth } from "@/config/firebaseConfig";
-import { RegisterCouple } from "@/utils/Auth/registerCouple";
+import useAuthStore from "@/Context/authStore";
+import { useRegisterCouple } from "@/utils/Auth/registerCouple";
 import { IsoToDate } from "@/utils/others/dateUtils";
 import { getUserNameFromFirestore, userRef } from "@/utils/others/firestoreRefs";
 import { onAuthStateChanged, updateProfile, User } from "firebase/auth";
@@ -25,17 +24,23 @@ const SetProfile = () => {
   const [icon, setICon] = useState<string>("");
   const [birthDay, setBirthDay] = useState<string>("");
   const [inviterId, setInviterId] = useState<string>("");
-  const user = auth.currentUser;
+  // const [user,setUser] = useState<User|null>(null)
   const root = useRouter();
   const [inviterName, setInviterName] = useState<string>("");
   const [invitedName, setInvitedName] = useState<string>("");
   // trueでロード中
-  const [gettingName, setGettingName] = useState<boolean>(false);
+  const [gettingName, setGettingName] = useState<boolean>(true);
+
+  const user = useAuthStore((state) => state.currentUser);
+  const loading = useAuthStore((state) => state.loading);
+  // const initializeAuthListener = useAuthStore((state) => state.initializeAuthListener);
 
   const icons = Array.from({ length: 12 }, (_, i) => `/icons/icon${i + 1}.png`);
 
   const searchParams = useSearchParams();
   const InviterId = searchParams.get("inviterId");
+
+  const registerCouple = useRegisterCouple();
 
   // Google経由の時名前自動入力
   useEffect(() => {
@@ -48,16 +53,28 @@ const SetProfile = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (loading || !user) {
+      console.log("no user or now loading");
+      return;
+    } else {
+      if (!InviterId) return;
+      registerCouple(InviterId, user.uid);
+    }
+  }, []);
+
   const registerUserProfile = async (user: User, birthDay: string) => {
     try {
-      await setDoc(userRef(user.uid), {
-        name: user.displayName || "Anonymous",
-        email: user.email,
-        cid: null,
-        partnerId: null,
-        birthDay: IsoToDate(birthDay),
-        createdAt: new Date(),
-      });
+      await setDoc(
+        userRef(user.uid),
+        {
+          name: user.displayName || "Anonymous",
+          email: user.email,
+          birthDay: IsoToDate(birthDay),
+          createdAt: new Date(),
+        },
+        { merge: true }
+      );
       console.log("User registered in Firestore!");
     } catch (err: unknown) {
       alert(err);
@@ -77,12 +94,10 @@ const SetProfile = () => {
       console.log("now updating");
       await updateProfile(user, { displayName: name, photoURL: icon });
       await registerUserProfile(user, birthDay);
-      if (InviterId) {
-        await RegisterCouple(InviterId, user.uid);
-      } else {
+      if (!InviterId) {
         setInviterId(user.uid);
       }
-      setName("");
+      // setName("");
       setICon("");
       setBirthDay("");
       setProgress("completed");
@@ -112,13 +127,13 @@ const SetProfile = () => {
   };
 
   const getUserName = async () => {
-    if (!user||!InviterId) {
+    if (!user || !InviterId) {
       return;
     }
     const InviterName: string = await getUserNameFromFirestore(InviterId);
     const InvitedName: string = await getUserNameFromFirestore(user.uid);
     setInviterName(InviterName);
-    setInvitedName(InvitedName);
+    setInvitedName(name);
     console.log(`inviter:${InviterName},invited:${InvitedName}`);
     setGettingName(false);
   };
@@ -137,9 +152,7 @@ const SetProfile = () => {
           {/* 名前 */}
           {progress == "name" && (
             <div>
-              <h1 className="text-xl w-full mb-8 font-semibold break-words">
-                ニックネームを決めてください！
-              </h1>
+              <h1 className="text-xl w-full mb-8 font-semibold break-words">ニックネームを決めてください！</h1>
               <input
                 placeholder="だいすけ"
                 value={name}
@@ -165,9 +178,7 @@ const SetProfile = () => {
           {/* アイコン */}
           {progress == "icon" && (
             <div>
-              <h1 className="text-lg sm:tex-xl w-full mb-8 font-bold">
-                アイコンを決めてください
-              </h1>
+              <h1 className="text-lg sm:tex-xl w-full mb-8 font-bold">アイコンを決めてください</h1>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
                 {icons.map((path, index) => (
                   <div
@@ -178,6 +189,8 @@ const SetProfile = () => {
                   >
                     <Image
                       src={path}
+                      width={60}
+                      height={60}
                       alt={`Icon ${index + 1}`}
                       className="w-24 h-24 object-fit"
                     />
@@ -193,13 +206,7 @@ const SetProfile = () => {
                 >
                   前へ
                 </button>
-                <BasicButton
-                  onClick={handleNext}
-                  disabled={!icon}
-                  //       className="
-                  //   bg-pink-400 text-white text-lg font-bold rounded-lg w-full py-2
-                  //   transition duration-500 hover:bg-pink-500 "
-                >
+                <BasicButton onClick={handleNext} disabled={!icon}>
                   次へ
                 </BasicButton>
               </div>
@@ -209,9 +216,7 @@ const SetProfile = () => {
           {/* 誕生日 */}
           {progress == "birthDay" && (
             <div className="relative">
-              <h1 className="text-xl w-full mb-8 font-bold">
-                誕生日を入力してください
-              </h1>
+              <h1 className="text-xl w-full mb-8 font-bold">誕生日を入力してください</h1>
               <input
                 type="date"
                 value={birthDay}
@@ -230,13 +235,7 @@ const SetProfile = () => {
                 >
                   前へ
                 </button>
-                <BasicButton
-                  type="submit"
-                  disabled={!birthDay}
-                  //       className="
-                  //   bg-pink-400 text-white text-lg font-bold rounded-lg w-full py-2
-                  //   transition duration-500 hover:bg-pink-500 "
-                >
+                <BasicButton type="submit" disabled={!birthDay}>
                   登録
                 </BasicButton>
               </div>
@@ -245,12 +244,8 @@ const SetProfile = () => {
           {/* 招待 */}
           {!InviterId && progress == "completed" && (
             <div>
-              <h1 className="text-xl w-full mb-8 font-semibold break-words">
-                登録が完了しました！
-              </h1>
-              <h1 className="text-xl w-full mb-8 font-semibold break-words">
-                パートナーを招待しましょう！
-              </h1>
+              <h1 className="text-xl w-full mb-8 font-semibold break-words">登録が完了しました！</h1>
+              <h1 className="text-xl w-full mb-8 font-semibold break-words">パートナーを招待しましょう！</h1>
               <h1 className="mb-8">{generateInviteLink(inviterId)}</h1>
               <BasicButton
                 type="button"
@@ -273,8 +268,9 @@ const SetProfile = () => {
                   </h1>
                   <BasicButton
                     type="button"
+                    // disabled={true}
                     onClick={() => {
-                      root.push("/");
+                      root.push("/Calendar");
                     }}
                   >
                     ホームへ
@@ -292,7 +288,9 @@ const SetProfile = () => {
 export default function AuthSetProfile() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SetProfile />
+      <RequireAuth requireCouple={false}>
+        <SetProfile />
+      </RequireAuth>
     </Suspense>
   );
 }

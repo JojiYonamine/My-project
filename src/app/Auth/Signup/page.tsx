@@ -123,6 +123,7 @@ const SignupPage = () => {
     }
   }, []);
 
+
   return (
     // ページ表示
     <div className="bg-pink-400 h-screen overflow-hidden">

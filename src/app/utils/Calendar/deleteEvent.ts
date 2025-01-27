@@ -7,6 +7,7 @@ import useAuthStore from "@/Context/authStore";
 const deleteEvent = async (cid:string,selectedCalendar:calendar, selectedEvent:calendarEvent) => {
     const calendarId =selectedCalendar.calendarId
     const eventId = selectedEvent.eventId
+    if(!eventId) return
   try {
     await deleteDoc(eventRef(cid, calendarId, eventId));
     alert("削除しました");

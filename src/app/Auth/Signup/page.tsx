@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -20,7 +20,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { loginWithGoogle } from "@/utils/Auth/loginWithGoogle";
 import AuthHeader from "@/components/AuthHeader";
 
-export default function SignupPage() {
+const SignupPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirm, setConfirm] = useState<string>("");
@@ -307,5 +307,13 @@ export default function SignupPage() {
       </main>
       {/* <footer><h1>じょうじ</h1></footer> */}
     </div>
+  );
+}
+
+export default function AuthSignup() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignupPage />
+    </Suspense>
   );
 }

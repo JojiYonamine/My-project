@@ -122,8 +122,9 @@ const SetProfile = () => {
   };
 
   const generateInviteLink = (uid: string): string => {
-    const baseUrl = process.env.NEXT_PUBLIC_FIREBASE_INVITE_URL;
-    return `${baseUrl}?inviterId=${encodeURIComponent(uid)}`;
+    // const baseUrl = process.env.NEXT_PUBLIC_FIREBASE_INVITE_URL;
+    // return `${baseUrl}?inviterId=${encodeURIComponent(uid)}`;
+    return `https://my-project-yftg.vercel.app?inviterId=${encodeURIComponent(uid)}`
   };
 
   const getUserName = async () => {

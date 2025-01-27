@@ -1,7 +1,7 @@
 "use client";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/config/firebaseConfig";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { FaLine, FaInstagram, FaTwitter } from "react-icons/fa";
 import { AiOutlineClose } from "react-icons/ai";
 import { BiShow } from "react-icons/bi";
@@ -12,7 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { loginWithGoogle } from "@/utils/Auth/loginWithGoogle";
 import AuthHeader from "@/components/AuthHeader";
 
-export default function LoginPage() {
+const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPass, setShowPass] = useState<string>(password);
@@ -191,5 +191,13 @@ export default function LoginPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function AuthLogin() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginPage />
+    </Suspense>
   );
 }

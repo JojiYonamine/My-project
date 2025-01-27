@@ -14,7 +14,7 @@ import { getUserNameFromFirestore, userRef } from "@/utils/others/firestoreRefs"
 import { onAuthStateChanged, updateProfile, User } from "firebase/auth";
 import { setDoc } from "firebase/firestore";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
 
 const SetProfile = () => {
@@ -288,4 +288,10 @@ const SetProfile = () => {
   );
 };
 
-export default SetProfile;
+export default function AuthSetProfile() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SetProfile />
+    </Suspense>
+  );
+}

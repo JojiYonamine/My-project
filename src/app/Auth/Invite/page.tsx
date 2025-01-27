@@ -4,7 +4,7 @@ import { BasicButton } from "@/components";
 import { userRef } from "@/utils/others/firestoreRefs";
 import { getDoc } from "firebase/firestore";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 const InvitePage = () => {
   const searhParams = useSearchParams();
@@ -58,4 +58,12 @@ const InvitePage = () => {
   );
 };
 
-export default InvitePage;
+// export default InvitePage;
+
+export default function AuthInvite() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <InvitePage />
+    </Suspense>
+  );
+}

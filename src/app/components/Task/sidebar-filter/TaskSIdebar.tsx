@@ -2,7 +2,7 @@ import { ThemeFilter } from "./themeFilter";
 import { DoneFilter } from "./doneFilter";
 import useTaskOtherStore from "@/Context/Task/taskOtherStore";
 
-import { useEditBoolean } from "@/utils/others/editObjectBoolean";
+// import { useEditBoolean } from "@/utils/others/editObjectBoolean";
 import { CreateThemeButton } from "./createThemeButton";
 import { ToggleSidebarButton } from "@/components/buttons/toggleSidebarButton";
 import { EditThemeModal } from "./editThemeModal";
@@ -10,7 +10,11 @@ import { EditThemeModal } from "./editThemeModal";
 // タスクのサイドバー、フィルターを表示する
 export const TaskSidebar = () => {
   const { sidebarOpen, setSidebarOpen } = useTaskOtherStore();
-  const toggleSidebar = useEditBoolean(sidebarOpen, setSidebarOpen);
+  // const toggleSidebar = useEditBoolean(sidebarOpen, setSidebarOpen);
+  const toggleSidebar = () => {
+    const newOpen = sidebarOpen?false:true
+    setSidebarOpen(newOpen)
+  }
 
   return (
     <div

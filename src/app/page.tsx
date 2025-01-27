@@ -3,17 +3,20 @@
 //Routeはレンダリングされない、Linkを使ってあげる
 //Next.js13以降らしい、Viteとは全く違う感じがするので注意していこう
 
-"use client"
+"use client";
 
+import { RequireAuth } from "./components/RequireAuth";
 import Sidebar from "./components/Sidebar";
 
-const home =()=>{
-  return(
+const home = () => {
+  return (
     <div>
-      <Sidebar/>
-      <h1>ようこそ</h1>
+      <RequireAuth>
+        <Sidebar />
+        <h1>ようこそ</h1>
+      </RequireAuth>
     </div>
-  )
+  );
 };
 
 export default home;

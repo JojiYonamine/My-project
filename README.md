@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# カップル用総合アプリ - スケジュール、タスク、チャットをひとまとめに 
+このアプリは、カップルの安定運営のためのすべての機能を実現することを目標にしたアプリです。
 
-## Getting Started
+## 作者情報
+- 名前：與那嶺 城司 (Yonamine Joji)
+- GitHub: [https://github.com/JojiYonamine](https://github.com/JojiYonamine)
+- メール: yonaminejoji@gmail.com
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## デプロイリンク
+-  [https://my-project-yftg.vercel.app](https://my-project-yftg.vercel.app)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 使用技術
+- **フロントエンド**: Next.js@15.1.2, React@18.3.1, TypeScript@5.6.3, TailwindCSS@3.4.14
+- **バックエンド**: Firebase Authentication, Firestore
+- **状態管理**: Zustand@5.0.3
+- **ホスティング**: Vercel
+- **カレンダー**: react-big-calendar@1.17.1
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 主な機能
+- **認証機能**:
+  - Firebase Authenticationを使用した認証機能
+  - メールアドレスとパスワード、googleアカウント使ったログインに対応
+- **チャット機能**
+  - Firestoreを利用し、リアルタイムでメッセージの送受信可能
+  - テーマごとにチャットルームを分け、テーマごとの会話が可能
+- **カレンダー機能**:
+  - React-Big-Calendarを使用し、直感的な操作で予定を管理
+  - Firebaseを使用したリアルタイム更新機能で、パートナーと予定を即時共有。
+  - イベントごとにテーマカラーを設定可能
+- **タスク管理機能**:
+  - Firebaseを使用し、オンラインでタスクデータを管理
+  - タスクの追加、編集、削除、（テーマ、終了状況によるフィルタリング）
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 技術的な工夫
+- **Zustandでのパフォーマンス最適化**:
+  - 再レンダリングを減らし、高速な操作を実現
+- **Firestoreとのリアルタイム連携**:
+  - データ更新が即座に他方のユーザーに反映
+  
+## 参考にしたサービス
+- **Timetree**:
+  - カレンダー機能のUIを参考にし、React-Big-Calendarで再現
+  - サインイン・ログイン画面のUIを参考にし、tailwind cssで再現 
+- **Line**:
+  - チャットデザインを参考にし、Firestoreでリアルタイム通信を実装
+- **iOS Reminder**:
+  - タスクのテーマによるフィルタリング機能を参考にし、実装予定
+- **Chat GPT**:
+  - サイドバーのデザインを参考にし、tailwind cssでアニメーションを実装
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## 今後の課題と改善点
+- **未実装の機能**:
+  - 認証機能:
+    - ユーザー情報設定時にのプログレス表示を作る
+    - ソーシャルログインの拡充
+    - パートナーのログイン状態の表示
+    - QRコードによるカップル認証
+  - チャット機能:
+    - 相手の入力中を表示
+    - メッセージの検索
+    - ルームアイコンの設定
+  - カレンダー機能:
+    - カレンダーアイコン
+    - 繰り返しイベントの実装
+  - タスク機能:
+    - フィルターの実装
+    - サブタスク機能
+  - UI面:
+    - デザインの芋臭さをなくす
+  - 家計簿機能 
+  - 通知機能
+  - 機能間の連携:
+    - 予定合わせ機能
+    - タスクをカレンダーに表示
+  
+- **改善点**:
+  - ダッシュボード画面の作成
+  - コードの可読性のためのリファクタリング（特に、初期に取り組んだものを優先）
+  - カレンダー週表示にした際のUIを整備
+  - スマホでの表示に対応
+  - テストの導入
+  - コンポーネントのメモ化など、再レンダリングの最小化
+  - firestore rules を設定
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**取り組み中**
+- 初回ログイン時のルーティング
+- タスク機能のフィルターを修正して実装
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**最終更新日**
+2025年1月27日12:50
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

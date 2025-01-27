@@ -13,6 +13,7 @@ import { IsoToDate } from "@/utils/others/dateUtils";
 import { getUserNameFromFirestore, userRef } from "@/utils/others/firestoreRefs";
 import { onAuthStateChanged, updateProfile, User } from "firebase/auth";
 import { setDoc } from "firebase/firestore";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
@@ -175,7 +176,7 @@ const SetProfile = () => {
                     className={`flex justify-center items-center cursor-pointer border-4 hover:border-pink-500 rounded-lg
                       ${path == icon ? "border-pink-500" : "border:gray-500"}`}
                   >
-                    <img
+                    <Image
                       src={path}
                       alt={`Icon ${index + 1}`}
                       className="w-24 h-24 object-fit"

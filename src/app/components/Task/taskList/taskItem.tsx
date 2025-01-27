@@ -12,6 +12,8 @@ import { CustumCheckBox } from "@/components/buttons/custumCheckBox";
 import { InputDate } from "@/components/inputs/inputDate";
 import { MySubmitButton } from "@/components/buttons/MySubmitButton";
 import { validateTask } from "@/utils/Task/validateTask";
+// import { useEffect } from "react";
+import { useFilter } from "@/utils/Task/doneThemeFilter";
 // import { useEditBoolean } from "@/utils/others/editObjectBoolean";
 
 interface taskItemProps {
@@ -23,6 +25,8 @@ export const TaskItem: React.FC<taskItemProps> = ({ task }) => {
   const setEditngTask = useTaskStore((state) => state.setEditingTask);
   const uploadTask = useTask();
   const editTask = useEditObject(editingTask, setEditngTask);
+  const updateFilteredTask = useFilter();
+  
   const getTheme = useGetTheme();
   const theme = getTheme(task);
   const isEditing: boolean = task.taskId === editingTask?.taskId ? true : false;
@@ -43,9 +47,14 @@ export const TaskItem: React.FC<taskItemProps> = ({ task }) => {
     }
   };
 
+  // useEffect(()=>{
+  //   updateFilteredTask()
+  // },[editingTask])
+
   const setDate = (date:Date) => {
     if(!editingTask) return
     setEditngTask({...editingTask,dueDate:date})
+    updateFilteredTask()
   } 
 
   // const toggleShare = useEditBoolean(editingTask,setEditngTask,"share")

@@ -11,8 +11,8 @@ interface taskStore {
   initializeTask: (cid: string) => () => void;
   editingTask: Task | null;
   setEditingTask: (task: Task | null) => void;
-  filteredTasks: Task[];
-  setFilteredTasks: (tasks: Task[]) => void;
+  filteredTasks: Task[]|null;
+  setFilteredTasks: (tasks: Task[]|null) => void;
 }
 
 const useTaskStore = create<taskStore>((set) => ({

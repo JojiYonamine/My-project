@@ -24,6 +24,12 @@ export const ThemeFilter = () => {
     };
   }, [currentCid]);
 
+  // useEffect(()=>{
+  //   if(taskThemes){
+  //     setSelectedThemes(taskThemes)
+  //   }
+  // },[])
+
   return (
     <div className="w-full flex flex-col grow text-center gap-2">
       <h1 className="font-semibold bg-pink-400 text-white p-1 rounded-lg max-h-8">テーマフィルター</h1>

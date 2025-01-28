@@ -11,6 +11,7 @@ import { BasicButton } from "@/components";
 import { useRouter, useSearchParams } from "next/navigation";
 import { loginWithGoogle } from "@/utils/Auth/loginWithGoogle";
 import AuthHeader from "@/components/AuthHeader";
+import useAuthStore from "@/Context/authStore";
 
 const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -19,7 +20,7 @@ const LoginPage = () => {
   const [emailError, setEmaileError] = useState<boolean>(true);
   const [passError, setPassError] = useState<boolean>(true);
   const [link, setLink] = useState<string>("");
-
+  const initializeAuthListener = useAuthStore((state)=>state.initializeAuthListener)
   const [loading, setLoading] = useState<boolean>(false);
 
   const root = useRouter();
@@ -70,6 +71,11 @@ const LoginPage = () => {
       setEmaileError(false);
     }
   };
+
+  useEffect(()=>{
+    const unsubscribe = initializeAuthListener()
+    return () => unsubscribe()
+  },[])
 
   useEffect(() => {
     validation();

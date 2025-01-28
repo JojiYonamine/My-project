@@ -7,10 +7,11 @@ import { Spinner } from "./loadingSpinner";
 
 interface RequireAuthProps {
   children: React.ReactNode;
+  requireAuth?:boolean;
   requireCouple?: boolean;
 }
 
-export const RequireAuth: React.FC<RequireAuthProps> = ({ children, requireCouple = true }) => {
+export const RequireAuth: React.FC<RequireAuthProps> = ({ children, requireCouple = true, requireAuth=true }) => {
   const { loading, currentUser, initializeAuthListener, currentCid } = useAuthStore();
   const root = useRouter();
 
@@ -29,12 +30,12 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children, requireCoupl
       // console.log("loading中: 初期化待機");
       return;
     }
-    if (!currentUser && !loading) {
+    if (!currentUser && !loading && requireAuth) {
       alert("この機能を使うにはログインが必要です");
       root.push("/Auth/Login");
       return;
     }
-    if (!currentCid && requireCouple && !loading) {
+    if (!currentCid && requireCouple && !loading && requireAuth) {
       alert("この機能を使うにはカップルの登録が必要です");
       root.push("/Auth/Login");
       return;
@@ -42,7 +43,7 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children, requireCoupl
   }, [loading, currentCid,currentUser]);
 
   // 初期化できていないときはスピナーを表示
-  if (loading || !currentUser || !currentCid) {
+  if (loading || !currentUser || !currentCid ) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Spinner size={70} />

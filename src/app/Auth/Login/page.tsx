@@ -32,8 +32,9 @@ const LoginPage = () => {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
       alert("ログイン成功！");
+      console.log("ログイン成功")
       setLoading(false);
-      root.push("/");
+      root.push("/Calendar");
     } catch (err: unknown) {
       alert(err);
       setLoading(false);

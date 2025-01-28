@@ -46,7 +46,7 @@ export const EventSidebar: React.FC = () => {
   // 入力内容にエラーがある時にtrueを返す
   const validateInputs = (): boolean => {
     const errors = validateEvent(selectedEvent!);
-    console.log(errors);
+    // console.log(errors);
     if (errors.length > 0) {
       return true;
     } else {

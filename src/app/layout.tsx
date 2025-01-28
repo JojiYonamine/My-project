@@ -1,10 +1,9 @@
-"use client";
-
 // import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import useAuthStore from "./Context/authStore";
-import { useEffect } from "react";
+// import useAuthStore from "./Context/authStore";
+// import { useEffect } from "react";
+// import { Spinner } from "./components/loadingSpinner";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,26 +26,28 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initializeAuthListener = useAuthStore(
-    (state) => state.initializeAuthListener
-  );
+  // const initializeAuthListener = useAuthStore((state) => state.initializeAuthListener);
+  // const loading = useAuthStore((state) => state.loading);
 
-  useEffect(() => {
-    console.log("useEffect on layout.tsx start");
-    const unsubscribe = initializeAuthListener();
+  // useEffect(() => {
+  //   console.log("useEffect on layout.tsx start");
+  //   const unsubscribe = initializeAuthListener();
+  //   return () => {
+  //     unsubscribe();
+  //     console.log("useEffect on layout.tsx ends");
+  //   };
+  // }, [initializeAuthListener]);
 
-    return () => {
-      unsubscribe();
-      console.log("useEffect on layout.tsx ends");
-    };
-  }, [initializeAuthListener]);
+  // if (loading) {
+  //   return (
+  //     <div className="flex justify-center items-center h-screen">
+  //       <Spinner size={70} />
+  //     </div>
+  //   );
+  // }
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>
   );
 }

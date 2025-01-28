@@ -37,7 +37,7 @@ export const CalendarHeader: React.FC = ({}) => {
     }
   };
 
-  console.log(currentView);
+  // console.log(currentView);
 
   return (
     <div className="flex justify-start gap-4 w-full items-center p-2 h-full max-h-[7vh] bg-pink-100">

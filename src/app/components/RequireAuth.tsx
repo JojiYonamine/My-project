@@ -10,61 +10,45 @@ interface RequireAuthProps {
   requireCouple?: boolean;
 }
 
-export const RequireAuth: React.FC<RequireAuthProps> = ({
-  children,
-  requireCouple = true,
-}) => {
-  const { loading, currentUser, currentCid} = useAuthStore();
+export const RequireAuth: React.FC<RequireAuthProps> = ({ children, requireCouple = true }) => {
+  const { loading, currentUser, initializeAuthListener, currentCid } = useAuthStore();
   const root = useRouter();
-  console.log("loading:", loading);
-  console.log("currentUser:", currentUser);
-  console.log("cid:", currentCid);
 
+
+  useEffect(() => {
+    const unsubscribe = initializeAuthListener();
+    return () => {
+      unsubscribe();
+    };
+  }, [initializeAuthListener]);
 
   // 条件を満たさないユーザーをログイン画面に送る
   useEffect(() => {
-    console.log("useEffect on require auth")
-    if(loading){
-      return
+    console.log("useEffect on require auth");
+    if (loading) {
+      // console.log("loading中: 初期化待機");
+      return;
     }
-    if (!currentUser) {
+    if (!currentUser && !loading) {
       alert("この機能を使うにはログインが必要です");
       root.push("/Auth/Login");
       return;
     }
-    if (!currentCid && requireCouple) {
+    if (!currentCid && requireCouple && !loading) {
       alert("この機能を使うにはカップルの登録が必要です");
       root.push("/Auth/Login");
       return;
     }
-  }, [loading]);
+  }, [loading, currentCid,currentUser]);
 
   // 初期化できていないときはスピナーを表示
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner size={70} />
-      </div>
-    );
-  }
-
-  // 未ログイン時に少し表示されるの防止
-  if (!currentUser) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner size={70} />
-      </div>
-    );
-  }
-  // カップル登録なしの時に少し表示されるの防止
-  if (requireCouple && !currentCid) {
+  if (loading || !currentUser || !currentCid) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Spinner size={70} />
       </div>
     );
   } else {
-    console.log("return children");
     return <>{children}</>;
   }
 };

@@ -249,6 +249,7 @@ const SignupPage = () => {
                   </div>
                 )}
               </div>
+              
               <BasicButton
                 disabled={emailError || passError || confirmError || loading}
               >

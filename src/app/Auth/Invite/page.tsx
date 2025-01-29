@@ -1,6 +1,7 @@
 "use client";
 
 import { BasicButton } from "@/components";
+import useSignStore from "@/Context/signStore";
 import { userRef } from "@/utils/others/firestoreRefs";
 import { getDoc } from "firebase/firestore";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -9,9 +10,12 @@ import { Suspense, useEffect, useState } from "react";
 const InvitePage = () => {
   const searhParams = useSearchParams();
   const root = useRouter();
+  const { setInviterId } = useSignStore()
   const inviterId = searhParams.get("inviterId");
   const [inviterName, setInviterName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  setInviterId(inviterId)
 
   const getInviterName = async (inviterId: string) => {
     if (inviterId) {

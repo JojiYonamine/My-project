@@ -1,7 +1,6 @@
 import useSignStore from "@/Context/signStore";
 import { formObjectType } from "@/types/formtypes";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 
 const AuthHeader: React.FC = () => {

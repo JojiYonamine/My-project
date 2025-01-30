@@ -41,9 +41,10 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children, requireCoupl
       return;
     }
   }, [loading, currentCid,currentUser]);
+  console.log(loading,(!currentUser&&requireAuth),(requireCouple&&!currentCid))
 
   // 初期化できていないときはスピナーを表示
-  if (loading || !currentUser || !currentCid ) {
+  if (loading || (!currentUser&&requireAuth) || (requireCouple&&!currentCid) ) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Spinner size={70} />

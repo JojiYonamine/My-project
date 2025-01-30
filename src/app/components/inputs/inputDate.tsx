@@ -2,7 +2,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface InputDateProps {
-  date:Date|null,
+  date:Date|null|undefined,
   setDate:(date:Date)=>void
 }
 

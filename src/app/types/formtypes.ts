@@ -11,3 +11,10 @@ export interface validateFormType {
     passwordError:boolean,
     confirmError:boolean, //ログイン時は常にfalse
 }
+
+export interface profileType {
+  name:string,
+  icon:string,
+  birthday:Date,
+}
+

@@ -1,7 +1,6 @@
 // ログイン・サインアップ周辺の状態を管理する
-import { formObjectType, validateFormType } from "@/types/formtypes";
+import { formObjectType, profileType, validateFormType } from "@/types/formtypes";
 import { create } from "zustand";
-
 
 const newForm: formObjectType = {
   email: "",
@@ -9,11 +8,17 @@ const newForm: formObjectType = {
   confirmPassword: null,
 };
 
-const newError:validateFormType = {
-  emailError:true,
-  passwordError:true,
-  confirmError:true
-}
+const newError: validateFormType = {
+  emailError: true,
+  passwordError: true,
+  confirmError: true,
+};
+
+const newProfile: profileType = {
+  name: "",
+  icon: "",
+  birthday: new Date(2003, 0o3, 0o2),
+};
 
 interface signStore {
   // invite linkの生成時に用いる
@@ -31,15 +36,25 @@ interface signStore {
   setFormObject: (object: formObjectType | null) => void;
 
   // フォームのバリデーションに用いる
-  formError:validateFormType
-  setFormError:(form:validateFormType)=>void
+  formError: validateFormType;
+  setFormError: (form: validateFormType) => void;
 
   // ログインかサインアップかの判定用
-  isLogin:"login"|"signup"
-  setIsLogin:(islogin:"login"|"signup") => void
+  isLogin: "login" | "signup";
+  setIsLogin: (islogin: "login" | "signup") => void;
 
-  loading:boolean
-  setLoading:(loading:boolean) => void
+  // プロフィール入力で使う
+  profile: profileType|null;
+  setProfile: (prof: profileType|null) => void;
+
+  // プロフィール入力の進行状況を管理する
+  progress:"name"|"icon"|"birthDay"|"complete"
+  setProgress:(prog:"name"|"icon"|"birthDay"|"complete")=>void
+
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+
+  
 }
 
 const useSignStore = create<signStore>((set) => ({
@@ -51,12 +66,16 @@ const useSignStore = create<signStore>((set) => ({
   setHeaderLink: (link) => set({ headerLink: link }),
   formObject: newForm,
   setFormObject: (form) => set({ formObject: form }),
-  formError:newError,
-  setFormError:(form)=>set({formError:form}),
-  isLogin:"login" as const,
-  setIsLogin:(isLogin) => set({isLogin:isLogin}),
-  loading:false,
-  setLoading:(loading)=>set({loading:loading})
+  formError: newError,
+  setFormError: (form) => set({ formError: form }),
+  isLogin: "login" as const,
+  setIsLogin: (isLogin) => set({ isLogin: isLogin }),
+  loading: false,
+  setLoading: (loading) => set({ loading: loading }),
+  profile:newProfile,
+  setProfile:(prof)=>set({profile:prof}),
+  progress:"name" as const,
+  setProgress:(prog)=>set({progress:prog})
 }));
 
 export default useSignStore;

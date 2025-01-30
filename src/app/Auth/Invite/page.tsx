@@ -2,8 +2,7 @@
 
 import { BasicButton } from "@/components";
 import useSignStore from "@/Context/signStore";
-import { userRef } from "@/utils/others/firestoreRefs";
-import { getDoc } from "firebase/firestore";
+import { getUserNameFromFirestore} from "@/utils/others/firestoreRefs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
@@ -15,24 +14,15 @@ const InvitePage = () => {
   const [inviterName, setInviterName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  setInviterId(inviterId)
 
-  const getInviterName = async (inviterId: string) => {
-    if (inviterId) {
-      const inviter = await getDoc(userRef(inviterId));
-      if (inviter.exists()) {
-        return inviter.data().name;
-      } else {
-        return "エラー";
-      }
-    }
-  };
 
   useEffect(() => {
     const fetchInviterName = async () => {
+      if (!inviterId) return
+      setInviterId(inviterId)
       try {
-        if (inviterId) {
-          const name = await getInviterName(inviterId);
+         {
+          const name = await getUserNameFromFirestore(inviterId);
           setInviterName(name);
         }
       } catch (err: unknown) {

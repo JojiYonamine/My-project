@@ -21,18 +21,9 @@ export const BirthDay: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-2">
-        <BasicButton onClick={() => setProgress("icon")} disabled={!profile?.name.trim()}>
-          前へ
-        </BasicButton>
-        <div className="mb-4 w-full">
-        <MySubmitButtonWithSpinner
-          color="border-white"
-          text="登録"
-          disabled={!profile?.birthday}
-          loading={loading}
-        />
-        </div>
+        <BasicButton type="button" onClick={() => setProgress("icon")} text="前へ" />
 
+        <MySubmitButtonWithSpinner color="border-white" text="登録" disabled={!profile?.birthday} loading={loading} />
       </div>
     </div>
   );

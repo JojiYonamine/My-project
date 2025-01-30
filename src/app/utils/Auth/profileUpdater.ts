@@ -15,6 +15,8 @@ export const useUploadProfile = () => {
   const setLoading = useSignStore((state)=>state.setLoading)
   const setProgress = useSignStore((state)=>state.setProgress)
 
+
+
 //   firestoreへの登録
   const registerUserProfile = async (user: User, birthDay: Date) => {
     try {

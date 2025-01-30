@@ -27,17 +27,11 @@ export const Icon: React.FC = () => {
         ))}
       </div>
       <div className="grid grid-cols-2 gap-2">
-        <button
-          onClick={()=>setProgress("name")}
-          className="
-              bg-pink-400 text-white text-lg font-semibold rounded-lg w-full py-2 
-              transition duration-500 hover:bg-pink-500 mb-8"
-        >
-          前へ
-        </button>
-        <BasicButton type='button' onClick={()=>setProgress('birthDay')} disabled={!profile?.icon}>
-          次へ
-        </BasicButton>
+
+        <BasicButton type='button' onClick={()=>setProgress('name')} text="前へ"/>
+
+        <BasicButton type='button' onClick={()=>setProgress('birthDay')} disabled={!profile?.icon} text="次へ"/>
+
       </div>
     </div>
   );

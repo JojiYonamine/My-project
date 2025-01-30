@@ -35,9 +35,7 @@ export const Name: React.FC = () => {
               focus:outline-none mb-4"
         onChange={editProf}
       />
-      <BasicButton type='button' onClick={() => setProgress("icon")} disabled={!profile?.name.trim()}>
-        次へ
-      </BasicButton>
+      <BasicButton type='button' onClick={() => setProgress("icon")} disabled={!profile?.name.trim()} text="次へ"/>
     </div>
   );
 };

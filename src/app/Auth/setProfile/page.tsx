@@ -70,6 +70,7 @@ const SetProfile = () => {
     // ページ表示
     <div className="h-screen flex justify-center text-center items-center">
       {/* カード表示 */}
+      <h1>{progress}</h1>
       <div className="bg-white rounded p-6 w-11/12 sm:mt-0  max-w-lg border border-gray-300">
         <form
         onSubmit={(e)=>handleUpadateProfile(e)}

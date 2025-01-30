@@ -1,30 +1,25 @@
 // components/Button.jsx
-import React, { ReactNode } from "react";
+import React from "react";
 interface BasicButtonProps {
-  children?:ReactNode;
-  onClick?:()=>void;
-  type?:"button"|"submit"|"reset"
-  variant?:"primary" |"error"; 
-  disabled?:boolean
+  onClick?: () => void;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  text: string;
 }
 
-const BasicButton:React.FC<BasicButtonProps> = ({ children, onClick, type = "submit",disabled=false}) => {
-  const baseStyles = "mb-8 py-2 w-full rounded-lg font-semibold focus:outline-none transition duration-500 min-h-[48px] min-w-[120px]";
-  const variants = {
-    primary: "bg-pink-400 text-white hover:bg-pink-500",
-    error: "bg-pink-400 text-gray-300",
-  };
+const BasicButton: React.FC<BasicButtonProps> = ({ onClick, type = "button", disabled = false, text }) => {
 
   return (
     <button
       type={type}
-      className={!disabled?(`${baseStyles} ${variants["primary"]}`):(`${baseStyles} ${variants["error"]}`)}
+      className={`p-2 w-full rounded-lg focus:outline-none transition duration-500  font-semibold 
+        ${disabled ? "bg-pink-400 text-gray-300" : "bg-pink-400 text-white hover:bg-pink-500"}`}
       disabled={disabled}
       onClick={onClick}
     >
-      {children}
+      {text}
     </button>
   );
 };
 
-export default BasicButton
+export default BasicButton;

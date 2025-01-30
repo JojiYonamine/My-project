@@ -1,40 +1,20 @@
 "use client";
-import React, { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+
+import { QRCodeCanvas } from "qrcode.react";
+
+const LoginPage = () => {
 
 
-
-const MyDatePicker = () => {
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [selectedTime, setSelectedTime] = useState<Date | null>(null);
 
   return (
-    <div>
-      <h3>日付を選択してください:</h3>
-      <DatePicker
-        selected={startDate} // 選択された日付
-        onChange={(date) => {
-          if(date)
-          setStartDate(date)}} // 日付変更時の処理
-        dateFormat="EEE, LLL d, yyyy" // 表示形式
-      />
-
-      <DatePicker
-          selected={selectedTime}
-          onChange={(date) => setSelectedTime(date)}
-          showTimeSelect
-          showTimeSelectOnly
-          timeIntervals={10}
-          timeCaption="時間"
-          dateFormat="HH:mm"
-           timeFormat="HH:mm"
-          className="border p-2 rounded"
-          placeholderText="時間を選択"
-        />
+    <div className="relative bg-pink-400 h-screen overflow-hidden flex items-center justify-center">
+      <div className="flex flex-col items-center">
+        <h2 className="text-lg font-bold mb-2">QRコードで招待</h2>
+        <QRCodeCanvas value={`https://my-project-yftg.vercel.app/Auth/Invite?inviterId=`} size={200} />
+        <p className="mt-2 text-sm text-gray-500">スキャンして招待リンクにアクセス</p>
       </div>
-
+    </div>
   );
 };
 
-export default MyDatePicker;
+export default LoginPage;

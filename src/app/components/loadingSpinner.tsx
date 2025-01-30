@@ -3,6 +3,7 @@ import { FaUser } from "react-icons/fa6";
 
 interface SpinnerProps {
   size: number;
+  color?:string
 }
 
 interface SpinnerWithIconProps extends SpinnerProps {
@@ -15,7 +16,7 @@ interface SpinnerWithIconProps extends SpinnerProps {
 //   loading?: boolean;
 // }
 
-export const Spinner: React.FC<SpinnerProps> = ({ size }) => {
+export const Spinner: React.FC<SpinnerProps> = ({ size,color }) => {
   return (
     <div
       className={`relative flex items-center justify-center`}
@@ -25,7 +26,7 @@ export const Spinner: React.FC<SpinnerProps> = ({ size }) => {
       <div
         className={`
             animate-spin z-0 rounded-full border-t-transparent
-            border-4 border-pink-400`}
+            border-4 ${color?color:"border-pink-400"}`}
         style={{ height: `${size}px`, width: `${size}px` }}
       />
     </div>

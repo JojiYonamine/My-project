@@ -3,14 +3,15 @@ interface inputFieldBoldProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?:string
   name?:string
+  type?:string
 }
 
-export const InputFieldBold: React.FC<inputFieldBoldProps> = ({ value, onChange, placeholder,name }) => {
+export const InputFieldBold: React.FC<inputFieldBoldProps> = ({ value, onChange, placeholder,name,type="text" }) => {
 
   return (
     <div className="bg-gray-100 px-2 pt-2 rounded-md ">
       <input
-        type="text"
+        type={type}
         placeholder={placeholder||""}
         value={value}
         name={name}

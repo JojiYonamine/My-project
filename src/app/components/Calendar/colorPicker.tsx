@@ -1,9 +1,9 @@
-import useCalendarStore from "@/Context/calendarStore";
+import useCalendarEventStore from "@/Context/Calendar/calendarEventStore";
 import React from "react";
 
 const ColorPicker: React.FC = () => {
-  const setSelectedEvent = useCalendarStore((state) => state.setSelectedEvent);
-  const selectedEvent = useCalendarStore((state) => state.selectedEvent)!;
+  const setSelectedEvent = useCalendarEventStore((state) => state.setSelectedEvent);
+  const selectedEvent = useCalendarEventStore((state) => state.selectedEvent)!;
 
   const colorTags: Record<string, string> = {
     "#ff7fbf": "a",

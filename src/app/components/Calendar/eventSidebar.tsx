@@ -1,6 +1,6 @@
 // イベントの作成・編集時に表示するサイドバー（右側）
 //イベント新規作成時には、空のselectedCalendarを用意する
-import useCalendarStore from "@/Context/calendarStore";
+import useCalendarStore from "@/Context/Calendar/calendarStore";
 import { calendarEvent } from "@/types/calendarTypes";
 import { useEvent } from "@/utils/Calendar/eventHandler";
 import ColorPicker from "./colorPicker";
@@ -8,18 +8,19 @@ import { useValidateEvent } from "@/utils/Calendar/validateEvent";
 import { CiCalendar } from "react-icons/ci";
 import { FaUserAlt } from "react-icons/fa";
 import { BasicCheckBox } from "../buttons/basicCheckBox";
-import {  useEditObject } from "@/utils/others/editObject";
+import { useEditObject } from "@/utils/others/editObject";
 import { InputDate } from "../inputs/inputDate";
 import { InputTime } from "../inputs/inputTime";
-
+import useCalendarEventStore from "@/Context/Calendar/calendarEventStore";
+import useCalendarUIStore from "@/Context/Calendar/calendarUIStore";
 
 export const EventSidebar: React.FC = () => {
   // 新規作成時には、selectedEventは、null
-  const { selectedEvent, setSelectedEvent, isEdit, selectedCalendar } =
-    useCalendarStore();
+  const selectedCalendar = useCalendarStore((state)=>state.selectedCalendar);
+  const { selectedEvent, setSelectedEvent } = useCalendarEventStore();
+  const isEdit = useCalendarUIStore((state)=>state.isEdit)
   const handleEvent = useEvent(isEdit ? "edit" : "create");
   const validateEvent = useValidateEvent();
-
 
   //   フォーム送信時に実行する関数
   const HandleEvent = () => {
@@ -31,7 +32,7 @@ export const EventSidebar: React.FC = () => {
   };
 
   //   インプット編集時に実行する関数
-  const editEvent = useEditObject<calendarEvent>(selectedEvent,setSelectedEvent)
+  const editEvent = useEditObject<calendarEvent>(selectedEvent, setSelectedEvent);
 
   //   終日の変更を行う関数
   const toggleAllday = () => {
@@ -54,16 +55,15 @@ export const EventSidebar: React.FC = () => {
     }
   };
 
-  const setStart = (date:Date) => {
-    if(!selectedEvent)return
-    setSelectedEvent({...selectedEvent,start:date})
-  }
-  const setEnd = (date:Date) => {
-    if(!selectedEvent)return
-    setSelectedEvent({...selectedEvent,end:date})
-  }
- 
- 
+  const setStart = (date: Date) => {
+    if (!selectedEvent) return;
+    setSelectedEvent({ ...selectedEvent, start: date });
+  };
+  const setEnd = (date: Date) => {
+    if (!selectedEvent) return;
+    setSelectedEvent({ ...selectedEvent, end: date });
+  };
+
   return (
     <div
       className={`duration-500 transition-all h-full w-full overflow-hidden ${
@@ -100,9 +100,9 @@ export const EventSidebar: React.FC = () => {
             <div className="flex justify-between items-center p-1 w-full">
               <h1 className="font-semibold">開始</h1>
               <div className="flex items-center justify-center gap-2">
-                {selectedEvent&&<InputDate date={selectedEvent.start} setDate={setStart}/>}
+                {selectedEvent && <InputDate date={selectedEvent.start} setDate={setStart} />}
                 {/* <InputDate startOrEnd="start" /> */}
-                {!selectedEvent?.allDay && <InputTime time={selectedEvent?.start} setTime={setStart}/>}
+                {!selectedEvent?.allDay && <InputTime time={selectedEvent?.start} setTime={setStart} />}
               </div>
             </div>
 
@@ -110,15 +110,15 @@ export const EventSidebar: React.FC = () => {
             <div className="flex justify-between items-center p-1 w-full">
               <h1 className="font-semibold">終了</h1>
               <div className="flex items-center justify-center gap-2">
-              {selectedEvent&&<InputDate date={selectedEvent.end} setDate={setEnd}/>}
-              {!selectedEvent?.allDay && <InputTime time={selectedEvent?.end} setTime={setEnd}/>}
+                {selectedEvent && <InputDate date={selectedEvent.end} setDate={setEnd} />}
+                {!selectedEvent?.allDay && <InputTime time={selectedEvent?.end} setTime={setEnd} />}
               </div>
             </div>
           </div>
 
           {/* 終日 */}
           <div className="w-full flex justify-end items-center gap-2 px-10 py-2 ">
-            <BasicCheckBox onClick={()=>toggleAllday()} checked={selectedEvent?.allDay}/>
+            <BasicCheckBox onClick={() => toggleAllday()} checked={selectedEvent?.allDay} />
             <h1 className="font-semibold">終日</h1>
           </div>
         </div>
@@ -127,7 +127,7 @@ export const EventSidebar: React.FC = () => {
         <hr className="border-gray-300 my-4" />
 
         {/* 色選択 */}
-        <ColorPicker/>
+        <ColorPicker />
 
         {/* 詳細設定 */}
         <div className="p-4 flex flex-col w-full gap-2">

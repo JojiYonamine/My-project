@@ -1,13 +1,13 @@
 // カレンダーのヘッダー
-import useCalendarStore from "@/Context/calendarStore";
 import { addMonths, addWeeks, format, subMonths, subWeeks } from "date-fns";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import useShowCalendarStore from "@/Context/showCalendarStore";
+import useShowCalendarStore from "@/Context/Calendar/showCalendarStore";
 import { ToggleSidebarButton } from "../buttons/toggleSidebarButton";
+import useCalendarUIStore from "@/Context/Calendar/calendarUIStore";
 
 export const CalendarHeader: React.FC = ({}) => {
-  const sidebarOpen = useCalendarStore((state) => state.sidebarOpen);
-  const setSidebarOpen = useCalendarStore((state) => state.setSidebarOpen);
+  const sidebarOpen = useCalendarUIStore((state) => state.sidebarOpen);
+  const setSidebarOpen = useCalendarUIStore((state) => state.setSidebarOpen);
   const { currentView, setCurrentView, currentDate, setCurrentDate } =
     useShowCalendarStore();
 

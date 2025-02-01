@@ -6,8 +6,10 @@ import { ja } from "date-fns/locale";
 import { useEffect } from "react";
 import { Calendar, dateFnsLocalizer, SlotInfo } from "react-big-calendar";
 import useAuthStore from "@/Context/authStore";
-import useCalendarStore from "@/Context/calendarStore";
-import useShowCalendarStore from "@/Context/showCalendarStore";
+import useCalendarStore from "@/Context/Calendar/calendarStore";
+import useShowCalendarStore from "@/Context/Calendar/showCalendarStore";
+import useCalendarEventStore from "@/Context/Calendar/calendarEventStore";
+import useCalendarUIStore from "@/Context/Calendar/calendarUIStore";
 
 export const MainCalendar: React.FC = () => {
   const locales = {
@@ -24,15 +26,10 @@ export const MainCalendar: React.FC = () => {
   const loading = useAuthStore((state) => state.loading);
   const cid = useAuthStore((state) => state.currentCid);
   const uid = useAuthStore((state) => state.currentUser)!.uid;
-  const {currentDate,currentView} = useShowCalendarStore()
-  const {
-    events,
-    selectedCalendar,
-    setSelectedEvent,
-    initializeEvents,
-    setIsEdit,
-  } = useCalendarStore();
-
+  const { currentDate, currentView } = useShowCalendarStore();
+  const { events, setSelectedEvent, initializeEvents} = useCalendarEventStore();
+  const selectedCalendar = useCalendarStore((state)=>state.selectedCalendar)
+  const setIsEdit = useCalendarUIStore((state)=>state.setIsEdit)
   // 表示を変更
 
   // イベントを選択
@@ -52,6 +49,8 @@ export const MainCalendar: React.FC = () => {
       start: e.start,
       end: e.start,
       color: "",
+      advanced: null,
+      repeat: null,
     };
     setSelectedEvent(newEvent);
     setIsEdit(false);
@@ -78,19 +77,19 @@ export const MainCalendar: React.FC = () => {
   };
 
   return (
-      <Calendar
-        localizer={localizer}
-        events={events}
-        date={currentDate}
-        startAccessor="start"
-        endAccessor="end"
-        onSelectEvent={handleSelectEvent}
-        selectable
-        onSelectSlot={handleSelectSlot}
-        view={currentView}
-        style={{ height:"100%", width: "100%" }}
-        eventPropGetter={eventColorGetter}
-        toolbar={false}
-      />
+    <Calendar
+      localizer={localizer}
+      events={events}
+      date={currentDate}
+      startAccessor="start"
+      endAccessor="end"
+      onSelectEvent={handleSelectEvent}
+      selectable
+      onSelectSlot={handleSelectSlot}
+      view={currentView}
+      style={{ height: "100%", width: "100%" }}
+      eventPropGetter={eventColorGetter}
+      toolbar={false}
+    />
   );
 };

@@ -1,6 +1,6 @@
 // イベントのバリデーションを行う
 
-import useCalendarStore from "@/Context/calendarStore";
+import useCalendarStore from "@/Context/Calendar/calendarStore";
 import { calendarEvent } from "@/types/calendarTypes";
 import { addDays, isBefore } from "date-fns";
 

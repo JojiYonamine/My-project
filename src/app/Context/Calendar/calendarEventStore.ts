@@ -45,7 +45,7 @@ const useCalendarEventStore = create<calendarEventStore>((set) => ({
             ? {
                 frequency: data.repeat.frequency,
                 interval: data.repeat.interval,
-                endDate: data.repeat.endDate.toDate() ?? new Date(2030, 12, 31),
+                endDate: data.repeat.endDate?.toDate() || null,
                 noDate: data.repeat.noDate ?? null,
               }
             : null,

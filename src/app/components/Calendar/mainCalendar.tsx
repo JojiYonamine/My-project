@@ -1,15 +1,16 @@
 // カレンダー本体を表示する部分
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { calendarEvent } from "@/types/calendarTypes";
-import { format, getDay, parse, startOfWeek } from "date-fns";
+import { addMonths, format, getDay, parse, startOfWeek, subMonths } from "date-fns";
 import { ja } from "date-fns/locale";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Calendar, dateFnsLocalizer, SlotInfo } from "react-big-calendar";
 import useAuthStore from "@/Context/authStore";
 import useCalendarStore from "@/Context/Calendar/calendarStore";
 import useShowCalendarStore from "@/Context/Calendar/showCalendarStore";
 import useCalendarEventStore from "@/Context/Calendar/calendarEventStore";
 import useCalendarUIStore from "@/Context/Calendar/calendarUIStore";
+import { expandRepeatedEvent } from "@/utils/Calendar/repeatedEvent";
 
 export const MainCalendar: React.FC = () => {
   const locales = {
@@ -27,7 +28,8 @@ export const MainCalendar: React.FC = () => {
   const cid = useAuthStore((state) => state.currentCid);
   const uid = useAuthStore((state) => state.currentUser)!.uid;
   const { currentDate, currentView } = useShowCalendarStore();
-  const { events, setSelectedEvent, initializeEvents} = useCalendarEventStore();
+  const { events, setSelectedEvent,initializeEvents} = useCalendarEventStore();
+  
   const selectedCalendar = useCalendarStore((state)=>state.selectedCalendar)
   const setIsEdit = useCalendarUIStore((state)=>state.setIsEdit)
   // 表示を変更
@@ -67,6 +69,16 @@ export const MainCalendar: React.FC = () => {
     };
   }, [selectedCalendar]);
 
+  const memoizedExpandedEvents = useMemo(() => {
+    return expandRepeatedEvent(events, subMonths(currentDate, 1), addMonths(currentDate, 1));
+  }, [events, currentDate])
+
+
+  // useEffect(()=>{
+  //   setEvents(memoizedExpandedEvents)
+  // },[memoizedExpandedEvents])
+
+
   // イベントの色を取得
   const eventColorGetter = (event: calendarEvent) => {
     return {
@@ -79,7 +91,7 @@ export const MainCalendar: React.FC = () => {
   return (
     <Calendar
       localizer={localizer}
-      events={events}
+      events={memoizedExpandedEvents}
       date={currentDate}
       startAccessor="start"
       endAccessor="end"

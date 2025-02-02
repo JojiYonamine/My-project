@@ -2,7 +2,18 @@
 // 繰り返しイベントを展開する関数
 
 import { calendarEvent } from "@/types/calendarTypes";
-import { addDays, addMonths, addWeeks, addYears, isBefore, isSameDay, isWithinInterval } from "date-fns";
+import {
+  addDays,
+  addMonths,
+  addWeeks,
+  addYears,
+  isBefore,
+  isSameDay,
+  isWithinInterval,
+  setHours,
+  setMinutes,
+  setSeconds,
+} from "date-fns";
 
 // 繰り返しイベントを展開する際の日付を得る関数
 const getNextDate = (event: calendarEvent, currentStartDate: Date, currentEndDate: Date) => {
@@ -39,13 +50,20 @@ export const expandRepeatedEvent = (events: calendarEvent[], startDate: Date, en
   let expandedEvents: calendarEvent[] = [];
 
   events.forEach((event) => {
+    // 終了時間が00:00の時に23:59に変換する
+    const correctEndDate =
+      event.end.getHours() === 0 && event.end.getMinutes() === 0
+        ? setHours(setMinutes(setSeconds(event.end, 59), 59), 23)
+        : event.end;
+
+    // イベントが繰り返しでない時そのまま返す
     if (!event.repeat) {
-      expandedEvents.push(event);
+      expandedEvents.push({ ...event, end: correctEndDate });
       return;
     }
 
     let currentStartDate: Date = new Date(event.start);
-    let currentEndDate: Date = new Date(event.end);
+    let currentEndDate: Date = new Date(correctEndDate);
 
     // 開始日が、表示終了の日付を超えるまで実行
     while (isBefore(currentStartDate, endDate)) {

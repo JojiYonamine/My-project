@@ -1,11 +1,12 @@
 // イベント編集画面で送信・キャンセルのボタン
 import useCalendarEventStore from "@/Context/Calendar/calendarEventStore";
+import useCalendarUIStore from "@/Context/Calendar/calendarUIStore";
 import { useValidateEvent } from "@/utils/Calendar/validateEvent";
 
 export const EventSidebarButtons = () => {
   const validateEvent = useValidateEvent();
   const { selectedEvent, setSelectedEvent } = useCalendarEventStore();
-
+  const isEdit = useCalendarUIStore((state)=>state.isEdit)
   // 入力内容にエラーがある時にtrueを返す
   const validateInputs = (): boolean => {
     const errors = validateEvent(selectedEvent!);
@@ -16,6 +17,8 @@ export const EventSidebarButtons = () => {
       return false;
     }
   };
+
+  const text = isEdit?"編集":"作成"
 
   return (
     <div className="flex w-full justify-end p-2">
@@ -28,7 +31,7 @@ export const EventSidebarButtons = () => {
         }`}
         type="submit"
       >
-        作成
+        {text}
       </button>
       <button
         onClick={() => setSelectedEvent(null)}

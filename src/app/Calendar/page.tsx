@@ -4,7 +4,7 @@ import { RequireAuth } from "@/components/RequireAuth";
 import Sidebar from "@/components/Sidebar";
 import { CalendarList } from "@/components/Calendar/calendarList";
 import { MainCalendar } from "@/components/Calendar/mainCalendar";
-import { EventSidebar } from "@/components/Calendar/eventSidebar";
+import { EventSidebar } from "@/components/Calendar/eventSidebar/eventSidebar";
 import { CalendarHeader } from "@/components/Calendar/calendarHeader";
 
 const MyCalendar = () => {

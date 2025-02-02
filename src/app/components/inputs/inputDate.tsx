@@ -3,10 +3,12 @@ import "react-datepicker/dist/react-datepicker.css";
 
 interface InputDateProps {
   date:Date|null|undefined,
-  setDate:(date:Date)=>void
+  setDate:(date:Date)=>void,
+  // クラスネームを追加したい時に用いる
+  custom?:string
 }
 
-export const InputDate:React.FC<InputDateProps> = ({date,setDate})=>{
+export const InputDate:React.FC<InputDateProps> = ({date,setDate,custom})=>{
   if(!date) return
   return(
     <div className="bg-gray-100 rounded-md px-1">
@@ -18,7 +20,7 @@ export const InputDate:React.FC<InputDateProps> = ({date,setDate})=>{
           }
         }}
         dateFormat="EEE, LLL d, yyyy"
-        className="bg-gray-100 w-40 p-2 border-b-2 border-gray-100 focus:outline-none focus:border-pink-500 focus:font-semibold"
+        className={`${custom} bg-gray-100 w-40 p-2 border-b-2 border-gray-100 focus:outline-none focus:border-pink-500 focus:font-semibold`}
       />
     </div>
   )

@@ -1,7 +1,7 @@
 // カレンダーイベントの状態を管理する
 import { calendarEvent } from "@/types/calendarTypes";
 import { eventsRef } from "@/utils/others/firestoreRefs";
-import { onSnapshot } from "firebase/firestore";
+import { onSnapshot, Timestamp } from "firebase/firestore";
 import { create } from "zustand";
 
 interface calendarEventStore {
@@ -45,8 +45,10 @@ const useCalendarEventStore = create<calendarEventStore>((set) => ({
             ? {
                 frequency: data.repeat.frequency,
                 interval: data.repeat.interval,
-                endDate: data.repeat.endDate?.toDate() || null,
-                noDate: data.repeat.noDate ?? null,
+                endDate: data.repeat.endDate.toDate() || null,
+                noDate: data.repeat.noDate
+                  ? data.repeat.noDate.map((timestamp: Timestamp) => timestamp.toDate())
+                  : null,
               }
             : null,
         };

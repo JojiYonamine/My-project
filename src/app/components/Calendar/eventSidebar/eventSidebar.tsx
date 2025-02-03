@@ -52,7 +52,7 @@ export const EventSidebar: React.FC = () => {
         {/* 繰り返し設定 */}
         <RepeatCustuoForm/>
         
-        {/* イベント作成・キャンセル */}
+        {/* イベント作成・キャンセル・削除 */}
         <EventSidebarButtons />
       </form>
     </div>

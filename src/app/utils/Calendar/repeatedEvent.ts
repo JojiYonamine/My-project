@@ -47,7 +47,7 @@ const getNextDate = (event: calendarEvent, currentStartDate: Date, currentEndDat
 
 // 繰り返しイベントを展開する
 export const expandRepeatedEvent = (events: calendarEvent[], startDate: Date, endDate: Date): calendarEvent[] => {
-  let expandedEvents: calendarEvent[] = [];
+  const expandedEvents: calendarEvent[] = [];
 
   events.forEach((event) => {
     // 終了時間が00:00の時に23:59に変換する
@@ -59,16 +59,22 @@ export const expandRepeatedEvent = (events: calendarEvent[], startDate: Date, en
     // イベントが繰り返しでない時そのまま返す
     if (!event.repeat) {
       expandedEvents.push({ ...event, end: correctEndDate });
+      console.log(event,"added")
       return;
     }
 
+    // 繰り返しイベントの、繰り返し先の開始・終了日時
     let currentStartDate: Date = new Date(event.start);
     let currentEndDate: Date = new Date(correctEndDate);
+    console.log(event.title,"展開開始")
+    console.log(event.repeat.noDate)
 
     // 開始日が、表示終了の日付を超えるまで実行
-    while (isBefore(currentStartDate, endDate)) {
+    while (isBefore(currentStartDate, event.repeat.endDate||endDate)) {
+      console.log("開始日：",currentStartDate,"終了日：",currentEndDate)
       // 除外日のときスキップ
       if (event.repeat.noDate && event.repeat.noDate.some((date) => isSameDay(date, currentStartDate))) {
+        console.log("スキップ",event.start)
         const { nextStartDate, nextEndDate } = getNextDate(event, currentStartDate, currentEndDate);
         currentStartDate = nextStartDate;
         currentEndDate = nextEndDate;
@@ -92,5 +98,6 @@ export const expandRepeatedEvent = (events: calendarEvent[], startDate: Date, en
       currentEndDate = nextEndDate;
     }
   });
+  console.log(expandedEvents)
   return expandedEvents;
 };
